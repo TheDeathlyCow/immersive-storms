@@ -12,20 +12,13 @@
         "sources": "https://github.com/TheDeathlyCow/immersive-storms"
     },
     "license": "LGPL-3.0",
-    "icon": "assets/immersive-storms/icon.png",
     "environment": "*",
     "entrypoints": {
         "fabric-datagen": [
             "com.thedeathlycow.immersive.storms.datagen.ImmersiveStormsDataGenerator"
         ]
     },
-    "mixins": [
-        "immersive-storms.mixins.json",
-        {
-            "config": "immersive-storms.client.mixins.json",
-            "environment": "client"
-        }
-    ],
+    "mixins": [],
     "depends": {
         "fabricloader": "*",
         "minecraft": "*",

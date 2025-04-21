@@ -77,10 +77,14 @@ public final class StormEffects {
 
     public static void updateFogDistance(
             Camera camera,
-            float viewDistance,
+            BackgroundRenderer.FogType fogType,
             CameraSubmersionType cameraSubmersionType,
             BackgroundRenderer.FogData fogData
     ) {
+        if (fogType == BackgroundRenderer.FogType.FOG_SKY) {
+            return;
+        }
+
         Entity focused = camera.getFocusedEntity();
         World world = focused.getWorld();
         final float rainGradient = world.getRainGradient(1f);
@@ -88,7 +92,7 @@ public final class StormEffects {
         if (cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
             BlockPos pos = camera.getBlockPos();
             WeatherEffects.Type currentEffects = WeatherEffectsClient.getCurrentType(world, pos, false);
-            if (currentEffects != null) {
+            if (currentEffects != WeatherEffects.Type.NONE) {
                 var samplePos = new BlockPos.Mutable();
                 final var baseRadius = new Vec3d(fogData.fogStart, fogData.fogEnd, 0);
                 final var fogRadius = new Vec3d(

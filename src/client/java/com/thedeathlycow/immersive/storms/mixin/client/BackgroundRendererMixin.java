@@ -64,6 +64,6 @@ public class BackgroundRendererMixin {
             @Local CameraSubmersionType cameraSubmersionType,
             @Local BackgroundRenderer.FogData fogData
     ) {
-        StormEffects.updateFogDistance(camera, viewDistance, cameraSubmersionType, fogData);
+        StormEffects.updateFogDistance(camera, fogType, cameraSubmersionType, fogData);
     }
 }

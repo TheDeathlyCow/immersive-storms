@@ -3,19 +3,26 @@ package com.thedeathlycow.immersive.storms;
 import com.thedeathlycow.immersive.storms.api.WeatherEffects;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
+import net.minecraft.block.enums.CameraSubmersionType;
+import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.FogShape;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import org.joml.Vector3f;
 
 public final class StormEffects {
-
     private static final float START_FOG_SPHERE_RAIN_GRADIENT = 0.75f;
+
+    private static final float FOG_START = 16f;
+
+    private static final float FOG_END = 64f;
 
     private static final float PARTICLE_SCALE = 10f;
 
@@ -35,11 +42,11 @@ public final class StormEffects {
             return null;
         }
 
-        WeatherEffects.Type type = WeatherEffectsClient.getCurrentType(world, camera.getBlockPos(), false);
+        WeatherEffects.Type currentEffects = WeatherEffectsClient.getCurrentType(world, camera.getBlockPos(), false);
 
-        if (type != WeatherEffects.Type.NONE) {
+        if (currentEffects != WeatherEffects.Type.NONE) {
             final var normalColor = new Vec3d(baseRed, baseGreen, baseBlue);
-            Vec3d adjustedColor = ISMath.lerp(gradient, normalColor, type.getColor());
+            Vec3d adjustedColor = ISMath.lerp(gradient, normalColor, currentEffects.getColor());
 
             // idk why the game does this transformation but ill do it here too for consistency
             float skyAngle = MathHelper.clamp(
@@ -66,6 +73,58 @@ public final class StormEffects {
             );
         }
         return null;
+    }
+
+    public static void updateFogDistance(
+            Camera camera,
+            float viewDistance,
+            CameraSubmersionType cameraSubmersionType,
+            BackgroundRenderer.FogData fogData
+    ) {
+        Entity focused = camera.getFocusedEntity();
+        World world = focused.getWorld();
+        final float rainGradient = world.getRainGradient(1f);
+
+        if (cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
+            BlockPos pos = camera.getBlockPos();
+            WeatherEffects.Type currentEffects = WeatherEffectsClient.getCurrentType(world, pos, false);
+            if (currentEffects != null) {
+                var samplePos = new BlockPos.Mutable();
+                final var baseRadius = new Vec3d(fogData.fogStart, fogData.fogEnd, 0);
+                final var fogRadius = new Vec3d(
+                        FOG_START,
+                        FOG_END,
+                        0
+                );
+
+                // tri lerp fog distances to make less jarring biome transition
+                // start is stored in X and end in Y
+                Vec3d fogDistances = CubicSampler.sampleColor(camera.getPos(), (x, y, z) -> {
+                    samplePos.set(x, y, z);
+                    WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(
+                            world.getBiome(samplePos),
+                            ClientTags::isInWithLocalFallback
+                    );
+
+                    if (sampledType != WeatherEffects.Type.NONE) {
+                        return fogRadius;
+                    }
+                    return baseRadius;
+                });
+
+                // lerp fog distances for smooth transition when weather changes
+                updateFogRadius(fogData, fogDistances, rainGradient);
+            }
+        }
+    }
+
+    private static void updateFogRadius(BackgroundRenderer.FogData fogData, Vec3d fogDistances, float rainGradient) {
+        fogData.fogStart = MathHelper.lerp(rainGradient, fogData.fogStart, (float) fogDistances.x);
+        fogData.fogEnd = MathHelper.lerp(rainGradient, fogData.fogEnd, (float) fogDistances.y);
+
+        if (rainGradient > START_FOG_SPHERE_RAIN_GRADIENT) {
+            fogData.fogShape = FogShape.SPHERE;
+        }
     }
 
     private StormEffects() {

@@ -50,7 +50,7 @@ public final class WeatherEffects {
         NONE("none", null, null),
         SANDSTORM("sandstorm", ISBiomeTags.HAS_SANDSTORMS, Vec3d.unpackRgb(0xD9AA84)),
         BLIZZARD("blizzard", ISBiomeTags.HAS_BLIZZARDS, Vec3d.unpackRgb(0xFFFFFF)),
-        DENSE_FOG("dense_fog", ISBiomeTags.HAS_DENSE_FOG, Vec3d.unpackRgb(0xFFFFFF));
+        DENSE_FOG("dense_fog", ISBiomeTags.HAS_DENSE_FOG, Vec3d.unpackRgb(0x999999));
 
         private final String name;
 

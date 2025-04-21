@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "immersive-storms",
+	"version": "${version}",
+	"name": "Immersive Storms",
+	"description": "Makes fog effects during storms more immersive.",
+	"authors": [
+		"TheDeathlyCow"
+	],
+	"contact": {
+		"homepage": "https://github.com/TheDeathlyCow/",
+		"sources": "https://github.com/TheDeathlyCow/immersive-storms"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/immersive-storms/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.thedeathlycow.immersive.storms.ImmersiveStorms"
+		],
+		"client": [
+			"com.thedeathlycow.immersive.storms.ImmersiveStormsClient"
+		],
+		"fabric-datagen": [
+			"com.thedeathlycow.immersive.storms.ImmersiveStormsDataGenerator"
+		]
+	},
+	"mixins": [
+		"immersive-storms.mixins.json",
+		{
+			"config": "immersive-storms.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.13",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

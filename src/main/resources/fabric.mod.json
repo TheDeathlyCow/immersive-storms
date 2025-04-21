@@ -37,5 +37,6 @@
 	},
 	"suggests": {
 		"scorchful": "*"
-	}
+	},
+	"accessWidener": "immersive-storms.accesswidener"
 }

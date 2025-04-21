@@ -28,6 +28,7 @@ loom {
 		}
 	}
 
+	accessWidenerPath = file("src/main/resources/immersive-storms.accesswidener")
 }
 
 fabricApi {

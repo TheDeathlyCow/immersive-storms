@@ -10,8 +10,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.BiPredicate;
+
 public final class WeatherEffects {
-    public static Type getCurrentType(World world, BlockPos pos, boolean aboveSurface) {
+    public static Type getCurrentType(
+            World world,
+            BlockPos pos,
+            boolean aboveSurface,
+            BiPredicate<TagKey<Biome>, RegistryEntry<Biome>> tagInclusion
+    ) {
         if (!world.isRaining() || (aboveSurface && world.hasRain(pos))) {
             return Type.NONE;
         } else if (aboveSurface && !world.isSkyVisible(pos)) {
@@ -20,8 +27,21 @@ public final class WeatherEffects {
             return Type.NONE;
         } else {
             RegistryEntry<Biome> biome = world.getBiome(pos);
-            return Type.forBiome(biome);
+            return Type.forBiome(biome, tagInclusion);
         }
+    }
+
+    public static Type getCurrentType(
+            World world,
+            BlockPos pos,
+            boolean aboveSurface
+    ) {
+        return getCurrentType(
+                world,
+                pos,
+                aboveSurface,
+                (tag, biome) -> biome.isIn(tag)
+        );
     }
 
     public enum Type implements StringIdentifiable {
@@ -45,9 +65,9 @@ public final class WeatherEffects {
             return this.name;
         }
 
-        private static Type forBiome(RegistryEntry<Biome> biome) {
+        private static Type forBiome(RegistryEntry<Biome> biome, BiPredicate<TagKey<Biome>, RegistryEntry<Biome>> tagInclusion) {
             for (Type value : values()) {
-                if (value.biomeTag != null && biome.isIn(value.biomeTag)) {
+                if (value.biomeTag != null && tagInclusion.test(value.biomeTag, biome)) {
                     return value;
                 }
             }

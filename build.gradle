@@ -33,6 +33,8 @@ loom {
 fabricApi {
 	configureDataGeneration {
 		client = true
+		createSourceSet = true
+		modId = "immersive-storms-datagen"
 	}
 }
 

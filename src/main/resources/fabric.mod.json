@@ -20,9 +20,6 @@
 		],
 		"client": [
 			"com.thedeathlycow.immersive.storms.ImmersiveStormsClient"
-		],
-		"fabric-datagen": [
-			"com.thedeathlycow.immersive.storms.ImmersiveStormsDataGenerator"
 		]
 	},
 	"mixins": [
@@ -39,6 +36,6 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"scorchful": "*"
 	}
 }

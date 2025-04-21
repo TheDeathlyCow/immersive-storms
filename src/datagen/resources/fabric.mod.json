@@ -1,0 +1,36 @@
+{
+    "schemaVersion": 1,
+    "id": "immersive-storms-datagen",
+    "version": "${version}",
+    "name": "Immersive Storms",
+    "description": "Data Generator for Immersive Storms",
+    "authors": [
+        "TheDeathlyCow"
+    ],
+    "contact": {
+        "homepage": "https://github.com/TheDeathlyCow/",
+        "sources": "https://github.com/TheDeathlyCow/immersive-storms"
+    },
+    "license": "LGPL-3.0",
+    "icon": "assets/immersive-storms/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "fabric-datagen": [
+            "com.thedeathlycow.immersive.storms.datagen.ImmersiveStormsDataGenerator"
+        ]
+    },
+    "mixins": [
+        "immersive-storms.mixins.json",
+        {
+            "config": "immersive-storms.client.mixins.json",
+            "environment": "client"
+        }
+    ],
+    "depends": {
+        "fabricloader": "*",
+        "minecraft": "*",
+        "java": "*",
+        "fabric-api": "*",
+        "immersive-storms": "*"
+    }
+}

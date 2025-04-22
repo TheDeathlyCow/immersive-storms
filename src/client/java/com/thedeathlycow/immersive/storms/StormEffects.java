@@ -35,9 +35,9 @@ public final class StormEffects {
             ClientWorld world,
             Camera camera,
             float baseRed, float baseGreen, float baseBlue,
-            float tickDelta
+            float tickProgress
     ) {
-        float gradient = world.getRainGradient(1f);
+        float gradient = world.getRainGradient(tickProgress);
         if (gradient <= 0f) {
             return null;
         }
@@ -46,11 +46,10 @@ public final class StormEffects {
 
         if (currentEffects != WeatherEffects.Type.NONE) {
             final var normalColor = new Vec3d(baseRed, baseGreen, baseBlue);
-            Vec3d adjustedColor = ISMath.lerp(gradient, normalColor, currentEffects.getColor());
 
             // idk why the game does this transformation but ill do it here too for consistency
             float skyAngle = MathHelper.clamp(
-                    MathHelper.cos(world.getSkyAngle(tickDelta) * 2 * MathHelper.PI) * 2.0F + 0.5F,
+                    MathHelper.cos(world.getSkyAngle(tickProgress) * 2 * MathHelper.PI) * 2.0F + 0.5F,
                     0.0F, 1.0F
             );
 
@@ -65,7 +64,7 @@ public final class StormEffects {
 
                         return world.getDimensionEffects().adjustFogColor(
                                 sampledType != WeatherEffects.Type.NONE
-                                        ? adjustedColor
+                                        ? ISMath.lerp(gradient, normalColor, sampledType.getColor())
                                         : normalColor,
                                 skyAngle
                         );
@@ -79,15 +78,16 @@ public final class StormEffects {
             Camera camera,
             BackgroundRenderer.FogType fogType,
             CameraSubmersionType cameraSubmersionType,
-            BackgroundRenderer.FogData fogData
+            BackgroundRenderer.FogData fogData,
+            float tickProgress
     ) {
-        if (fogType == BackgroundRenderer.FogType.FOG_SKY) {
+        if (fogType == BackgroundRenderer.FogType.FOG_TERRAIN) {
             return;
         }
 
         Entity focused = camera.getFocusedEntity();
         World world = focused.getWorld();
-        final float rainGradient = world.getRainGradient(1f);
+        final float rainGradient = world.getRainGradient(tickProgress);
 
         if (cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
             BlockPos pos = camera.getBlockPos();

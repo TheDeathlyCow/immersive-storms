@@ -27,7 +27,7 @@ public class BackgroundRendererMixin {
     )
     private static void setFogColorForSandstorm(
             Camera camera,
-            float tickDelta,
+            float tickProgress,
             ClientWorld world,
             int clampedViewDistance,
             float skyDarkness,
@@ -39,7 +39,7 @@ public class BackgroundRendererMixin {
         Vec3d color = StormEffects.getFogColor(
                 world, camera,
                 red.get(), green.get(), blue.get(),
-                tickDelta
+                tickProgress
         );
 
         if (color != null) {
@@ -59,11 +59,11 @@ public class BackgroundRendererMixin {
             Vector4f color,
             float viewDistance,
             boolean thickenFog,
-            float tickDelta,
+            float tickProgress,
             CallbackInfoReturnable<Fog> cir,
             @Local CameraSubmersionType cameraSubmersionType,
             @Local BackgroundRenderer.FogData fogData
     ) {
-        StormEffects.updateFogDistance(camera, fogType, cameraSubmersionType, fogData);
+        StormEffects.updateFogDistance(camera, fogType, cameraSubmersionType, fogData, tickProgress);
     }
 }

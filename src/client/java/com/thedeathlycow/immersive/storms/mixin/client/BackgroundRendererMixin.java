@@ -1,5 +1,6 @@
 package com.thedeathlycow.immersive.storms.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.thedeathlycow.immersive.storms.StormEffects;
@@ -10,11 +11,13 @@ import net.minecraft.client.render.Fog;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector4f;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@Debug(export = true)
 @Mixin(BackgroundRenderer.class)
 public class BackgroundRendererMixin {
     @Inject(
@@ -49,21 +52,21 @@ public class BackgroundRendererMixin {
         }
     }
 
-    @Inject(
+    @ModifyReturnValue(
             method = "applyFog",
             at = @At("TAIL")
     )
-    private static void setFogDistanceForSandstorm(
+    private static Fog setFogDistanceForSandstorm(
+            Fog original,
             Camera camera,
             BackgroundRenderer.FogType fogType,
             Vector4f color,
             float viewDistance,
             boolean thickenFog,
             float tickProgress,
-            CallbackInfoReturnable<Fog> cir,
             @Local CameraSubmersionType cameraSubmersionType,
             @Local BackgroundRenderer.FogData fogData
     ) {
-        StormEffects.updateFogDistance(camera, fogType, cameraSubmersionType, fogData, tickProgress);
+        return StormEffects.updateFogDistance(original, camera, fogType, cameraSubmersionType, tickProgress);
     }
 }

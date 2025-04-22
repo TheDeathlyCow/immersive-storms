@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.Fog;
 import net.minecraft.client.render.FogShape;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -42,47 +43,42 @@ public final class StormEffects {
             return null;
         }
 
-        WeatherEffects.Type currentEffects = WeatherEffectsClient.getCurrentType(world, camera.getBlockPos(), false);
+        final var normalColor = new Vec3d(baseRed, baseGreen, baseBlue);
 
-        if (currentEffects != WeatherEffects.Type.NONE) {
-            final var normalColor = new Vec3d(baseRed, baseGreen, baseBlue);
+        // idk why the game does this transformation but ill do it here too for consistency
+        float skyAngle = MathHelper.clamp(
+                MathHelper.cos(world.getSkyAngle(tickProgress) * 2 * MathHelper.PI) * 2.0F + 0.5F,
+                0.0F, 1.0F
+        );
 
-            // idk why the game does this transformation but ill do it here too for consistency
-            float skyAngle = MathHelper.clamp(
-                    MathHelper.cos(world.getSkyAngle(tickProgress) * 2 * MathHelper.PI) * 2.0F + 0.5F,
-                    0.0F, 1.0F
-            );
+        var samplePos = new BlockPos.Mutable();
 
-            var samplePos = new BlockPos.Mutable();
+        return CubicSampler.sampleColor(
+                camera.getPos(),
+                (x, y, z) -> {
+                    samplePos.set(x, y, z);
+                    RegistryEntry<Biome> biome = world.getBiome(samplePos);
+                    WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(biome, ClientTags::isInWithLocalFallback);
 
-            return CubicSampler.sampleColor(
-                    camera.getPos(),
-                    (x, y, z) -> {
-                        samplePos.set(x, y, z);
-                        RegistryEntry<Biome> biome = world.getBiome(samplePos);
-                        WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(biome, ClientTags::isInWithLocalFallback);
-
-                        return world.getDimensionEffects().adjustFogColor(
-                                sampledType != WeatherEffects.Type.NONE
-                                        ? ISMath.lerp(gradient, normalColor, sampledType.getColor())
-                                        : normalColor,
-                                skyAngle
-                        );
-                    }
-            );
-        }
-        return null;
+                    return world.getDimensionEffects().adjustFogColor(
+                            sampledType != WeatherEffects.Type.NONE
+                                    ? ISMath.lerp(gradient, normalColor, sampledType.getColor())
+                                    : normalColor,
+                            skyAngle
+                    );
+                }
+        );
     }
 
-    public static void updateFogDistance(
+    public static Fog updateFogDistance(
+            Fog fog,
             Camera camera,
             BackgroundRenderer.FogType fogType,
             CameraSubmersionType cameraSubmersionType,
-            BackgroundRenderer.FogData fogData,
             float tickProgress
     ) {
-        if (fogType == BackgroundRenderer.FogType.FOG_TERRAIN) {
-            return;
+        if (fogType == BackgroundRenderer.FogType.FOG_SKY) {
+            return fog;
         }
 
         Entity focused = camera.getFocusedEntity();
@@ -90,45 +86,45 @@ public final class StormEffects {
         final float rainGradient = world.getRainGradient(tickProgress);
 
         if (cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
-            BlockPos pos = camera.getBlockPos();
-            WeatherEffects.Type currentEffects = WeatherEffectsClient.getCurrentType(world, pos, false);
-            if (currentEffects != WeatherEffects.Type.NONE) {
-                var samplePos = new BlockPos.Mutable();
-                final var baseRadius = new Vec3d(fogData.fogStart, fogData.fogEnd, 0);
-                final var fogRadius = new Vec3d(
-                        FOG_START,
-                        FOG_END,
-                        0
+            var samplePos = new BlockPos.Mutable();
+            final var baseRadius = new Vec3d(fog.start(), fog.end(), 0);
+            final var fogRadius = new Vec3d(
+                    FOG_START,
+                    FOG_END,
+                    0
+            );
+
+            // tri lerp fog distances to make less jarring biome transition
+            // start is stored in X and end in Y
+            Vec3d fogDistances = CubicSampler.sampleColor(camera.getPos(), (x, y, z) -> {
+                samplePos.set(x, y, z);
+                WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(
+                        world.getBiome(samplePos),
+                        ClientTags::isInWithLocalFallback
                 );
 
-                // tri lerp fog distances to make less jarring biome transition
-                // start is stored in X and end in Y
-                Vec3d fogDistances = CubicSampler.sampleColor(camera.getPos(), (x, y, z) -> {
-                    samplePos.set(x, y, z);
-                    WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(
-                            world.getBiome(samplePos),
-                            ClientTags::isInWithLocalFallback
-                    );
+                if (sampledType != WeatherEffects.Type.NONE) {
+                    return fogRadius;
+                }
+                return baseRadius;
+            });
 
-                    if (sampledType != WeatherEffects.Type.NONE) {
-                        return fogRadius;
-                    }
-                    return baseRadius;
-                });
-
-                // lerp fog distances for smooth transition when weather changes
-                updateFogRadius(fogData, fogDistances, rainGradient);
-            }
+            // lerp fog distances for smooth transition when weather changes
+            return updateFogRadius(fog, fogDistances, rainGradient);
         }
+
+        return fog;
     }
 
-    private static void updateFogRadius(BackgroundRenderer.FogData fogData, Vec3d fogDistances, float rainGradient) {
-        fogData.fogStart = MathHelper.lerp(rainGradient, fogData.fogStart, (float) fogDistances.x);
-        fogData.fogEnd = MathHelper.lerp(rainGradient, fogData.fogEnd, (float) fogDistances.y);
+    private static Fog updateFogRadius(Fog fog, Vec3d fogDistances, float rainGradient) {
+        float fogStart = MathHelper.lerp(rainGradient, fog.start(), (float) fogDistances.x);
+        float fogEnd = MathHelper.lerp(rainGradient, fog.end(), (float) fogDistances.y);
 
-        if (rainGradient > START_FOG_SPHERE_RAIN_GRADIENT) {
-            fogData.fogShape = FogShape.SPHERE;
-        }
+        FogShape fogShape = rainGradient > START_FOG_SPHERE_RAIN_GRADIENT
+                ? FogShape.SPHERE
+                : fog.shape();
+
+        return new Fog(fogStart, fogEnd, fogShape, fog.red(), fog.green(), fog.blue(), fog.alpha());
     }
 
     private StormEffects() {

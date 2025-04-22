@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"com.thedeathlycow.immersive.storms.ImmersiveStormsClient"
+		],
+		"modmenu": [
+			"com.thedeathlycow.immersive.storms.ImmersiveStormsModMenu"
 		]
 	},
 	"mixins": [

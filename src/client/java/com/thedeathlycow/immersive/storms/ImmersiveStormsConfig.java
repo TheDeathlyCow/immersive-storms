@@ -14,4 +14,19 @@ public class ImmersiveStormsConfig implements ConfigData {
     @Comment("Adjusts how close fog closes in during weather")
     @ConfigEntry.Gui.Tooltip
     float fogDistanceMultiplier = 1.0f;
+
+    public boolean isEnableFogChanges() {
+        return enableFogChanges;
+    }
+
+    public float getFogDistanceMultiplier() {
+        return fogDistanceMultiplier;
+    }
+
+    @Override
+    public void validatePostLoad() throws ValidationException {
+        if (this.fogDistanceMultiplier <= 0f) {
+            throw new ValidationException("Fog distance multiplier must be positive");
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.thedeathlycow.immersive.storms.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
+import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.StormEffects;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.BackgroundRenderer;
@@ -42,7 +43,8 @@ public class BackgroundRendererMixin {
         Vec3d color = StormEffects.getFogColor(
                 world, camera,
                 red.get(), green.get(), blue.get(),
-                tickProgress
+                tickProgress,
+                ImmersiveStormsClient.getConfig()
         );
 
         if (color != null) {
@@ -67,6 +69,6 @@ public class BackgroundRendererMixin {
             @Local CameraSubmersionType cameraSubmersionType,
             @Local BackgroundRenderer.FogData fogData
     ) {
-        return StormEffects.updateFogDistance(original, camera, fogType, cameraSubmersionType, tickProgress);
+        return StormEffects.updateFogDistance(original, camera, fogType, cameraSubmersionType, tickProgress, ImmersiveStormsClient.getConfig());
     }
 }

@@ -36,10 +36,11 @@ public final class StormEffects {
             ClientWorld world,
             Camera camera,
             float baseRed, float baseGreen, float baseBlue,
-            float tickProgress
+            float tickProgress,
+            ImmersiveStormsConfig config
     ) {
         float gradient = world.getRainGradient(tickProgress);
-        if (gradient <= 0f) {
+        if (!config.isEnableFogChanges() || gradient <= 0f) {
             return null;
         }
 
@@ -76,13 +77,14 @@ public final class StormEffects {
             Camera camera,
             BackgroundRenderer.FogType fogType,
             CameraSubmersionType cameraSubmersionType,
-            float tickProgress
+            float tickProgress,
+            ImmersiveStormsConfig config
     ) {
         Entity focused = camera.getFocusedEntity();
         World world = focused.getWorld();
         final float rainGradient = world.getRainGradient(tickProgress);
 
-        if (cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
+        if (config.isEnableFogChanges() && cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
             if (fogType == BackgroundRenderer.FogType.FOG_SKY) {
                 return rainGradient > START_FOG_SPHERE_RAIN_GRADIENT
                         ? new Fog(fog.start(), fog.end(), FogShape.CYLINDER, fog.red(), fog.green(), fog.blue(), fog.alpha())
@@ -100,7 +102,7 @@ public final class StormEffects {
                     : null;
 
             // lerp fog distances for smooth transition when weather changes
-            return updateFogRadius(fog, rainDistance, thunderDistance, rainGradient, thunderGradient);
+            return updateFogRadius(fog, rainDistance, thunderDistance, rainGradient, thunderGradient, config);
         }
 
         return fog;
@@ -137,7 +139,8 @@ public final class StormEffects {
             Vec3d rainDistance,
             @Nullable Vec3d thunderDistance,
             float rainGradient,
-            float thunderGradient
+            float thunderGradient,
+            ImmersiveStormsConfig config
     ) {
         float fogStart = MathHelper.lerp(rainGradient, fog.start(), (float) rainDistance.x);
         float fogEnd = MathHelper.lerp(rainGradient, fog.end(), (float) rainDistance.y);
@@ -146,6 +149,9 @@ public final class StormEffects {
             fogStart = MathHelper.lerp(thunderGradient, fogStart, (float) thunderDistance.x);
             fogEnd = MathHelper.lerp(thunderGradient, fogEnd, (float) thunderDistance.y);
         }
+
+        fogStart *= config.getFogDistanceMultiplier();
+        fogEnd *= config.getFogDistanceMultiplier();
 
         return new Fog(fogStart, fogEnd, fog.shape(), fog.red(), fog.green(), fog.blue(), fog.alpha());
     }

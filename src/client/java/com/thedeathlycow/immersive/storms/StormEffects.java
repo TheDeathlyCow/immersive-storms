@@ -89,7 +89,6 @@ public final class StormEffects {
                         : fog;
             }
 
-            var samplePos = new BlockPos.Mutable();
             final var baseRadius = new Vec3d(fog.start(), fog.end(), 0);
 
             final float thunderGradient = world.getThunderGradient(tickProgress);

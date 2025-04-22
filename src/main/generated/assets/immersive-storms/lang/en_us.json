@@ -1,7 +1,13 @@
 {
-  "text.autoconfig.immersive-storms.option.enableFogChanges": "Enable fog changes",
-  "text.autoconfig.immersive-storms.option.enableFogChanges.@Tooltip": "Toggles the fog density changes during weather",
+  "text.autoconfig.immersive-storms.option.enableBlizzardFog": "Enable blizzard fog changes",
+  "text.autoconfig.immersive-storms.option.enableBlizzardFog.@Tooltip": "Toggles the fog density and color changes for blizzards",
+  "text.autoconfig.immersive-storms.option.enableDenseFog": "Enable dense fog changes",
+  "text.autoconfig.immersive-storms.option.enableDenseFog.@Tooltip": "Toggles the fog density and color changes for dense fog (Pale Gardens)",
+  "text.autoconfig.immersive-storms.option.enableFogChanges": "Enable all fog changes",
+  "text.autoconfig.immersive-storms.option.enableFogChanges.@Tooltip": "Toggle for all fog density and color changing features",
+  "text.autoconfig.immersive-storms.option.enableSandstormFog": "Enable sandstorm fog changes",
+  "text.autoconfig.immersive-storms.option.enableSandstormFog.@Tooltip": "Toggles the fog density and color changes for sandstorms",
   "text.autoconfig.immersive-storms.option.fogDistanceMultiplier": "Fog distance multiplier",
-  "text.autoconfig.immersive-storms.option.fogDistanceMultiplier.@Tooltip": "Adjusts how close fog closes in during weather",
+  "text.autoconfig.immersive-storms.option.fogDistanceMultiplier.@Tooltip": "Adjusts how close fog closes in during weather, must be positive",
   "text.autoconfig.immersive-storms.title": "Immersive Storms"
 }

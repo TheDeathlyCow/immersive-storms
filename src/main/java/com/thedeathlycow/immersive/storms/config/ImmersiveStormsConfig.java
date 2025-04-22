@@ -8,18 +8,45 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = ImmersiveStorms.MOD_ID)
 public class ImmersiveStormsConfig implements ConfigData {
-    @OptionName("Enable fog changes")
-    @Comment("Toggles the fog density changes during weather")
+    @OptionName("Enable all fog changes")
+    @Comment("Toggle for all fog density and color changing features")
     @ConfigEntry.Gui.Tooltip
     boolean enableFogChanges = true;
 
+    @OptionName("Enable sandstorm fog changes")
+    @Comment("Toggles the fog density and color changes for sandstorms")
+    @ConfigEntry.Gui.Tooltip
+    boolean enableSandstormFog = true;
+
+    @OptionName("Enable blizzard fog changes")
+    @Comment("Toggles the fog density and color changes for blizzards")
+    @ConfigEntry.Gui.Tooltip
+    boolean enableBlizzardFog = true;
+
+    @OptionName("Enable dense fog changes")
+    @Comment("Toggles the fog density and color changes for dense fog (Pale Gardens)")
+    @ConfigEntry.Gui.Tooltip
+    boolean enableDenseFog = true;
+
     @OptionName("Fog distance multiplier")
-    @Comment("Adjusts how close fog closes in during weather")
+    @Comment("Adjusts how close fog closes in during weather, must be positive")
     @ConfigEntry.Gui.Tooltip
     float fogDistanceMultiplier = 1.0f;
 
     public boolean isEnableFogChanges() {
         return enableFogChanges;
+    }
+
+    public boolean isEnableSandstormFog() {
+        return enableSandstormFog;
+    }
+
+    public boolean isEnableBlizzardFog() {
+        return enableBlizzardFog;
+    }
+
+    public boolean isEnableDenseFog() {
+        return enableDenseFog;
     }
 
     public float getFogDistanceMultiplier() {

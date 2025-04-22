@@ -1,6 +1,8 @@
 package com.thedeathlycow.immersive.storms.api;
 
 import com.thedeathlycow.immersive.storms.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.StringIdentifiable;
@@ -10,6 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public enum WeatherEffectType implements StringIdentifiable {
     NONE,
@@ -18,21 +21,24 @@ public enum WeatherEffectType implements StringIdentifiable {
             ISBiomeTags.HAS_SANDSTORMS,
             Vec3d.unpackRgb(0xD9AA84),
             WeatherFogData.LIGHT,
-            WeatherFogData.THICK
+            WeatherFogData.THICK,
+            ImmersiveStormsConfig::isEnableSandstormFog
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             Vec3d.unpackRgb(0xFFFFFF),
             null,
-            WeatherFogData.LIGHT
+            WeatherFogData.LIGHT,
+            ImmersiveStormsConfig::isEnableBlizzardFog
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
             null,
             WeatherFogData.THICK,
-            WeatherFogData.THICK
+            WeatherFogData.THICK,
+            ImmersiveStormsConfig::isEnableDenseFog
     );
 
     private final String name;
@@ -49,8 +55,10 @@ public enum WeatherEffectType implements StringIdentifiable {
     @Nullable
     private final WeatherFogData thunderFogData;
 
+    private final Predicate<ImmersiveStormsConfig> enabled;
+
     WeatherEffectType() {
-        this("none", null, null, null, null);
+        this("none", null, null, null, null, c -> false);
     }
 
     WeatherEffectType(
@@ -58,13 +66,15 @@ public enum WeatherEffectType implements StringIdentifiable {
             @Nullable TagKey<Biome> biomeTag,
             @Nullable Vec3d color,
             @Nullable WeatherFogData rainFogData,
-            @Nullable WeatherFogData thunderFogData
+            @Nullable WeatherFogData thunderFogData,
+            Predicate<ImmersiveStormsConfig> enabled
     ) {
         this.name = name;
         this.biomeTag = biomeTag;
         this.color = color;
         this.rainFogData = rainFogData;
         this.thunderFogData = thunderFogData;
+        this.enabled = enabled;
     }
 
     @Override
@@ -89,8 +99,10 @@ public enum WeatherEffectType implements StringIdentifiable {
 
     @ApiStatus.Internal
     public static WeatherEffectType forBiome(RegistryEntry<Biome> biome, BiPredicate<TagKey<Biome>, RegistryEntry<Biome>> tagInclusion) {
+        ImmersiveStormsConfig config = ImmersiveStorms.getConfig();
+
         for (WeatherEffectType value : values()) {
-            if (value.biomeTag != null && tagInclusion.test(value.biomeTag, biome)) {
+            if (value.enabled.test(config) && value.biomeTag != null && tagInclusion.test(value.biomeTag, biome)) {
                 return value;
             }
         }

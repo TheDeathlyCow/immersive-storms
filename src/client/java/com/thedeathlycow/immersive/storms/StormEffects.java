@@ -3,6 +3,7 @@ package com.thedeathlycow.immersive.storms;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
@@ -17,13 +18,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Function;
 
 public final class StormEffects {
     private static final float START_FOG_SPHERE_RAIN_GRADIENT = 0.75f;
-
-    private static final float FOG_START = 16f;
-
-    private static final float FOG_END = 64f;
 
     private static final float PARTICLE_SCALE = 10f;
 
@@ -59,10 +59,11 @@ public final class StormEffects {
                     samplePos.set(x, y, z);
                     RegistryEntry<Biome> biome = world.getBiome(samplePos);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, ClientTags::isInWithLocalFallback);
+                    Vec3d color = sampledType.getColor();
 
                     return world.getDimensionEffects().adjustFogColor(
-                            sampledType != WeatherEffectType.NONE
-                                    ? ISMath.lerp(gradient, normalColor, sampledType.getColor())
+                            color != null
+                                    ? ISMath.lerp(gradient, normalColor, color)
                                     : normalColor,
                             skyAngle
                     );
@@ -90,37 +91,62 @@ public final class StormEffects {
 
             var samplePos = new BlockPos.Mutable();
             final var baseRadius = new Vec3d(fog.start(), fog.end(), 0);
-            final var fogRadius = new Vec3d(
-                    FOG_START,
-                    FOG_END,
-                    0
-            );
 
-            // tri lerp fog distances to make less jarring biome transition
-            // start is stored in X and end in Y
-            Vec3d fogDistances = CubicSampler.sampleColor(camera.getPos(), (x, y, z) -> {
-                samplePos.set(x, y, z);
-                WeatherEffectType sampledType = WeatherEffectType.forBiome(
-                        world.getBiome(samplePos),
-                        ClientTags::isInWithLocalFallback
-                );
+            final float thunderGradient = world.getThunderGradient(tickProgress);
 
-                if (sampledType != WeatherEffectType.NONE) {
-                    return fogRadius;
-                }
-                return baseRadius;
-            });
+            Vec3d rainDistance = lerpFogDistance(camera.getPos(), world, baseRadius, WeatherEffectType::getRainFogData);
+
+            Vec3d thunderDistance = thunderGradient > 0
+                    ? lerpFogDistance(camera.getPos(), world, baseRadius, WeatherEffectType::getThunderFogData)
+                    : null;
 
             // lerp fog distances for smooth transition when weather changes
-            return updateFogRadius(fog, fogDistances, rainGradient);
+            return updateFogRadius(fog, rainDistance, thunderDistance, rainGradient, thunderGradient);
         }
 
         return fog;
     }
 
-    private static Fog updateFogRadius(Fog fog, Vec3d fogDistances, float rainGradient) {
-        float fogStart = MathHelper.lerp(rainGradient, fog.start(), (float) fogDistances.x);
-        float fogEnd = MathHelper.lerp(rainGradient, fog.end(), (float) fogDistances.y);
+    private static Vec3d lerpFogDistance(
+            Vec3d pos,
+            World world,
+            Vec3d baseRadius,
+            Function<WeatherEffectType, WeatherEffectType.WeatherFogData> fogDataSupplier
+    ) {
+        var samplePos = new BlockPos.Mutable();
+
+        // tri lerp fog distances to make less jarring biome transition
+        // start is stored in X and end in Y
+        return CubicSampler.sampleColor(pos, (x, y, z) -> {
+            samplePos.set(x, y, z);
+            WeatherEffectType sampledType = WeatherEffectType.forBiome(
+                    world.getBiome(samplePos),
+                    ClientTags::isInWithLocalFallback
+            );
+
+            WeatherEffectType.WeatherFogData fogData = fogDataSupplier.apply(sampledType);
+            if (fogData != null) {
+                return fogData.fogDistance();
+            }
+
+            return baseRadius;
+        });
+    }
+
+    private static Fog updateFogRadius(
+            Fog fog,
+            Vec3d rainDistance,
+            @Nullable Vec3d thunderDistance,
+            float rainGradient,
+            float thunderGradient
+    ) {
+        float fogStart = MathHelper.lerp(rainGradient, fog.start(), (float) rainDistance.x);
+        float fogEnd = MathHelper.lerp(rainGradient, fog.end(), (float) rainDistance.y);
+
+        if (thunderDistance != null) {
+            fogStart = MathHelper.lerp(thunderGradient, fogStart, (float) thunderDistance.x);
+            fogEnd = MathHelper.lerp(thunderGradient, fogEnd, (float) thunderDistance.y);
+        }
 
         return new Fog(fogStart, fogEnd, fog.shape(), fog.red(), fog.green(), fog.blue(), fog.alpha());
     }

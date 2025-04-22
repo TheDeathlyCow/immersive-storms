@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms;
 
-import com.thedeathlycow.immersive.storms.api.WeatherEffects;
+import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.block.enums.CameraSubmersionType;
@@ -29,7 +29,7 @@ public final class StormEffects {
 
     public static boolean shouldCancelClouds(ClientWorld world, BlockPos pos) {
         return world.getRainGradient(1f) > START_FOG_SPHERE_RAIN_GRADIENT
-                && WeatherEffectsClient.getCurrentType(world, pos, false) != WeatherEffects.Type.NONE;
+                && WeatherEffectsClient.getCurrentType(world, pos, false) != WeatherEffectType.NONE;
     }
 
     public static Vec3d getFogColor(
@@ -58,10 +58,10 @@ public final class StormEffects {
                 (x, y, z) -> {
                     samplePos.set(x, y, z);
                     RegistryEntry<Biome> biome = world.getBiome(samplePos);
-                    WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(biome, ClientTags::isInWithLocalFallback);
+                    WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, ClientTags::isInWithLocalFallback);
 
                     return world.getDimensionEffects().adjustFogColor(
-                            sampledType != WeatherEffects.Type.NONE
+                            sampledType != WeatherEffectType.NONE
                                     ? ISMath.lerp(gradient, normalColor, sampledType.getColor())
                                     : normalColor,
                             skyAngle
@@ -100,12 +100,12 @@ public final class StormEffects {
             // start is stored in X and end in Y
             Vec3d fogDistances = CubicSampler.sampleColor(camera.getPos(), (x, y, z) -> {
                 samplePos.set(x, y, z);
-                WeatherEffects.Type sampledType = WeatherEffects.Type.forBiome(
+                WeatherEffectType sampledType = WeatherEffectType.forBiome(
                         world.getBiome(samplePos),
                         ClientTags::isInWithLocalFallback
                 );
 
-                if (sampledType != WeatherEffects.Type.NONE) {
+                if (sampledType != WeatherEffectType.NONE) {
                     return fogRadius;
                 }
                 return baseRadius;

@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public final class WeatherEffectsClient {
-    public static WeatherEffects.Type getCurrentType(
+    public static WeatherEffectType getCurrentType(
             World world,
             BlockPos pos,
             boolean aboveSurface

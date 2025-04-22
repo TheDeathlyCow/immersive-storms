@@ -1,7 +1,6 @@
 package com.thedeathlycow.immersive.storms.mixin.client;
 
-import com.thedeathlycow.immersive.storms.StormEffects;
-import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
+import com.thedeathlycow.immersive.storms.util.StormEffects;
 import net.minecraft.client.option.CloudRenderMode;
 import net.minecraft.client.render.FrameGraphBuilder;
 import net.minecraft.client.render.WorldRenderer;

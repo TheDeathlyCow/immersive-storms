@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "immersive-storms-datagen",
-    "version": "${version}",
+    "version": "1.0.0",
     "name": "Immersive Storms",
     "description": "Data Generator for Immersive Storms",
     "authors": [

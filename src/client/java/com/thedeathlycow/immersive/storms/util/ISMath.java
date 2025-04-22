@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms;
+package com.thedeathlycow.immersive.storms.util;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;

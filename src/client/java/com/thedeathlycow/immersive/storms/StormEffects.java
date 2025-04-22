@@ -77,15 +77,17 @@ public final class StormEffects {
             CameraSubmersionType cameraSubmersionType,
             float tickProgress
     ) {
-        if (fogType == BackgroundRenderer.FogType.FOG_SKY) {
-            return fog;
-        }
-
         Entity focused = camera.getFocusedEntity();
         World world = focused.getWorld();
         final float rainGradient = world.getRainGradient(tickProgress);
 
         if (cameraSubmersionType == CameraSubmersionType.NONE && rainGradient > 0f) {
+            if (fogType == BackgroundRenderer.FogType.FOG_SKY) {
+                return rainGradient > START_FOG_SPHERE_RAIN_GRADIENT
+                        ? new Fog(fog.start(), fog.end(), FogShape.CYLINDER, fog.red(), fog.green(), fog.blue(), fog.alpha())
+                        : fog;
+            }
+
             var samplePos = new BlockPos.Mutable();
             final var baseRadius = new Vec3d(fog.start(), fog.end(), 0);
             final var fogRadius = new Vec3d(
@@ -120,11 +122,7 @@ public final class StormEffects {
         float fogStart = MathHelper.lerp(rainGradient, fog.start(), (float) fogDistances.x);
         float fogEnd = MathHelper.lerp(rainGradient, fog.end(), (float) fogDistances.y);
 
-        FogShape fogShape = rainGradient > START_FOG_SPHERE_RAIN_GRADIENT
-                ? FogShape.SPHERE
-                : fog.shape();
-
-        return new Fog(fogStart, fogEnd, fogShape, fog.red(), fog.green(), fog.blue(), fog.alpha());
+        return new Fog(fogStart, fogEnd, fog.shape(), fog.red(), fog.green(), fog.blue(), fog.alpha());
     }
 
     private StormEffects() {

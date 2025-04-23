@@ -2,7 +2,6 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
-import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
@@ -21,7 +20,7 @@ import java.util.Objects;
 public class SandstormParticles implements ClientTickEvents.EndWorldTick {
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;
-    private static final int PARTICLE_RARITY = 60;
+    private static final float BASE_PARTICLE_CHANCE = 1f / 60f;
 
     private final Vector3f color = Objects.requireNonNull(WeatherEffectType.SANDSTORM.getColor()).toVector3f();
 
@@ -32,7 +31,7 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
         }
 
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        final int renderDistance = 20;
+        final int renderDistance = config.getSandstormParticleRenderDistance();
         if (renderDistance <= 0) {
             return; // config disabled
         }
@@ -47,9 +46,8 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
         final BlockPos cameraPos = camera.getBlockPos();
         final BlockPos.Mutable pos = new BlockPos.Mutable();
         final ParticleEffect particle = new DustGrainParticleEffect(color, PARTICLE_SCALE);
-        final int rarity = PARTICLE_RARITY;
+        final float rarity = BASE_PARTICLE_CHANCE * config.getSandstormParticleDensityMultiplier();
         final int cameraY = cameraPos.getY();
-        final float particleVelocity = PARTICLE_VELOCITY;
         final int xOffset = renderDistance / 2;
 
         for (int x = cameraPos.getX() - renderDistance; x < cameraPos.getX() + renderDistance; x++) {
@@ -62,13 +60,13 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
                 y = Math.max(y, clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING, adjustedX, z));
 
                 pos.set(adjustedX, y, z);
-                addParticle(clientWorld, particle, pos, rarity, particleVelocity);
+                addParticle(clientWorld, particle, pos, rarity);
             }
         }
     }
 
-    private static void addParticle(ClientWorld world, ParticleEffect particle, BlockPos pos, int rarity, float velocity) {
-        boolean addParticle = world.random.nextInt(rarity) == 0
+    private static void addParticle(ClientWorld world, ParticleEffect particle, BlockPos pos, float rarity) {
+        boolean addParticle = world.random.nextFloat() < rarity
                 && !world.hasRain(pos) // for compatibility with seasons mods
                 && ClientTags.isInWithLocalFallback(ISBiomeTags.HAS_SANDSTORMS, world.getBiome(pos)); // faster than checking the weather effects api
 
@@ -78,7 +76,7 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
                     pos.getX() + world.random.nextDouble(),
                     pos.getY() + world.random.nextDouble(),
                     pos.getZ() + world.random.nextDouble(),
-                    velocity, 0, 0
+                    PARTICLE_VELOCITY, 0, 0
             );
         }
     }

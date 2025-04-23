@@ -1,5 +1,7 @@
 package com.thedeathlycow.immersive.storms;
 
+import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
+import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -12,7 +14,8 @@ public class ImmersiveStorms implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
+        ISParticleTypes.initialize();
+        ISSoundEvents.initialize();
     }
 
     public static Identifier id(String path) {

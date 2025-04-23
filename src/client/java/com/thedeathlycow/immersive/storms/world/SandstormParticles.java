@@ -32,7 +32,7 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
 
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         final int renderDistance = config.getSandstormParticleRenderDistance();
-        if (renderDistance <= 0) {
+        if (!config.isEnableSandstormParticles() || renderDistance <= 0) {
             return; // config disabled
         }
 

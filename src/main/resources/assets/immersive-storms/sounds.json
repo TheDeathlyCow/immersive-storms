@@ -1,0 +1,12 @@
+{
+    "weather.sandstorm": {
+        "sounds": [
+            "immersive-storms:weather/sandstorm/soft1",
+            "immersive-storms:weather/sandstorm/soft2",
+            "immersive-storms:weather/sandstorm/strong1",
+            "immersive-storms:weather/sandstorm/strong2",
+            "immersive-storms:weather/sandstorm/strong3"
+        ],
+        "subtitle": "subtitles.weather.immersive-storms.sandstorm"
+    }
+}

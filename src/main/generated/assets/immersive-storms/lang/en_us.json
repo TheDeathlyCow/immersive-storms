@@ -1,4 +1,5 @@
 {
+  "subtitles.weather.immersive-storms.sandstorm": "Wind blows",
   "text.autoconfig.immersive-storms.option.enableBlizzardFog": "Enable blizzard fog changes",
   "text.autoconfig.immersive-storms.option.enableBlizzardFog.@Tooltip": "Toggles the fog density and color changes for blizzards",
   "text.autoconfig.immersive-storms.option.enableDenseFog": "Enable dense fog changes",

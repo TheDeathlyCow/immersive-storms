@@ -20,6 +20,8 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder builder) {
+        builder.add("subtitles.weather.immersive-storms.sandstorm", "Wind blows");
+
         builder.add(PREFIX + ".title", "Immersive Storms");
 
         generateConfigOptionTranslations(builder, ImmersiveStormsConfig.class);

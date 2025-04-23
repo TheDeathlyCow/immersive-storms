@@ -4,6 +4,7 @@ import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.SandstormParticles;
+import com.thedeathlycow.immersive.storms.world.SandstormSounds;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -19,6 +20,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         registerConfig();
 
         ClientTickEvents.END_WORLD_TICK.register(new SandstormParticles());
+        ClientTickEvents.END_WORLD_TICK.register(new SandstormSounds());
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);

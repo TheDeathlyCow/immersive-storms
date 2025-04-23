@@ -1,11 +1,11 @@
 package com.thedeathlycow.immersive.storms.config;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
-import net.minecraft.util.math.MathHelper;
 
 @Config(name = ImmersiveStorms.MOD_ID)
 public class ImmersiveStormsConfig implements ConfigData {
@@ -52,16 +52,14 @@ public class ImmersiveStormsConfig implements ConfigData {
         return enableFogChanges;
     }
 
-    public boolean isEnableSandstormFog() {
-        return enableSandstormFog;
-    }
-
-    public boolean isEnableBlizzardFog() {
-        return enableBlizzardFog;
-    }
-
-    public boolean isEnableDenseFog() {
-        return enableDenseFog;
+    public boolean isEnabled(WeatherEffectType type) {
+        return switch (type) {
+            case SANDSTORM -> this.enableSandstormFog;
+            case BLIZZARD -> this.enableBlizzardFog;
+            case DENSE_FOG -> this.enableDenseFog;
+            case NONE -> false;
+            case null -> false;
+        };
     }
 
     public float getFogDistanceMultiplier() {

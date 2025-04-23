@@ -14,7 +14,7 @@ public final class WeatherEffects {
             World world,
             BlockPos pos,
             boolean aboveSurface,
-            BiPredicate<TagKey<Biome>, RegistryEntry<Biome>> tagInclusion
+            BiPredicate<WeatherEffectType, RegistryEntry<Biome>> tagInclusion
     ) {
         if (!world.isRaining() || (aboveSurface && world.hasRain(pos))) {
             return WeatherEffectType.NONE;
@@ -37,7 +37,7 @@ public final class WeatherEffects {
                 world,
                 pos,
                 aboveSurface,
-                (tag, biome) -> biome.isIn(tag)
+                (type, biome) -> type.getBiomeTag() != null && biome.isIn(type.getBiomeTag())
         );
     }
 

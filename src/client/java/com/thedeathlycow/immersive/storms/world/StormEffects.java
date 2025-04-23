@@ -60,7 +60,7 @@ public final class StormEffects {
                 (x, y, z) -> {
                     samplePos.set(x, y, z);
                     RegistryEntry<Biome> biome = world.getBiome(samplePos);
-                    WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, ClientTags::isInWithLocalFallback);
+                    WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
                     Vec3d color = sampledType.getColor();
 
                     return world.getDimensionEffects().adjustFogColor(
@@ -123,7 +123,7 @@ public final class StormEffects {
             samplePos.set(x, y, z);
             WeatherEffectType sampledType = WeatherEffectType.forBiome(
                     world.getBiome(samplePos),
-                    ClientTags::isInWithLocalFallback
+                    WeatherEffectsClient::isWeatherEffectTypeEnabled
             );
 
             WeatherEffectType.WeatherFogData fogData = fogDataSupplier.apply(sampledType);

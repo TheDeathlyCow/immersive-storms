@@ -50,12 +50,18 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
         final int rarity = PARTICLE_RARITY;
         final int cameraY = cameraPos.getY();
         final float particleVelocity = PARTICLE_VELOCITY;
+        final int xOffset = renderDistance / 2;
 
         for (int x = cameraPos.getX() - renderDistance; x < cameraPos.getX() + renderDistance; x++) {
             for (int z = cameraPos.getZ() - renderDistance; z < cameraPos.getZ() + renderDistance; z++) {
+                // adjust to account for the fact that particles travel along the x-axis
+                // makes the area the particles come from look less empty
+                int adjustedX = x + xOffset;
+
                 int y = cameraY + clientWorld.random.nextBetween(-renderDistance / 2, (renderDistance + 1) / 2);
-                y = Math.max(y, clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z));
-                pos.set(x, y, z);
+                y = Math.max(y, clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING, adjustedX, z));
+
+                pos.set(adjustedX, y, z);
                 addParticle(clientWorld, particle, pos, rarity, particleVelocity);
             }
         }

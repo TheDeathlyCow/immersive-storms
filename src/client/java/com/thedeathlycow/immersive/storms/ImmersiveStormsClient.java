@@ -11,6 +11,7 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
     private static ConfigHolder<ImmersiveStormsConfig> configHolder = null;
@@ -19,8 +20,12 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     public void onInitializeClient() {
         registerConfig();
 
-        ClientTickEvents.END_WORLD_TICK.register(new SandstormParticles());
-        ClientTickEvents.END_WORLD_TICK.register(new SandstormSounds());
+        if (!FabricLoader.getInstance().isModLoaded("particlerain")) {
+            ClientTickEvents.END_WORLD_TICK.register(new SandstormParticles());
+            ClientTickEvents.END_WORLD_TICK.register(new SandstormSounds());
+        } else {
+            ImmersiveStorms.LOGGER.warn("Particle Rain has been detected, disabling Immersive Storms sandstorm particle and sound effects");
+        }
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);

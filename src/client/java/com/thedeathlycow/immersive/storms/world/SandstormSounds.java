@@ -24,7 +24,7 @@ public class SandstormSounds implements ClientTickEvents.EndWorldTick {
     @Override
     public void onEndTick(ClientWorld world) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        if (world.getTickManager().isFrozen()) {
+        if (!config.isEnableSandstormSounds() || world.getTickManager().isFrozen()) {
             return;
         }
 

@@ -9,6 +9,7 @@
   "text.autoconfig.immersive-storms.option.enableSandstormFog": "Enable sandstorm fog changes",
   "text.autoconfig.immersive-storms.option.enableSandstormFog.@Tooltip": "Toggles the fog density and color changes for sandstorms",
   "text.autoconfig.immersive-storms.option.enableSandstormParticles": "Enable sandstorm particles",
+  "text.autoconfig.immersive-storms.option.enableSandstormSounds": "Enable sandstorm sounds",
   "text.autoconfig.immersive-storms.option.fogDistanceMultiplier": "Fog distance multiplier",
   "text.autoconfig.immersive-storms.option.fogDistanceMultiplier.@Tooltip": "Adjusts how close fog closes in during weather, must be positive",
   "text.autoconfig.immersive-storms.option.sandstormParticleDensityMultiplier": "Sandstorm particle density",

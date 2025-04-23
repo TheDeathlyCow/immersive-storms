@@ -29,14 +29,18 @@ public class ImmersiveStormsConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     boolean enableDenseFog = true;
 
+    @OptionName("Enable sandstorm particles")
+    @NoComment
+    boolean enableSandstormParticles = true;
+
+    @OptionName("Enable sandstorm sounds")
+    @NoComment
+    boolean enableSandstormSounds = true;
+
     @OptionName("Fog distance multiplier")
     @Comment("Adjusts how close fog closes in during weather, must be positive")
     @ConfigEntry.Gui.Tooltip
     float fogDistanceMultiplier = 1.0f;
-
-    @OptionName("Enable sandstorm particles")
-    @NoComment
-    boolean enableSandstormParticles = true;
 
     @OptionName("Sandstorm particle render distance")
     @Comment("How many blocks away to render sandstorm particles, must be positive")
@@ -62,12 +66,16 @@ public class ImmersiveStormsConfig implements ConfigData {
         };
     }
 
-    public float getFogDistanceMultiplier() {
-        return fogDistanceMultiplier;
-    }
-
     public boolean isEnableSandstormParticles() {
         return enableSandstormParticles;
+    }
+
+    public boolean isEnableSandstormSounds() {
+        return enableSandstormSounds;
+    }
+
+    public float getFogDistanceMultiplier() {
+        return fogDistanceMultiplier;
     }
 
     public int getSandstormParticleRenderDistance() {

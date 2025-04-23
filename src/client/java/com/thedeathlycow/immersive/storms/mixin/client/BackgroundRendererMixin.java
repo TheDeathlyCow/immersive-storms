@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.util.StormEffects;
+import com.thedeathlycow.immersive.storms.world.StormEffects;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;

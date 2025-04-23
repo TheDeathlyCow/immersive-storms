@@ -1,5 +1,6 @@
-package com.thedeathlycow.immersive.storms;
+package com.thedeathlycow.immersive.storms.registry;
 
+import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.biome.Biome;

@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
-import com.thedeathlycow.immersive.storms.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;

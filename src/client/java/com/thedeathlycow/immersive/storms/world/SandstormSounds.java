@@ -23,8 +23,15 @@ public class SandstormSounds implements ClientTickEvents.EndWorldTick {
 
     @Override
     public void onEndTick(ClientWorld world) {
+        if (world.getRainGradient(1f) < 0.7f || world.getTickManager().isFrozen()) {
+            return;
+        }
+
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        if (!config.isEnableSandstormSounds() || world.getTickManager().isFrozen()) {
+        boolean enabled = config.isEnableSandstormSounds()
+                && config.isEnabled(WeatherEffectType.SANDSTORM);
+
+        if (!enabled) {
             return;
         }
 

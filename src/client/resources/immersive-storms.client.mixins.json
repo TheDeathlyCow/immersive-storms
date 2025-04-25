@@ -3,7 +3,8 @@
     "package": "com.thedeathlycow.immersive.storms.mixin.client",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "BackgroundRendererMixin"
+        "BackgroundRendererMixin",
+        "ClientWorldMixin"
     ],
     "injectors": {
         "defaultRequire": 1

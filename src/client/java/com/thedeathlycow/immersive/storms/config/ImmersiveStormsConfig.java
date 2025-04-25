@@ -37,6 +37,10 @@ public class ImmersiveStormsConfig implements ConfigData {
     @NoComment
     boolean enableSandstormSounds = true;
 
+    @OptionName("Detect Particle Rain")
+    @Comment("Will disable sandstorm particles and sounds automatically if the mod Particle Rain is detected")
+    boolean detectParticleRain = true;
+
     @OptionName("Fog distance multiplier")
     @Comment("Adjusts how close fog closes in during weather, must be positive")
     @ConfigEntry.Gui.Tooltip
@@ -72,6 +76,10 @@ public class ImmersiveStormsConfig implements ConfigData {
 
     public boolean isEnableSandstormSounds() {
         return enableSandstormSounds;
+    }
+
+    public boolean isDetectParticleRain() {
+        return detectParticleRain;
     }
 
     public float getFogDistanceMultiplier() {

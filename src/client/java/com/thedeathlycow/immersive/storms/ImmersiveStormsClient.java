@@ -20,11 +20,14 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     public void onInitializeClient() {
         registerConfig();
 
-        if (!FabricLoader.getInstance().isModLoaded("particlerain")) {
+        boolean disableSandstormEffects = getConfig().isDetectParticleRain()
+                && FabricLoader.getInstance().isModLoaded("particlerain");
+
+        if (!disableSandstormEffects) {
             ClientTickEvents.END_WORLD_TICK.register(new SandstormParticles());
             ClientTickEvents.END_WORLD_TICK.register(new SandstormSounds());
         } else {
-            ImmersiveStorms.LOGGER.warn("Particle Rain has been detected, disabling Immersive Storms sandstorm particle and sound effects");
+            ImmersiveStorms.LOGGER.info("Particle Rain has been detected, disabling Immersive Storms sandstorm particle and sound effects");
         }
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();

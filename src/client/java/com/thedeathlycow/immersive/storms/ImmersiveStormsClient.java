@@ -20,7 +20,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     public void onInitializeClient() {
         registerConfig();
 
-        boolean disableSandstormEffects = getConfig().isDetectParticleRain()
+        boolean disableSandstormEffects = getConfig().getSandstorm().isDetectParticleRain()
                 && FabricLoader.getInstance().isModLoaded("particlerain");
 
         if (!disableSandstormEffects) {

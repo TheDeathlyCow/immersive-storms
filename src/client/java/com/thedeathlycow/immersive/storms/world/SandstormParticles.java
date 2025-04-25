@@ -3,6 +3,7 @@ package com.thedeathlycow.immersive.storms.world;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -31,8 +32,9 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
         }
 
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        final int renderDistance = config.getSandstormParticleRenderDistance();
-        boolean enabled = config.isEnableSandstormParticles()
+        SandstormConfig sandstormConfig = config.getSandstorm();
+        final int renderDistance = sandstormConfig.getSandstormParticleRenderDistance();
+        boolean enabled = sandstormConfig.isEnableSandstormParticles()
                 && config.isEnabled(WeatherEffectType.SANDSTORM)
                 && renderDistance > 0;
 
@@ -50,7 +52,7 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
         final BlockPos cameraPos = camera.getBlockPos();
         final BlockPos.Mutable pos = new BlockPos.Mutable();
         final ParticleEffect particle = new DustGrainParticleEffect(color, PARTICLE_SCALE);
-        final float rarity = BASE_PARTICLE_CHANCE * config.getSandstormParticleDensityMultiplier();
+        final float rarity = BASE_PARTICLE_CHANCE * sandstormConfig.getSandstormParticleDensityMultiplier();
         final int cameraY = cameraPos.getY();
         final int xOffset = renderDistance / 2;
 

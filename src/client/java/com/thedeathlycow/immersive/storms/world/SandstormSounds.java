@@ -28,7 +28,7 @@ public class SandstormSounds implements ClientTickEvents.EndWorldTick {
         }
 
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        boolean enabled = config.isEnableSandstormSounds()
+        boolean enabled = config.getSandstorm().isEnableSandstormSounds()
                 && config.isEnabled(WeatherEffectType.SANDSTORM);
 
         if (!enabled) {

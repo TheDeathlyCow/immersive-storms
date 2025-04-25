@@ -29,32 +29,15 @@ public class ImmersiveStormsConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     boolean enableDenseFog = true;
 
-    @OptionName("Enable sandstorm particles")
-    @NoComment
-    boolean enableSandstormParticles = true;
-
-    @OptionName("Enable sandstorm sounds")
-    @NoComment
-    boolean enableSandstormSounds = true;
-
-    @OptionName("Detect Particle Rain")
-    @Comment("Will disable sandstorm particles and sounds automatically if the mod Particle Rain is detected")
-    boolean detectParticleRain = true;
-
     @OptionName("Fog distance multiplier")
     @Comment("Adjusts how close fog closes in during weather, must be positive")
     @ConfigEntry.Gui.Tooltip
     float fogDistanceMultiplier = 1.0f;
 
-    @OptionName("Sandstorm particle render distance")
-    @Comment("How many blocks away to render sandstorm particles, must be positive")
-    @ConfigEntry.Gui.Tooltip
-    int sandstormParticleRenderDistance = 20;
-
-    @OptionName("Sandstorm particle density")
-    @Comment("Multiplier for how frequently sandstorm particles should appear, must be positive. Bigger values = more common.")
-    @ConfigEntry.Gui.Tooltip
-    float sandstormParticleDensityMultiplier = 1.0f;
+    @OptionName("Sandstorm Config")
+    @NoComment
+    @ConfigEntry.Gui.CollapsibleObject
+    SandstormConfig sandstorm = new SandstormConfig();
 
     public boolean isEnableFogChanges() {
         return enableFogChanges;
@@ -70,42 +53,20 @@ public class ImmersiveStormsConfig implements ConfigData {
         };
     }
 
-    public boolean isEnableSandstormParticles() {
-        return enableSandstormParticles;
-    }
-
-    public boolean isEnableSandstormSounds() {
-        return enableSandstormSounds;
-    }
-
-    public boolean isDetectParticleRain() {
-        return detectParticleRain;
-    }
-
     public float getFogDistanceMultiplier() {
         return fogDistanceMultiplier;
     }
 
-    public int getSandstormParticleRenderDistance() {
-        return sandstormParticleRenderDistance;
-    }
-
-    public float getSandstormParticleDensityMultiplier() {
-        return sandstormParticleDensityMultiplier;
+    public SandstormConfig getSandstorm() {
+        return sandstorm;
     }
 
     @Override
     public void validatePostLoad() throws ValidationException {
+        ConfigData.super.validatePostLoad();
+
         if (this.fogDistanceMultiplier <= 0f) {
             throw new ValidationException("Fog distance multiplier must be positive");
-        }
-
-        if (this.sandstormParticleRenderDistance <= 0) {
-            throw new ValidationException("Sandstorm particle render distance must be positive");
-        }
-
-        if (this.sandstormParticleDensityMultiplier <= 0f) {
-            throw new ValidationException("Sandstorm particle density multiplier must be positive");
         }
     }
 }

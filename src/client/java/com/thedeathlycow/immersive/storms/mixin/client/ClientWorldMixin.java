@@ -28,5 +28,6 @@ public class ClientWorldMixin {
                 pos,
                 random
         );
+        original.call(instance, state, world, pos, random);
     }
 }

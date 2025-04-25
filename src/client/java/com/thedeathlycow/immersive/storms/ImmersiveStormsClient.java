@@ -1,11 +1,12 @@
 package com.thedeathlycow.immersive.storms;
 
+import com.thedeathlycow.immersive.storms.block.BlockWindParticle;
+import com.thedeathlycow.immersive.storms.block.RandomBlockDisplayTickCallback;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.world.SandstormSounds;
-import com.thedeathlycow.immersive.storms.world.WindParticles;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -31,7 +32,8 @@ public class ImmersiveStormsClient implements ClientModInitializer {
             ImmersiveStorms.LOGGER.info("Particle Rain has been detected, disabling Immersive Storms sandstorm particle and sound effects");
         }
 
-        ClientTickEvents.END_WORLD_TICK.register(new WindParticles());
+//        ClientTickEvents.END_WORLD_TICK.register(new WindParticles());
+        RandomBlockDisplayTickCallback.EVENT.register(new BlockWindParticle());
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);

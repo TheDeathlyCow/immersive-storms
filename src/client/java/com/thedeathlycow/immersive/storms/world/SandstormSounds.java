@@ -57,7 +57,7 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
                             pos,
                             ISSoundEvents.WEATHER_SANDSTORM,
                             SoundCategory.WEATHER,
-                            0.9f, 1f,
+                            0.5f, 1f,
                             false
                     );
                 }

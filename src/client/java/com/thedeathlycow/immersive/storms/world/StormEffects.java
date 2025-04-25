@@ -112,7 +112,7 @@ public final class StormEffects {
             Vec3d pos,
             World world,
             Vec3d baseRadius,
-            Function<WeatherEffectType, WeatherEffectType.WeatherFogData> fogDataSupplier
+            Function<WeatherEffectType, WeatherEffectType.WeatherData> fogDataSupplier
     ) {
         var samplePos = new BlockPos.Mutable();
 
@@ -125,7 +125,7 @@ public final class StormEffects {
                     WeatherEffectsClient::isWeatherEffectTypeEnabled
             );
 
-            WeatherEffectType.WeatherFogData fogData = fogDataSupplier.apply(sampledType);
+            WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
             if (fogData != null) {
                 return fogData.fogDistance();
             }

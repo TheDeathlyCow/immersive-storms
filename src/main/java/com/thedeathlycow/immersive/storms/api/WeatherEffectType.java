@@ -17,22 +17,22 @@ public enum WeatherEffectType implements StringIdentifiable {
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
             Vec3d.unpackRgb(0xD9AA84),
-            WeatherFogData.LIGHT,
-            WeatherFogData.THICK
+            WeatherData.LIGHT,
+            WeatherData.THICK
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             Vec3d.unpackRgb(0xFFFFFF),
             null,
-            WeatherFogData.LIGHT
+            WeatherData.LIGHT
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
             null,
-            WeatherFogData.THICK,
-            WeatherFogData.THICK
+            WeatherData.THICK,
+            WeatherData.THICK
     );
 
     private final String name;
@@ -44,10 +44,10 @@ public enum WeatherEffectType implements StringIdentifiable {
     private final Vec3d color;
 
     @Nullable
-    private final WeatherFogData rainFogData;
+    private final WeatherEffectType.WeatherData rainFogData;
 
     @Nullable
-    private final WeatherFogData thunderFogData;
+    private final WeatherEffectType.WeatherData thunderFogData;
 
     WeatherEffectType() {
         this("none", null, null, null, null);
@@ -57,8 +57,8 @@ public enum WeatherEffectType implements StringIdentifiable {
             String name,
             @Nullable TagKey<Biome> biomeTag,
             @Nullable Vec3d color,
-            @Nullable WeatherFogData rainFogData,
-            @Nullable WeatherFogData thunderFogData
+            @Nullable WeatherEffectType.WeatherData rainFogData,
+            @Nullable WeatherEffectType.WeatherData thunderFogData
     ) {
         this.name = name;
         this.biomeTag = biomeTag;
@@ -83,12 +83,12 @@ public enum WeatherEffectType implements StringIdentifiable {
     }
 
     @Nullable
-    public WeatherFogData getRainFogData() {
+    public WeatherEffectType.WeatherData getRainFogData() {
         return rainFogData;
     }
 
     @Nullable
-    public WeatherFogData getThunderFogData() {
+    public WeatherEffectType.WeatherData getThunderFogData() {
         return thunderFogData;
     }
 
@@ -103,14 +103,18 @@ public enum WeatherEffectType implements StringIdentifiable {
         return NONE;
     }
 
-    public record WeatherFogData(
-            Vec3d fogDistance
-    ) {
-        public static final WeatherFogData LIGHT = new WeatherFogData(32.0, 64.0);
-        public static final WeatherFogData THICK = new WeatherFogData(16.0, 32.0);
+    public static class WeatherData {
+        private static final WeatherData LIGHT = new WeatherData(32.0, 64.0);
+        private static final WeatherData THICK = new WeatherData(16.0, 32.0);
 
-        public WeatherFogData(double fogStart, double fogEnd) {
-            this(new Vec3d(fogStart, fogEnd, 0));
+        private final Vec3d fogDistance;
+
+        private WeatherData(double fogStart, double fogEnd) {
+            this.fogDistance = new Vec3d(fogStart, fogEnd, 0);
+        }
+
+        public Vec3d fogDistance() {
+            return fogDistance;
         }
     }
 }

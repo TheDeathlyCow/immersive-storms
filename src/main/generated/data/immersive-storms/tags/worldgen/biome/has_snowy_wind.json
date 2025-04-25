@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "#immersive-storms:has_blizzards",
+      "required": false
+    },
+    {
+      "id": "#c:is_mountain",
+      "required": false
+    },
+    {
+      "id": "#c:is_windswept",
+      "required": false
+    }
+  ]
+}

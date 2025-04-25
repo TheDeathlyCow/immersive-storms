@@ -29,5 +29,15 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
 
         getOrCreateTagBuilder(ISBiomeTags.HAS_DENSE_FOG)
                 .add(BiomeKeys.PALE_GARDEN);
+
+        getOrCreateTagBuilder(ISBiomeTags.HAS_SNOWY_WIND)
+                .addOptionalTag(ISBiomeTags.HAS_BLIZZARDS)
+                .addOptionalTag(ConventionalBiomeTags.IS_MOUNTAIN)
+                .addOptionalTag(ConventionalBiomeTags.IS_WINDSWEPT);
+
+        getOrCreateTagBuilder(ISBiomeTags.HAS_SANDY_WIND)
+                .addOptionalTag(ConventionalBiomeTags.IS_SANDY)
+                .addOptionalTag(ConventionalBiomeTags.IS_DESERT)
+                .addOptionalTag(ConventionalBiomeTags.IS_BADLANDS);
     }
 }

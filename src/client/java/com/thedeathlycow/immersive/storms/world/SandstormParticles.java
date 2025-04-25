@@ -18,12 +18,12 @@ import org.joml.Vector3f;
 
 import java.util.Objects;
 
-public class SandstormParticles implements ClientTickEvents.EndWorldTick {
+public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
+    public static final Vector3f COLOR = Objects.requireNonNull(WeatherEffectType.SANDSTORM.getColor()).toVector3f();
+
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;
     private static final float BASE_PARTICLE_CHANCE = 1f / 60f;
-
-    private final Vector3f color = Objects.requireNonNull(WeatherEffectType.SANDSTORM.getColor()).toVector3f();
 
     @Override
     public void onEndTick(ClientWorld clientWorld) {
@@ -51,7 +51,7 @@ public class SandstormParticles implements ClientTickEvents.EndWorldTick {
         // main particle loop
         final BlockPos cameraPos = camera.getBlockPos();
         final BlockPos.Mutable pos = new BlockPos.Mutable();
-        final ParticleEffect particle = new DustGrainParticleEffect(color, PARTICLE_SCALE);
+        final ParticleEffect particle = new DustGrainParticleEffect(COLOR, PARTICLE_SCALE);
         final float rarity = BASE_PARTICLE_CHANCE * sandstormConfig.getSandstormParticleDensityMultiplier();
         final int cameraY = cameraPos.getY();
         final int xOffset = renderDistance / 2;

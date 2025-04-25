@@ -4,7 +4,6 @@ import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.util.ISMath;
-import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;

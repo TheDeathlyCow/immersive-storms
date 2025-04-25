@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
-public class SandstormSounds implements ClientTickEvents.EndWorldTick {
+public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
     private static final int MAX_SOUND_Y_DIFF = 10;
 
     private static final int MAX_XZ_OFFSET = 10;

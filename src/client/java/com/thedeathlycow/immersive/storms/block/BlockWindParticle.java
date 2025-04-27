@@ -16,6 +16,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 
 import java.util.function.Supplier;
 
@@ -23,7 +24,7 @@ public final class BlockWindParticle implements RandomBlockDisplayTickCallback {
     private static final float PARTICLE_SCALE = 5f;
     //    private static final int SOUND_CHANCE = 10_000;
     private static final int PARTICLE_CHANCE = 60;
-    private static final float PARTICLE_VELOCITY = -1f;
+    private static final Vector2f PARTICLE_VELOCITY = new Vector2f(-1f, -1f).normalize().mul(0.6f);
 
     @Override
     public void randomDisplayTick(ClientWorld world, BlockState state, BlockPos pos, Random random) {
@@ -48,7 +49,7 @@ public final class BlockWindParticle implements RandomBlockDisplayTickCallback {
                         pos.getX() + world.random.nextDouble(),
                         y + world.random.nextDouble(),
                         pos.getZ() + world.random.nextDouble(),
-                        PARTICLE_VELOCITY, 0, 0
+                        PARTICLE_VELOCITY.x, 0, PARTICLE_VELOCITY.y
                 );
             }
         }
@@ -58,7 +59,7 @@ public final class BlockWindParticle implements RandomBlockDisplayTickCallback {
         int i = 0;
 
         for (Direction direction : Direction.Type.HORIZONTAL) {
-            BlockPos blockPos = pos.offset(direction, 8);
+            BlockPos blockPos = pos.offset(direction);
             BlockState blockState = world.getBlockState(blockPos.withY(world.getTopY(Heightmap.Type.WORLD_SURFACE, blockPos) - 1));
             if (blockState.isIn(tag)) {
                 if (++i >= 3) {

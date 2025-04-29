@@ -23,7 +23,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
-            Vec3d.unpackRgb(0xFFFFFF),
+            Vec3d.unpackRgb(0xBBBBBB),
             null,
             WeatherData.LIGHT
     ),

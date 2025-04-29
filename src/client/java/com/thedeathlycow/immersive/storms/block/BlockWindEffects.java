@@ -45,12 +45,14 @@ public final class BlockWindEffects implements RandomBlockDisplayTickCallback {
             if (random.nextInt(PARTICLE_CHANCE) == 0 && shouldPlayAmbienceAt(world, pos, color)) {
                 int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ());
 
+                float speed = random.nextFloat();
+
                 world.addParticleClient(
                         color.getParticle(),
                         pos.getX() + world.random.nextDouble(),
                         y + world.random.nextDouble(),
                         pos.getZ() + world.random.nextDouble(),
-                        PARTICLE_VELOCITY.x, 0, PARTICLE_VELOCITY.y
+                        speed * PARTICLE_VELOCITY.x, 0, speed * PARTICLE_VELOCITY.y
                 );
             }
 
@@ -73,7 +75,7 @@ public final class BlockWindEffects implements RandomBlockDisplayTickCallback {
             BlockPos blockPos = pos.offset(direction, 2);
             BlockState blockState = world.getBlockState(blockPos.withY(world.getTopY(Heightmap.Type.WORLD_SURFACE, blockPos) - 1));
 
-            if (ClientTags.isInWithLocalFallback(color.tag, blockState.getRegistryEntry()) && ++i >= 3) {
+            if (ClientTags.isInWithLocalFallback(color.tag, blockState.getRegistryEntry()) && ++i >= color.requiredNeighbors) {
                 return true;
             }
         }
@@ -85,22 +87,24 @@ public final class BlockWindEffects implements RandomBlockDisplayTickCallback {
         SNOWY(ISBlockTags.PRODUCES_AMBIENT_SNOWY_WIND_PARTICLE, () -> new DustGrainParticleEffect(
                 0xffffff,
                 PARTICLE_SCALE
-        )),
+        ), 3),
         SANDY(ISBlockTags.PRODUCES_AMBIENT_SANDY_WIND_PARTICLE, () -> new DustGrainParticleEffect(
                 SandstormParticles.COLOR,
                 PARTICLE_SCALE
-        )),
+        ), 3),
         ROCKY(ISBlockTags.PRODUCES_AMBIENT_ROCKY_WIND_PARTICLE, () -> new DustGrainParticleEffect(
                 0x888888,
                 PARTICLE_SCALE
-        ));
+        ), 3);
 
         private final TagKey<Block> tag;
         private final Supplier<ParticleEffect> particle;
+        private final int requiredNeighbors;
 
-        ParticleColor(TagKey<Block> tag, Supplier<ParticleEffect> particle) {
+        ParticleColor(TagKey<Block> tag, Supplier<ParticleEffect> particle, int requiredNeighbors) {
             this.tag = tag;
             this.particle = Suppliers.memoize(particle::get);
+            this.requiredNeighbors = requiredNeighbors;
         }
 
         public ParticleEffect getParticle() {

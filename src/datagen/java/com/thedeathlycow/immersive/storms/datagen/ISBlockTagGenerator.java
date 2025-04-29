@@ -35,6 +35,5 @@ public class ISBlockTagGenerator extends FabricTagProvider<Block> {
                 .add(Blocks.GRASS_BLOCK)
                 .addOptionalTag(ConventionalBlockTags.STONES)
                 .addOptionalTag(ConventionalBlockTags.GRAVELS);
-
     }
 }

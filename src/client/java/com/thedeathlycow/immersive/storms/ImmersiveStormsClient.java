@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms;
 
-import com.thedeathlycow.immersive.storms.block.BlockWindParticle;
+import com.thedeathlycow.immersive.storms.block.BlockWindEffects;
 import com.thedeathlycow.immersive.storms.block.RandomBlockDisplayTickCallback;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
@@ -33,7 +33,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         }
 
 //        ClientTickEvents.END_WORLD_TICK.register(new WindParticles());
-        RandomBlockDisplayTickCallback.EVENT.register(new BlockWindParticle());
+        RandomBlockDisplayTickCallback.EVENT.register(new BlockWindEffects());
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);

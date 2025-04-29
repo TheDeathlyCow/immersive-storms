@@ -1,0 +1,16 @@
+{
+  "values": [
+    "minecraft:gravel",
+    "minecraft:coarse_dirt",
+    "minecraft:stone",
+    "minecraft:grass_block",
+    {
+      "id": "#c:stones",
+      "required": false
+    },
+    {
+      "id": "#c:gravels",
+      "required": false
+    }
+  ]
+}

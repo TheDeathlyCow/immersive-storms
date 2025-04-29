@@ -1,6 +1,10 @@
 {
   "values": [
     {
+      "id": "#immersive-storms:has_sandstorms",
+      "required": false
+    },
+    {
       "id": "#immersive-storms:has_blizzards",
       "required": false
     },

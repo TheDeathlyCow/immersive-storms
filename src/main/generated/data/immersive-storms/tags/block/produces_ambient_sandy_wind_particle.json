@@ -7,6 +7,10 @@
     {
       "id": "#minecraft:terracotta",
       "required": false
+    },
+    {
+      "id": "#c:sands",
+      "required": false
     }
   ]
 }

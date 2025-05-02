@@ -1,5 +1,9 @@
 {
   "values": [
-    "minecraft:pale_garden"
+    "minecraft:pale_garden",
+    {
+      "id": "#c:is_swamp",
+      "required": false
+    }
   ]
 }

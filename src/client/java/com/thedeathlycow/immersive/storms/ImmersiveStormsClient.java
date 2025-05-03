@@ -32,7 +32,6 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         }
 
         ClientTickEvents.END_WORLD_TICK.register(new BiomeWindEffects());
-//        RandomBlockDisplayTickCallback.EVENT.register(new BlockWindEffects());
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);

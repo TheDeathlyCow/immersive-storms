@@ -18,7 +18,6 @@ public class ImmersiveStormsDataGenerator implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
         pack.addProvider(ISBiomeTagGenerator::new);
-        pack.addProvider(ISBlockTagGenerator::new);
         pack.addProvider(EnglishUSGenerator::new);
     }
 

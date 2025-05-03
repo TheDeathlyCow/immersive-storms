@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.api;
+package com.thedeathlycow.immersive.storms.util;
 
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.minecraft.registry.entry.RegistryEntry;

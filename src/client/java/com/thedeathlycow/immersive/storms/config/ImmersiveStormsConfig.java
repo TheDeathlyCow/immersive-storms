@@ -1,7 +1,7 @@
 package com.thedeathlycow.immersive.storms.config;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;

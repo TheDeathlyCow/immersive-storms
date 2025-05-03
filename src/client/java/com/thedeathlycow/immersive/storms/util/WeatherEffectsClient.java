@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.api;
+package com.thedeathlycow.immersive.storms.util;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;

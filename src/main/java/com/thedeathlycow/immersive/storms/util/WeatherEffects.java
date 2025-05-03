@@ -1,7 +1,6 @@
-package com.thedeathlycow.immersive.storms.api;
+package com.thedeathlycow.immersive.storms.util;
 
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;

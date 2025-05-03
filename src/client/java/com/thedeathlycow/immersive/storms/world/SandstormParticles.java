@@ -1,7 +1,7 @@
 package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;

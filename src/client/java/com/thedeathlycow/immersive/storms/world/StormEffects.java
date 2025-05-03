@@ -1,7 +1,7 @@
 package com.thedeathlycow.immersive.storms.world;
 
-import com.thedeathlycow.immersive.storms.api.WeatherEffectType;
-import com.thedeathlycow.immersive.storms.api.WeatherEffectsClient;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import net.minecraft.block.enums.CameraSubmersionType;

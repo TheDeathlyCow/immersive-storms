@@ -13,7 +13,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.AmbientDesertBlockSounds;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -21,13 +20,14 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2d;
 
 import java.util.function.Supplier;
 
 public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     private static final int PARTICLES_PER_TICK = 3;
-    private static final float PARTICLE_SCALE = 5f;
-    private static final float PARTICLE_VELOCITY = -0.5f;
+    private static final float PARTICLE_SCALE = 4f;
+    private static final Vector2d PARTICLE_VELOCITY = new Vector2d(-1.0, -1.0).normalize(0.6);
     private static final float PARTICLE_CHANCE = 1f / 3f;
     private static final float SOUND_CHANCE = 1f / 600f;
 
@@ -70,12 +70,14 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
 
                 if (addParticle) {
                     ParticleEffect particle = color.getParticle();
+                    double speed = random.nextTriangular(1.0, 0.5);
+
                     clientWorld.addParticleClient(
                             particle,
                             pos.getX() + random.nextDouble(),
-                            pos.getY() + random.nextDouble(),
+                            pos.getY() + random.nextDouble() * 0.2 + 0.15,
                             pos.getZ() + random.nextDouble(),
-                            PARTICLE_VELOCITY, 0, 0
+                            speed * PARTICLE_VELOCITY.x, 0, speed * PARTICLE_VELOCITY.y
                     );
                 }
 

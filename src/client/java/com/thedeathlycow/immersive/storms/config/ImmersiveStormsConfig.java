@@ -25,9 +25,19 @@ public class ImmersiveStormsConfig implements ConfigData {
     boolean enableBlizzardFog = true;
 
     @OptionName("Enable dense fog changes")
-    @Comment("Toggles the fog density and color changes for dense fog (Pale Gardens)")
+    @Comment("Toggles the fog density and color changes for dense fog (affects Pale Gardens and Swamps)")
     @ConfigEntry.Gui.Tooltip
     boolean enableDenseFog = true;
+
+    @OptionName("Enable ambient wind particles")
+    @Comment("Enables ambient wind particles in windy biomes")
+    @ConfigEntry.Gui.Tooltip
+    boolean enableAmbientWindParticles = true;
+
+    @OptionName("Enable ambient wind sounds")
+    @Comment("Enables ambient wind sounds in windy biomes, has no effect in deserts/badlands due to vanilla mechanic")
+    @ConfigEntry.Gui.Tooltip
+    boolean enableAmbientWindSounds = true;
 
     @OptionName("Fog distance multiplier")
     @Comment("Adjusts how close fog closes in during weather, must be positive")
@@ -51,6 +61,14 @@ public class ImmersiveStormsConfig implements ConfigData {
             case NONE -> false;
             case null -> false;
         };
+    }
+
+    public boolean isEnableAmbientWindParticles() {
+        return enableAmbientWindParticles;
+    }
+
+    public boolean isEnableAmbientWindSounds() {
+        return enableAmbientWindSounds;
     }
 
     public float getFogDistanceMultiplier() {

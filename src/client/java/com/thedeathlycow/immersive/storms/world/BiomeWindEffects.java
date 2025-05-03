@@ -1,6 +1,8 @@
 package com.thedeathlycow.immersive.storms.world;
 
 import com.google.common.base.Suppliers;
+import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
+import com.thedeathlycow.immersive.storms.mixin.client.AmbientDesertBlockSoundsAccessor;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -11,6 +13,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.sound.AmbientDesertBlockSounds;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -25,11 +28,19 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     private static final int PARTICLES_PER_TICK = 3;
     private static final float PARTICLE_SCALE = 5f;
     private static final float PARTICLE_VELOCITY = -0.5f;
+    private static final float PARTICLE_CHANCE = 1f / 3f;
     private static final float SOUND_CHANCE = 1f / 600f;
 
     @Override
     public void onEndTick(ClientWorld clientWorld) {
         if (clientWorld.getTickManager().isFrozen()) {
+            return;
+        }
+
+        boolean enableParticles = ImmersiveStormsClient.getConfig().isEnableAmbientWindParticles();
+        boolean enableSounds = ImmersiveStormsClient.getConfig().isEnableAmbientWindSounds();
+
+        if (!(enableParticles || enableSounds)) {
             return;
         }
 
@@ -50,19 +61,29 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             int y = clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
             pos.set(x, y, z);
 
-            ParticleColor color = ParticleColor.forBiome(clientWorld.getBiome(pos));
+            RegistryEntry<Biome> biome = clientWorld.getBiome(pos);
+            ParticleColor color = ParticleColor.forBiome(biome);
 
             if (color != null) {
-                ParticleEffect particle = color.getParticle();
-                clientWorld.addParticleClient(
-                        particle,
-                        pos.getX() + random.nextDouble(),
-                        pos.getY() + random.nextDouble(),
-                        pos.getZ() + random.nextDouble(),
-                        PARTICLE_VELOCITY, 0, 0
-                );
+                boolean addParticle = enableParticles
+                        && random.nextFloat() < PARTICLE_CHANCE;
 
-                if (random.nextFloat() < SOUND_CHANCE) {
+                if (addParticle) {
+                    ParticleEffect particle = color.getParticle();
+                    clientWorld.addParticleClient(
+                            particle,
+                            pos.getX() + random.nextDouble(),
+                            pos.getY() + random.nextDouble(),
+                            pos.getZ() + random.nextDouble(),
+                            PARTICLE_VELOCITY, 0, 0
+                    );
+                }
+
+                boolean playSound = enableSounds
+                        && random.nextFloat() < SOUND_CHANCE
+                        && !AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome);
+
+                if (playSound) {
                     clientWorld.playSoundClient(
                             pos.getX(), pos.getY(), pos.getZ(),
                             SoundEvents.BLOCK_SAND_WIND, // this is actually a generic wind sound

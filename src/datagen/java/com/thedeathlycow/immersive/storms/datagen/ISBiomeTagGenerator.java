@@ -32,8 +32,6 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
                 .addOptionalTag(ConventionalBiomeTags.IS_SWAMP);
 
         getOrCreateTagBuilder(ISBiomeTags.IS_WINDY)
-                .addOptionalTag(ISBiomeTags.HAS_SANDSTORMS)
-                .addOptionalTag(ISBiomeTags.HAS_BLIZZARDS)
                 .addOptionalTag(ConventionalBiomeTags.IS_MOUNTAIN)
                 .addOptionalTag(ConventionalBiomeTags.IS_WINDSWEPT);
     }

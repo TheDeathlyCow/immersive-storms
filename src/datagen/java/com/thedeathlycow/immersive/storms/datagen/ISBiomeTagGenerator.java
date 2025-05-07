@@ -25,7 +25,8 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
 
         getOrCreateTagBuilder(ISBiomeTags.HAS_BLIZZARDS)
                 .addOptionalTag(ConventionalBiomeTags.IS_SNOWY)
-                .addOptionalTag(ConventionalBiomeTags.IS_ICY);
+                .addOptionalTag(ConventionalBiomeTags.IS_ICY)
+                .addOptionalTag(ConventionalBiomeTags.IS_AQUATIC_ICY);
 
         getOrCreateTagBuilder(ISBiomeTags.HAS_DENSE_FOG)
                 .add(BiomeKeys.PALE_GARDEN)

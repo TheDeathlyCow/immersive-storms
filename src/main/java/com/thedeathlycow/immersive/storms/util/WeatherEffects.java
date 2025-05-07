@@ -22,7 +22,7 @@ public final class WeatherEffects {
         } else if (aboveSurface && world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY() > pos.getY()) {
             return WeatherEffectType.NONE;
         } else {
-            RegistryEntry<Biome> biome = world.getBiome(pos);
+            RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(pos);
             return WeatherEffectType.forBiome(biome, tagInclusion);
         }
     }

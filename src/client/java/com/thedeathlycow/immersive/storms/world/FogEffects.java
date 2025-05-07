@@ -51,7 +51,7 @@ public final class FogEffects {
                 camera.getPos(),
                 (x, y, z) -> {
                     samplePos.set(x, y, z);
-                    RegistryEntry<Biome> biome = world.getBiome(samplePos);
+                    RegistryEntry<Biome> biome = world.getBiomeAccess().getBiome(samplePos);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
                     Vec3d color = sampledType.getColor();
 
@@ -114,7 +114,7 @@ public final class FogEffects {
         return CubicSampler.sampleColor(pos, (x, y, z) -> {
             samplePos.set(x, y, z);
             WeatherEffectType sampledType = WeatherEffectType.forBiome(
-                    world.getBiome(samplePos),
+                    world.getBiomeAccess().getBiomeForNoiseGen(samplePos),
                     WeatherEffectsClient::isWeatherEffectTypeEnabled
             );
 

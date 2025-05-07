@@ -61,7 +61,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             int y = clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
             pos.set(x, y, z);
 
-            RegistryEntry<Biome> biome = clientWorld.getBiome(pos);
+            RegistryEntry<Biome> biome = clientWorld.getBiomeAccess().getBiomeForNoiseGen(pos);
             ParticleColor color = ParticleColor.forBiome(biome);
 
             if (color != null) {

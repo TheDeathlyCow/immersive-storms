@@ -26,7 +26,7 @@ public enum WeatherEffectType implements StringIdentifiable {
             ISBiomeTags.HAS_BLIZZARDS,
             Vec3d.unpackRgb(0xBBBBBB),
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, true)
+            new WeatherData(WeatherData.LIGHT_FOG, false)
     ),
     DENSE_FOG(
             "dense_fog",

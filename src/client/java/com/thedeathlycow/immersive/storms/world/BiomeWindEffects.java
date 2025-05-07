@@ -59,12 +59,8 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
         final Random random = clientWorld.getRandom();
 
         for (int i = 0; i < PARTICLES_PER_TICK; i++) {
-            int x = cameraPos.getX() + random.nextBetween(-particleRenderDistance, particleRenderDistance);
-            int z = cameraPos.getZ() + random.nextBetween(-particleRenderDistance, particleRenderDistance);
-            int y = clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
-            pos.set(x, y, z);
+            RegistryEntry<Biome> biome = setRandomTopPos(clientWorld, cameraPos, random, particleRenderDistance, pos);
 
-            RegistryEntry<Biome> biome = clientWorld.getBiomeAccess().getBiomeForNoiseGen(pos);
             ParticleColor color = ParticleColor.forBiome(biome);
 
             if (color != null) {
@@ -100,29 +96,42 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             );
         }
 
-        boolean playSound = enableSounds
+        boolean tryPlaySound = enableSounds
                 && !clientWorld.isRaining()
                 && random.nextFloat() < SOUND_CHANCE;
 
-        if (playSound) {
+        if (tryPlaySound) {
             final int soundDistance = 5;
 
-            int x = cameraPos.getX() + random.nextBetween(-soundDistance, soundDistance);
-            int z = cameraPos.getZ() + random.nextBetween(-soundDistance, soundDistance);
-            int y = clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
-            RegistryEntry<Biome> biome = clientWorld.getBiomeAccess().getBiomeForNoiseGen(pos);
+            RegistryEntry<Biome> biome = setRandomTopPos(clientWorld, cameraPos, random, soundDistance, pos);
 
-            // avoid overlap with vanilla wind sound from sand
-            if (!AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome)) {
+
+            boolean canPlaySound = Math.abs(pos.getY() - cameraPos.getY()) <= soundDistance * 2
+                    && !AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome); // avoid overlap with vanilla wind sound from sand
+            if (canPlaySound) {
                 clientWorld.playSoundClient(
-                        x, y, z,
+                        pos.getX(), pos.getY(), pos.getZ(),
                         SoundEvents.BLOCK_SAND_WIND, // this is actually a generic wind sound
                         SoundCategory.AMBIENT,
                         1.0f, 1.0f,
-                        false
+                        true
                 );
             }
         }
+    }
+
+    private static RegistryEntry<Biome> setRandomTopPos(
+            ClientWorld world,
+            BlockPos center,
+            Random random,
+            int offset,
+            BlockPos.Mutable out
+    ) {
+        int x = center.getX() + random.nextBetween(-offset, offset);
+        int z = center.getZ() + random.nextBetween(-offset, offset);
+        int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
+        out.set(x, y, z);
+        return world.getBiomeAccess().getBiomeForNoiseGen(out);
     }
 
     private enum ParticleColor {

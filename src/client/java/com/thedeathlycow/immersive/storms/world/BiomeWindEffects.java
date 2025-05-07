@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
+import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.mixin.client.AmbientDesertBlockSoundsAccessor;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
@@ -28,8 +29,8 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     private static final int PARTICLES_PER_TICK = 3;
     private static final float PARTICLE_SCALE = 4f;
     private static final Vector2d PARTICLE_VELOCITY = new Vector2d(-1.0, -1.0).normalize(0.6);
-    private static final float PARTICLE_CHANCE = 1f / 3f;
-    private static final float SOUND_CHANCE = 1f / 300f;
+    private static final float PARTICLE_CHANCE = 1f / 10f;
+    private static final float SOUND_CHANCE = 1f / 100f;
 
     @Override
     public void onEndTick(ClientWorld clientWorld) {
@@ -37,8 +38,9 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             return;
         }
 
-        boolean enableParticles = ImmersiveStormsClient.getConfig().isEnableAmbientWindParticles();
-        boolean enableSounds = ImmersiveStormsClient.getConfig().isEnableAmbientWindSounds();
+        ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
+        boolean enableParticles = config.isEnableAmbientWindParticles();
+        boolean enableSounds = config.isEnableAmbientWindSounds();
 
         if (!(enableParticles || enableSounds)) {
             return;
@@ -52,12 +54,13 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
 
         final BlockPos cameraPos = camera.getBlockPos();
         final BlockPos.Mutable pos = new BlockPos.Mutable();
-        final int renderDistance = 20;
+        final int particleRenderDistance = 20;
+
         final Random random = clientWorld.getRandom();
 
         for (int i = 0; i < PARTICLES_PER_TICK; i++) {
-            int x = cameraPos.getX() + random.nextBetween(-renderDistance, renderDistance);
-            int z = cameraPos.getZ() + random.nextBetween(-renderDistance, renderDistance);
+            int x = cameraPos.getX() + random.nextBetween(-particleRenderDistance, particleRenderDistance);
+            int z = cameraPos.getZ() + random.nextBetween(-particleRenderDistance, particleRenderDistance);
             int y = clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
             pos.set(x, y, z);
 
@@ -65,36 +68,59 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             ParticleColor color = ParticleColor.forBiome(biome);
 
             if (color != null) {
-                boolean addParticle = enableParticles
-                        && random.nextFloat() < PARTICLE_CHANCE;
+                addParticleAndSound(clientWorld, config, random, color, pos, cameraPos);
+            }
+        }
+    }
 
-                if (addParticle) {
-                    ParticleEffect particle = color.getParticle();
-                    double speed = random.nextTriangular(1.0, 0.5);
+    private static void addParticleAndSound(
+            ClientWorld clientWorld,
+            ImmersiveStormsConfig config,
+            Random random,
+            ParticleColor color,
+            BlockPos.Mutable pos,
+            BlockPos cameraPos
+    ) {
+        boolean enableParticles = config.isEnableAmbientWindParticles();
+        boolean enableSounds = config.isEnableAmbientWindSounds();
+        
+        boolean addParticle = enableParticles
+                && random.nextFloat() < PARTICLE_CHANCE;
 
-                    clientWorld.addParticleClient(
-                            particle,
-                            pos.getX() + random.nextDouble(),
-                            pos.getY() + random.nextDouble() * 0.2 + 0.15,
-                            pos.getZ() + random.nextDouble(),
-                            speed * PARTICLE_VELOCITY.x, 0, speed * PARTICLE_VELOCITY.y
-                    );
-                }
+        if (addParticle) {
+            ParticleEffect particle = color.getParticle();
+            double speed = random.nextTriangular(1.0, 0.5);
 
-                boolean playSound = enableSounds
-                        && !clientWorld.isRaining()
-                        && random.nextFloat() < SOUND_CHANCE
-                        && !AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome);
+            clientWorld.addParticleClient(
+                    particle,
+                    pos.getX() + random.nextDouble(),
+                    pos.getY() + random.nextDouble() * 0.2 + 0.15,
+                    pos.getZ() + random.nextDouble(),
+                    speed * PARTICLE_VELOCITY.x, 0, speed * PARTICLE_VELOCITY.y
+            );
+        }
 
-                if (playSound) {
-                    clientWorld.playSoundClient(
-                            pos.getX(), pos.getY(), pos.getZ(),
-                            SoundEvents.BLOCK_SAND_WIND, // this is actually a generic wind sound
-                            SoundCategory.AMBIENT,
-                            1.0f, 1.0f,
-                            false
-                    );
-                }
+        boolean playSound = enableSounds
+                && !clientWorld.isRaining()
+                && random.nextFloat() < SOUND_CHANCE;
+
+        if (playSound) {
+            final int soundDistance = 5;
+
+            int x = cameraPos.getX() + random.nextBetween(-soundDistance, soundDistance);
+            int z = cameraPos.getZ() + random.nextBetween(-soundDistance, soundDistance);
+            int y = clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
+            RegistryEntry<Biome> biome = clientWorld.getBiomeAccess().getBiomeForNoiseGen(pos);
+
+            // avoid overlap with vanilla wind sound from sand
+            if (!AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome)) {
+                clientWorld.playSoundClient(
+                        x, y, z,
+                        SoundEvents.BLOCK_SAND_WIND, // this is actually a generic wind sound
+                        SoundCategory.AMBIENT,
+                        1.0f, 1.0f,
+                        false
+                );
             }
         }
     }

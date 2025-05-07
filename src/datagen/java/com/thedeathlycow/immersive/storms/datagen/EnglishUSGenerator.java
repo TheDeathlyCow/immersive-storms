@@ -4,10 +4,12 @@ import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.NoComment;
 import com.thedeathlycow.immersive.storms.config.OptionName;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvent;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
@@ -22,12 +24,16 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder builder) {
-        builder.add("subtitles.weather.immersive-storms.sandstorm", "Wind blows");
+        addSubtitle(builder, ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
 
         builder.add(BASE_PREFIX + ".title", "Immersive Storms");
 
         generateConfigOptionTranslations(BASE_PREFIX + ".option", builder, ImmersiveStormsConfig.class);
         generateConfigOptionTranslations(SANDSTORM_PREFIX, builder, SandstormConfig.class);
+    }
+
+    private static void addSubtitle(TranslationBuilder builder, SoundEvent event, String subtitle) {
+        builder.add(event.id().toTranslationKey("subtitles"), subtitle);
     }
 
     private void generateConfigOptionTranslations(

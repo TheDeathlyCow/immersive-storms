@@ -22,15 +22,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public final class StormEffects {
+public final class FogEffects {
     private static final float START_FOG_SPHERE_RAIN_GRADIENT = 0.75f;
-
-    private static final float PARTICLE_SCALE = 10f;
-
-    public static boolean shouldCancelClouds(ClientWorld world, BlockPos pos) {
-        return world.getRainGradient(1f) > START_FOG_SPHERE_RAIN_GRADIENT
-                && WeatherEffectsClient.getCurrentType(world, pos, false) != WeatherEffectType.NONE;
-    }
 
     public static Vec3d getFogColor(
             ClientWorld world,
@@ -95,10 +88,10 @@ public final class StormEffects {
 
             final float thunderGradient = world.getThunderGradient(tickProgress);
 
-            Vec3d rainDistance = lerpFogDistance(camera.getPos(), world, baseRadius, WeatherEffectType::getRainFogData);
+            Vec3d rainDistance = lerpFogDistance(camera.getPos(), world, baseRadius, WeatherEffectType::getRainWeatherData);
 
             Vec3d thunderDistance = thunderGradient > 0
-                    ? lerpFogDistance(camera.getPos(), world, baseRadius, WeatherEffectType::getThunderFogData)
+                    ? lerpFogDistance(camera.getPos(), world, baseRadius, WeatherEffectType::getThunderWeatherData)
                     : null;
 
             // lerp fog distances for smooth transition when weather changes
@@ -156,7 +149,7 @@ public final class StormEffects {
         return new Fog(fogStart, fogEnd, fog.shape(), fog.red(), fog.green(), fog.blue(), fog.alpha());
     }
 
-    private StormEffects() {
+    private FogEffects() {
 
     }
 }

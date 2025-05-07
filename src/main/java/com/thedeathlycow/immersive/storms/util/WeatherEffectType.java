@@ -5,6 +5,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -17,22 +18,22 @@ public enum WeatherEffectType implements StringIdentifiable {
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
             Vec3d.unpackRgb(0xD9AA84),
-            WeatherData.LIGHT,
-            WeatherData.THICK
+            new WeatherData(WeatherData.LIGHT_FOG, true),
+            new WeatherData(WeatherData.THICK_FOG, true)
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             Vec3d.unpackRgb(0xBBBBBB),
             null,
-            WeatherData.LIGHT
+            new WeatherData(WeatherData.LIGHT_FOG, true)
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
             null,
-            WeatherData.THICK,
-            WeatherData.THICK
+            new WeatherData(WeatherData.THICK_FOG, false),
+            new WeatherData(WeatherData.THICK_FOG, false)
     );
 
     private final String name;
@@ -44,10 +45,10 @@ public enum WeatherEffectType implements StringIdentifiable {
     private final Vec3d color;
 
     @Nullable
-    private final WeatherEffectType.WeatherData rainFogData;
+    private final WeatherEffectType.WeatherData rainWeatherData;
 
     @Nullable
-    private final WeatherEffectType.WeatherData thunderFogData;
+    private final WeatherEffectType.WeatherData thunderWeatherData;
 
     WeatherEffectType() {
         this("none", null, null, null, null);
@@ -57,14 +58,14 @@ public enum WeatherEffectType implements StringIdentifiable {
             String name,
             @Nullable TagKey<Biome> biomeTag,
             @Nullable Vec3d color,
-            @Nullable WeatherEffectType.WeatherData rainFogData,
-            @Nullable WeatherEffectType.WeatherData thunderFogData
+            @Nullable WeatherEffectType.WeatherData rainWeatherData,
+            @Nullable WeatherEffectType.WeatherData thunderWeatherData
     ) {
         this.name = name;
         this.biomeTag = biomeTag;
         this.color = color;
-        this.rainFogData = rainFogData;
-        this.thunderFogData = thunderFogData;
+        this.rainWeatherData = rainWeatherData;
+        this.thunderWeatherData = thunderWeatherData;
     }
 
     @Override
@@ -83,13 +84,24 @@ public enum WeatherEffectType implements StringIdentifiable {
     }
 
     @Nullable
-    public WeatherEffectType.WeatherData getRainFogData() {
-        return rainFogData;
+    public WeatherEffectType.WeatherData getWeatherData(World world) {
+        if (this.thunderWeatherData != null && world.isThundering()) {
+            return this.thunderWeatherData;
+        } else if (world.isRaining()) {
+            return this.rainWeatherData;
+        } else {
+            return null;
+        }
     }
 
     @Nullable
-    public WeatherEffectType.WeatherData getThunderFogData() {
-        return thunderFogData;
+    public WeatherEffectType.WeatherData getRainWeatherData() {
+        return rainWeatherData;
+    }
+
+    @Nullable
+    public WeatherEffectType.WeatherData getThunderWeatherData() {
+        return thunderWeatherData;
     }
 
     @ApiStatus.Internal
@@ -103,18 +115,11 @@ public enum WeatherEffectType implements StringIdentifiable {
         return NONE;
     }
 
-    public static class WeatherData {
-        private static final WeatherData LIGHT = new WeatherData(32.0, 64.0);
-        private static final WeatherData THICK = new WeatherData(16.0, 32.0);
-
-        private final Vec3d fogDistance;
-
-        private WeatherData(double fogStart, double fogEnd) {
-            this.fogDistance = new Vec3d(fogStart, fogEnd, 0);
-        }
-
-        public Vec3d fogDistance() {
-            return fogDistance;
-        }
+    public record WeatherData(
+            Vec3d fogDistance,
+            boolean windy
+    ) {
+        private static final Vec3d LIGHT_FOG = new Vec3d(32, 64, 0);
+        private static final Vec3d THICK_FOG = new Vec3d(16, 32, 0);
     }
 }

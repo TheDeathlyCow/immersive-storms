@@ -55,7 +55,7 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
                 pos -> {
                     world.playSoundAtBlockCenterClient(
                             pos,
-                            ISSoundEvents.WEATHER_SANDSTORM,
+                            ISSoundEvents.WEATHER_STRONG_WIND,
                             SoundCategory.WEATHER,
                             0.5f, 1f,
                             false
@@ -72,7 +72,9 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         int dz = world.random.nextBetween(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
         BlockPos soundPos = cameraPos.add(dx, dy, dz);
 
-        if (WeatherEffectsClient.getCurrentType(world, soundPos, true) == WeatherEffectType.SANDSTORM) {
+        WeatherEffectType.WeatherData weatherData = WeatherEffectsClient.getCurrentType(world, soundPos, true)
+                .getWeatherData(world);
+        if (weatherData != null && weatherData.windy()) {
             return Optional.of(soundPos);
         }
 

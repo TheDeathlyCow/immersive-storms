@@ -29,7 +29,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     private static final float PARTICLE_SCALE = 4f;
     private static final Vector2d PARTICLE_VELOCITY = new Vector2d(-1.0, -1.0).normalize(0.6);
     private static final float PARTICLE_CHANCE = 1f / 3f;
-    private static final float SOUND_CHANCE = 1f / 600f;
+    private static final float SOUND_CHANCE = 1f / 300f;
 
     @Override
     public void onEndTick(ClientWorld clientWorld) {
@@ -82,6 +82,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
                 }
 
                 boolean playSound = enableSounds
+                        && clientWorld.isRaining()
                         && random.nextFloat() < SOUND_CHANCE
                         && !AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome);
 

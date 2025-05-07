@@ -1,5 +1,5 @@
 {
-  "subtitles.weather.immersive-storms.sandstorm": "Wind blows",
+  "subtitles.immersive-storms.weather.strong_wind": "Wind blows strongly",
   "text.autoconfig.immersive-storms.option.enableAmbientWindParticles": "Enable ambient wind particles",
   "text.autoconfig.immersive-storms.option.enableAmbientWindParticles.@Tooltip": "Enables ambient wind particles in windy biomes",
   "text.autoconfig.immersive-storms.option.enableAmbientWindSounds": "Enable ambient wind sounds",
@@ -7,7 +7,7 @@
   "text.autoconfig.immersive-storms.option.enableBlizzardFog": "Enable blizzard fog changes",
   "text.autoconfig.immersive-storms.option.enableBlizzardFog.@Tooltip": "Toggles the fog density and color changes for blizzards",
   "text.autoconfig.immersive-storms.option.enableDenseFog": "Enable dense fog changes",
-  "text.autoconfig.immersive-storms.option.enableDenseFog.@Tooltip": "Toggles the fog density and color changes for dense fog (Pale Gardens)",
+  "text.autoconfig.immersive-storms.option.enableDenseFog.@Tooltip": "Toggles the fog density and color changes for dense fog (affects Pale Gardens and Swamps)",
   "text.autoconfig.immersive-storms.option.enableFogChanges": "Enable all fog changes",
   "text.autoconfig.immersive-storms.option.enableFogChanges.@Tooltip": "Toggle for all fog density and color changing features",
   "text.autoconfig.immersive-storms.option.enableSandstormFog": "Enable sandstorm fog changes",

@@ -6,7 +6,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 
 public final class ISSoundEvents {
-    public static final SoundEvent WEATHER_SANDSTORM = register("weather.sandstorm");
+    public static final SoundEvent WEATHER_STRONG_WIND = register("weather.strong_wind");
 
     public static void initialize() {
         ImmersiveStorms.LOGGER.debug("Initialized Immersive Storms sound events");

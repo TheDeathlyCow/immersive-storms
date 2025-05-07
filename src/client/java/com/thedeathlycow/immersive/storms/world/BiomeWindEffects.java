@@ -83,7 +83,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     ) {
         boolean enableParticles = config.isEnableAmbientWindParticles();
         boolean enableSounds = config.isEnableAmbientWindSounds();
-        
+
         boolean addParticle = enableParticles
                 && random.nextFloat() < PARTICLE_CHANCE;
 
@@ -126,16 +126,16 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     }
 
     private enum ParticleColor {
-        ROCKY(ISBiomeTags.IS_WINDY, () -> new DustGrainParticleEffect(
-                0x888888,
-                PARTICLE_SCALE
-        )),
         SNOWY(ISBiomeTags.HAS_BLIZZARDS, () -> new DustGrainParticleEffect(
                 0xffffff,
                 PARTICLE_SCALE
         )),
         SANDY(ISBiomeTags.HAS_SANDSTORMS, () -> new DustGrainParticleEffect(
                 SandstormParticles.COLOR,
+                PARTICLE_SCALE
+        )),
+        ROCKY(ISBiomeTags.IS_WINDY, () -> new DustGrainParticleEffect(
+                0x888888,
                 PARTICLE_SCALE
         ));
 
@@ -153,10 +153,14 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
 
         @Nullable
         public static ParticleColor forBiome(RegistryEntry<Biome> biome) {
-            for (ParticleColor value : values()) {
-                if (ClientTags.isInWithLocalFallback(value.tag, biome)) {
-                    return value;
+            if (ClientTags.isInWithLocalFallback(ISBiomeTags.IS_WINDY, biome)) {
+                for (ParticleColor value : values()) {
+                    if (ClientTags.isInWithLocalFallback(value.tag, biome)) {
+                        return value;
+                    }
                 }
+
+                return ROCKY;
             }
 
             return null;

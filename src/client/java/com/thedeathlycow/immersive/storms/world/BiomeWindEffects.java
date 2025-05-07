@@ -82,7 +82,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
                 }
 
                 boolean playSound = enableSounds
-                        && clientWorld.isRaining()
+                        && !clientWorld.isRaining()
                         && random.nextFloat() < SOUND_CHANCE
                         && !AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome);
 

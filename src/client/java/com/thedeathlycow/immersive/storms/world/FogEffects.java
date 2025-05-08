@@ -113,11 +113,8 @@ public final class FogEffects {
         // start is stored in X and end in Y
         return CubicSampler.sampleColor(pos, (x, y, z) -> {
             samplePos.set(x, y, z);
-            WeatherEffectType sampledType = WeatherEffectType.forBiome(
-                    world.getBiomeAccess().getBiomeForNoiseGen(samplePos),
-                    WeatherEffectsClient::isWeatherEffectTypeEnabled
-            );
-
+            WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, true);
+            
             WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
             if (fogData != null) {
                 return fogData.fogDistance();

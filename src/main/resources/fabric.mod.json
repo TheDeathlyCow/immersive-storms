@@ -36,10 +36,12 @@
 		"fabricloader": ">=0.16.13",
 		"minecraft": "~1.21.5",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"cloth-config": "18.0.145"
 	},
 	"suggests": {
-		"scorchful": "*"
+		"scorchful": "*",
+		"modmenu": "*"
 	},
 	"accessWidener": "immersive-storms.accesswidener"
 }

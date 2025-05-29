@@ -15,16 +15,18 @@ public final class WeatherEffects {
             boolean aboveSurface,
             BiPredicate<WeatherEffectType, RegistryEntry<Biome>> tagInclusion
     ) {
-        if (!world.isRaining() || (aboveSurface && world.hasRain(pos))) {
+        if (!isWeatherEffected(world, pos, aboveSurface)) {
             return WeatherEffectType.NONE;
-        } else if (aboveSurface && !world.isSkyVisible(pos)) {
-            return WeatherEffectType.NONE;
-        } else if (aboveSurface && world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY() > pos.getY()) {
-            return WeatherEffectType.NONE;
-        } else {
-            RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(pos);
-            return WeatherEffectType.forBiome(biome, tagInclusion);
         }
+
+        RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(pos);
+        WeatherEffectType type = WeatherEffectType.forBiome(biome, tagInclusion);
+
+        if (!type.allowedWithRain() && aboveSurface && world.hasRain(pos)) {
+            return WeatherEffectType.NONE;
+        }
+
+        return type;
     }
 
     public static WeatherEffectType getCurrentType(
@@ -38,6 +40,22 @@ public final class WeatherEffects {
                 aboveSurface,
                 (type, biome) -> type.getBiomeTag() != null && biome.isIn(type.getBiomeTag())
         );
+    }
+
+    private static boolean isWeatherEffected(
+            World world,
+            BlockPos pos,
+            boolean aboveSurface
+    ) {
+        if (!world.isRaining()) {
+            return false;
+        } else if (aboveSurface && !world.isSkyVisible(pos)) {
+            return false;
+        } else if (aboveSurface && world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY() > pos.getY()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private WeatherEffects() {

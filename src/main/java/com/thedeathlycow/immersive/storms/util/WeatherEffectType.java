@@ -19,21 +19,24 @@ public enum WeatherEffectType implements StringIdentifiable {
             ISBiomeTags.HAS_SANDSTORMS,
             Vec3d.unpackRgb(0xD9AA84),
             new WeatherData(WeatherData.LIGHT_FOG, true),
-            new WeatherData(WeatherData.THICK_FOG, true)
+            new WeatherData(WeatherData.THICK_FOG, true),
+            false
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             Vec3d.unpackRgb(0xBBBBBB),
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, false)
+            new WeatherData(WeatherData.LIGHT_FOG, false),
+            false
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
             null,
+            new WeatherData(WeatherData.LIGHT_FOG, false),
             new WeatherData(WeatherData.THICK_FOG, false),
-            new WeatherData(WeatherData.THICK_FOG, false)
+            true
     );
 
     private final String name;
@@ -50,8 +53,10 @@ public enum WeatherEffectType implements StringIdentifiable {
     @Nullable
     private final WeatherEffectType.WeatherData thunderWeatherData;
 
+    private final boolean allowedWithRain;
+
     WeatherEffectType() {
-        this("none", null, null, null, null);
+        this("none", null, null, null, null, true);
     }
 
     WeatherEffectType(
@@ -59,13 +64,15 @@ public enum WeatherEffectType implements StringIdentifiable {
             @Nullable TagKey<Biome> biomeTag,
             @Nullable Vec3d color,
             @Nullable WeatherEffectType.WeatherData rainWeatherData,
-            @Nullable WeatherEffectType.WeatherData thunderWeatherData
+            @Nullable WeatherEffectType.WeatherData thunderWeatherData,
+            boolean allowedWithRain
     ) {
         this.name = name;
         this.biomeTag = biomeTag;
         this.color = color;
         this.rainWeatherData = rainWeatherData;
         this.thunderWeatherData = thunderWeatherData;
+        this.allowedWithRain = allowedWithRain;
     }
 
     @Override
@@ -102,6 +109,10 @@ public enum WeatherEffectType implements StringIdentifiable {
     @Nullable
     public WeatherEffectType.WeatherData getThunderWeatherData() {
         return thunderWeatherData;
+    }
+
+    public boolean allowedWithRain() {
+        return this.allowedWithRain;
     }
 
     @ApiStatus.Internal

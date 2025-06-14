@@ -24,16 +24,12 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder builder) {
-        addSubtitle(builder, ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
+        builder.add(ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
 
         builder.add(BASE_PREFIX + ".title", "Immersive Storms");
 
         generateConfigOptionTranslations(BASE_PREFIX + ".option", builder, ImmersiveStormsConfig.class);
         generateConfigOptionTranslations(SANDSTORM_PREFIX, builder, SandstormConfig.class);
-    }
-
-    private static void addSubtitle(TranslationBuilder builder, SoundEvent event, String subtitle) {
-        builder.add(event.id().toTranslationKey("subtitles"), subtitle);
     }
 
     private void generateConfigOptionTranslations(

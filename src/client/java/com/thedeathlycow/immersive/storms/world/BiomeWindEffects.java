@@ -29,7 +29,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
     private static final int PARTICLES_PER_TICK = 3;
     private static final float PARTICLE_SCALE = 4f;
     private static final Vector2d PARTICLE_VELOCITY = new Vector2d(-1.0, -1.0).normalize(0.6);
-    private static final float PARTICLE_CHANCE = 1f / 10f;
+    private static final float PARTICLE_CHANCE = 1f / 5f;
     private static final float SOUND_CHANCE = 1f / 100f;
 
     @Override
@@ -81,7 +81,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
         boolean enableSounds = config.isEnableAmbientWindSounds();
 
         boolean addParticle = enableParticles
-                && random.nextFloat() < PARTICLE_CHANCE;
+                && random.nextFloat() < PARTICLE_CHANCE * config.getWindParticleChanceMultiplier();
 
         if (addParticle) {
             ParticleEffect particle = color.getParticle();

@@ -44,6 +44,11 @@ public class ImmersiveStormsConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     float fogDistanceMultiplier = 1.0f;
 
+    @OptionName("Wind particle chance multiplier")
+    @Comment("Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive")
+    @ConfigEntry.Gui.Tooltip
+    float windParticleChanceMultiplier = 1.0f;
+
     @OptionName("Sandstorm Config")
     @NoComment
     @ConfigEntry.Gui.CollapsibleObject
@@ -75,6 +80,10 @@ public class ImmersiveStormsConfig implements ConfigData {
         return fogDistanceMultiplier;
     }
 
+    public float getWindParticleChanceMultiplier() {
+        return windParticleChanceMultiplier;
+    }
+
     public SandstormConfig getSandstorm() {
         return sandstorm;
     }
@@ -85,6 +94,10 @@ public class ImmersiveStormsConfig implements ConfigData {
 
         if (this.fogDistanceMultiplier <= 0f) {
             throw new ValidationException("Fog distance multiplier must be positive");
+        }
+
+        if (this.windParticleChanceMultiplier <= 0f) {
+            throw new ValidationException("Wind particle chance multiplier must be positive");
         }
     }
 }

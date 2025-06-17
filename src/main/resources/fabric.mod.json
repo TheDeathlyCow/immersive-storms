@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://github.com/TheDeathlyCow/",
-		"sources": "https://github.com/TheDeathlyCow/immersive-storms"
+		"sources": "https://github.com/TheDeathlyCow/immersive-storms",
+		"issues": "https://github.com/TheDeathlyCow/immersive-storms/issues"
 	},
 	"license": "LGPL-3.0",
 	"icon": "assets/immersive-storms/icon.png",
@@ -43,5 +44,14 @@
 		"scorchful": "*",
 		"modmenu": "*"
 	},
-	"accessWidener": "immersive-storms.accesswidener"
+	"accessWidener": "immersive-storms.accesswidener",
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.thedeathlycow.com",
+				"modmenu.kofi": "https://ko-fi.com/thedeathlycow",
+				"modmenu.modrinth": "https://modrinth.com/mod/frostiful"
+			}
+		}
+	}
 }

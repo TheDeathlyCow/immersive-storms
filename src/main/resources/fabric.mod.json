@@ -3,7 +3,7 @@
 	"id": "immersive-storms",
 	"version": "${version}",
 	"name": "Immersive Storms",
-	"description": "Makes fog effects during storms more immersive.",
+	"description": "Immersive weather effects for mountains, deserts, swamps, and more!",
 	"authors": [
 		"TheDeathlyCow"
 	],

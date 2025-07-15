@@ -18,21 +18,21 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-        getOrCreateTagBuilder(ISBiomeTags.HAS_SANDSTORMS)
+        builder(ISBiomeTags.HAS_SANDSTORMS)
                 .addOptionalTag(ConventionalBiomeTags.IS_DESERT)
                 .addOptionalTag(ConventionalBiomeTags.IS_BADLANDS)
                 .addOptionalTag(ConventionalBiomeTags.IS_SAVANNA);
 
-        getOrCreateTagBuilder(ISBiomeTags.HAS_BLIZZARDS)
+        builder(ISBiomeTags.HAS_BLIZZARDS)
                 .addOptionalTag(ConventionalBiomeTags.IS_SNOWY)
                 .addOptionalTag(ConventionalBiomeTags.IS_ICY)
                 .addOptionalTag(ConventionalBiomeTags.IS_AQUATIC_ICY);
 
-        getOrCreateTagBuilder(ISBiomeTags.HAS_DENSE_FOG)
+        builder(ISBiomeTags.HAS_DENSE_FOG)
                 .add(BiomeKeys.PALE_GARDEN)
                 .addOptionalTag(ConventionalBiomeTags.IS_SWAMP);
 
-        getOrCreateTagBuilder(ISBiomeTags.IS_WINDY)
+        builder(ISBiomeTags.IS_WINDY)
                 .addOptionalTag(ConventionalBiomeTags.IS_DESERT)
                 .addOptionalTag(ConventionalBiomeTags.IS_BADLANDS)
                 .addOptionalTag(ConventionalBiomeTags.IS_MOUNTAIN)

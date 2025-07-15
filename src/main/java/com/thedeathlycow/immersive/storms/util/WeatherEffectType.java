@@ -17,7 +17,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            Vec3d.unpackRgb(0xD9AA84),
+            0xD9AA84,
             new WeatherData(WeatherData.LIGHT_FOG, true),
             new WeatherData(WeatherData.THICK_FOG, true),
             false
@@ -25,7 +25,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
-            Vec3d.unpackRgb(0xBBBBBB),
+            0xBBBBBB,
             null,
             new WeatherData(WeatherData.LIGHT_FOG, false),
             false
@@ -33,7 +33,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
-            null,
+            -1,
             new WeatherData(WeatherData.LIGHT_FOG, false),
             new WeatherData(WeatherData.THICK_FOG, false),
             true
@@ -44,8 +44,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     @Nullable
     private final TagKey<Biome> biomeTag;
 
-    @Nullable
-    private final Vec3d color;
+    private final int color;
 
     @Nullable
     private final WeatherEffectType.WeatherData rainWeatherData;
@@ -56,13 +55,13 @@ public enum WeatherEffectType implements StringIdentifiable {
     private final boolean allowedWithRain;
 
     WeatherEffectType() {
-        this("none", null, null, null, null, true);
+        this("none", null, -1, null, null, true);
     }
 
     WeatherEffectType(
             String name,
             @Nullable TagKey<Biome> biomeTag,
-            @Nullable Vec3d color,
+            int color,
             @Nullable WeatherEffectType.WeatherData rainWeatherData,
             @Nullable WeatherEffectType.WeatherData thunderWeatherData,
             boolean allowedWithRain
@@ -85,8 +84,7 @@ public enum WeatherEffectType implements StringIdentifiable {
         return biomeTag;
     }
 
-    @Nullable
-    public Vec3d getColor() {
+    public int getColor() {
         return color;
     }
 

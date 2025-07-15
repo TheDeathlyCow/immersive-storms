@@ -3,12 +3,10 @@ package com.thedeathlycow.immersive.storms.world;
 import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.mixin.client.AmbientDesertBlockSoundsAccessor;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
-import net.minecraft.block.ShortDryGrassBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.world.ClientWorld;
@@ -107,8 +105,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             RegistryEntry<Biome> biome = setRandomTopPos(clientWorld, cameraPos, random, soundDistance, pos);
 
 
-            boolean canPlaySound = Math.abs(pos.getY() - cameraPos.getY()) <= soundDistance * 2
-                    && !AmbientDesertBlockSoundsAccessor.invokeShouldPlayWindSoundIn(biome); // avoid overlap with vanilla wind sound from sand
+            boolean canPlaySound = Math.abs(pos.getY() - cameraPos.getY()) <= soundDistance * 2;
             if (canPlaySound) {
                 clientWorld.playSoundClient(
                         pos.getX(), pos.getY(), pos.getZ(),

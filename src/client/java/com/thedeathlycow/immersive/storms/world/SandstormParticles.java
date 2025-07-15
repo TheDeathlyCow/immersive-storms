@@ -13,13 +13,14 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import org.joml.Vector3f;
 
 import java.util.Objects;
 
 public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
-    public static final Vector3f COLOR = Objects.requireNonNull(WeatherEffectType.SANDSTORM.getColor()).toVector3f();
+    public static final Vector3f COLOR = Vec3d.unpackRgb(WeatherEffectType.SANDSTORM.getColor()).toVector3f();
 
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;

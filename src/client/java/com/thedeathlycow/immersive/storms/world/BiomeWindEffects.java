@@ -8,6 +8,7 @@ import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
+import net.minecraft.block.ShortDryGrassBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.world.ClientWorld;
@@ -111,7 +112,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
             if (canPlaySound) {
                 clientWorld.playSoundClient(
                         pos.getX(), pos.getY(), pos.getZ(),
-                        SoundEvents.BLOCK_SAND_WIND, // this is actually a generic wind sound
+                        SoundEvents.BLOCK_DRY_GRASS_AMBIENT, // this is actually a generic wind sound
                         SoundCategory.AMBIENT,
                         1.0f, 1.0f,
                         true

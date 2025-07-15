@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.mixin.client.WorldAccessor;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.minecraft.block.Block;
@@ -65,13 +66,9 @@ public class StormFogModifier extends FogModifier {
     public boolean shouldApply(@Nullable CameraSubmersionType submersionType, Entity cameraEntity) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         World world = cameraEntity.getWorld();
-
-        if (config.isEnableFogChanges() && submersionType == CameraSubmersionType.ATMOSPHERIC && world.isRaining()) {
-            WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, cameraEntity.getBlockPos(), true);
-            return sampledType.getWeatherData(world) != null;
-        }
-
-        return false;
+        return config.isEnableFogChanges()
+                && world.getRainGradient(1f) > 0f
+                && ((WorldAccessor) world).invokeCanHaveWeather();
     }
 
     private static Vec3d lerpFogDistance(

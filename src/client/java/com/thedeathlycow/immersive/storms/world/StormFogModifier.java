@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
-public class StormFogModifier {
+public final class StormFogModifier {
     public static Vec3d sampleWeatherFogColor(
             ClientWorld world,
             Vec3d pos,
@@ -39,11 +39,7 @@ public class StormFogModifier {
                     int color = sampledType.getColor();
 
                     if (color >= 0) {
-                        return ISMath.lerp(
-                                rainGradient,
-                                biomeColor,
-                                Vec3d.unpackRgb(color)
-                        );
+                        return ISMath.lerp(rainGradient, biomeColor, Vec3d.unpackRgb(color));
                     } else {
                         return biomeColor;
                     }
@@ -88,11 +84,17 @@ public class StormFogModifier {
             Function<WeatherEffectType, WeatherEffectType.WeatherData> fogDataSupplier
     ) {
         var samplePos = new BlockPos.Mutable();
+        final int undergroundFogCutoff = world.getSeaLevel();
 
         // tri lerp fog distances to make less jarring biome transition
         // start is stored in X and end in Y
         return CubicSampler.sampleColor(pos, (x, y, z) -> {
             samplePos.set(x, y, z);
+
+            if (y < undergroundFogCutoff) {
+                return baseRadius;
+            }
+
             WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, false);
 
             WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
@@ -127,5 +129,9 @@ public class StormFogModifier {
             data.skyEnd *= reduction;
             data.cloudEnd *= reduction;
         }
+    }
+
+    private StormFogModifier() {
+
     }
 }

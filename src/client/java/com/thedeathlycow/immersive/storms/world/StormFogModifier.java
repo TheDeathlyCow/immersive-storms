@@ -123,10 +123,12 @@ public class StormFogModifier {
         fogStart *= config.getFogDistanceMultiplier();
         fogEnd *= config.getFogDistanceMultiplier();
 
-        data.environmentalStart = fogStart;
-        data.environmentalEnd = fogEnd;
+        if (fogEnd < data.environmentalEnd) {
+            float reduction = fogEnd / data.environmentalEnd;
 
-        data.skyEnd = data.environmentalEnd;
-        data.cloudEnd = data.environmentalEnd;
+            data.environmentalEnd = fogEnd;
+            data.skyEnd *= reduction;
+            data.cloudEnd *= reduction;
+        }
     }
 }

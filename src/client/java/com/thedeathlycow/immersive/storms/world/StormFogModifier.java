@@ -3,16 +3,13 @@ package com.thedeathlycow.immersive.storms.world;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.mixin.client.WorldAccessor;
+import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
-import net.minecraft.block.Block;
-import net.minecraft.block.enums.CameraSubmersionType;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.FogData;
-import net.minecraft.client.render.fog.FogModifier;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.math.BlockPos;
@@ -24,14 +21,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class StormFogModifier extends FogModifier {
-    @Override
+public class StormFogModifier {
     public void applyStartEndModifier(
             FogData data,
-            Entity cameraEntity,
-            BlockPos cameraPos,
+            Vec3d cameraPos,
             ClientWorld world,
-            float viewDistance,
             RenderTickCounter tickCounter
     ) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
@@ -42,30 +36,41 @@ public class StormFogModifier extends FogModifier {
 
         var baseRadius = new Vec3d(data.environmentalStart, data.environmentalEnd, 0);
 
-        Vec3d cameraCenterPos = cameraPos.toCenterPos();
-        Vec3d rainDistance = lerpFogDistance(cameraCenterPos, world, baseRadius, WeatherEffectType::getRainWeatherData);
+        Vec3d rainDistance = lerpFogDistance(cameraPos, world, baseRadius, WeatherEffectType::getRainWeatherData);
 
         Vec3d thunderDistance = thunderGradient > 0
-                ? lerpFogDistance(cameraCenterPos, world, baseRadius, WeatherEffectType::getThunderWeatherData)
+                ? lerpFogDistance(cameraPos, world, baseRadius, WeatherEffectType::getThunderWeatherData)
                 : null;
 
         updateFogRadius(data, rainDistance, thunderDistance, rainGradient, thunderGradient, config);
     }
 
-    @Override
-    public int getFogColor(ClientWorld world, Camera camera, int viewDistance, float skyDarkness) {
-        BlockPos cameraPos = camera.getBlockPos();
+    public int modifyFogColor(
+            ClientWorld world,
+            Camera camera,
+            float skyDarkness,
+            int baseFogColor
+    ) {
+        if (!this.shouldApply(world)) {
+            return baseFogColor;
+        }
 
-        RegistryEntry<Biome> biome = world.getBiomeAccess().getBiome(cameraPos);
+        RegistryEntry<Biome> biome = world.getBiomeAccess().getBiome(camera.getBlockPos());
         WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
 
-        return sampledType.getColor();
+        int sampledColor = sampledType.getColor();
+
+        if (sampledColor < 0) {
+            return baseFogColor;
+        }
+
+        Vec3d mixed = ISMath.lerp(0.5f, Vec3d.unpackRgb(sampledColor), Vec3d.unpackRgb(baseFogColor)).multiply(255);
+
+        return ((int)mixed.x << 16) | ((int)mixed.y << 8) | ((int)mixed.z);
     }
 
-    @Override
-    public boolean shouldApply(@Nullable CameraSubmersionType submersionType, Entity cameraEntity) {
+    public boolean shouldApply(World world) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        World world = cameraEntity.getWorld();
         return config.isEnableFogChanges()
                 && world.getRainGradient(1f) > 0f
                 && ((WorldAccessor) world).invokeCanHaveWeather();

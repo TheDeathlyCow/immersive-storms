@@ -42,10 +42,9 @@ public abstract class StandardFogModifierMixin {
                 float skyDarkness,
                 Operation<Integer> original
         ) {
-            int modifiedColor = this.immersiveStormsFogModifier.getFogColor(world, camera, viewDistance, skyDarkness);
-            return modifiedColor < 0 ?
-                    super.overrideGetFogColor(world, camera, viewDistance, skyDarkness, original)
-                    : modifiedColor;
+            int baseColor = super.overrideGetFogColor(world, camera, viewDistance, skyDarkness, original);
+
+            return this.immersiveStormsFogModifier.modifyFogColor(world, camera, skyDarkness, baseColor);
         }
 
         @WrapMethod(
@@ -62,8 +61,8 @@ public abstract class StandardFogModifierMixin {
         ) {
             original.call(data, cameraEntity, cameraPos, world, viewDistance, tickCounter);
 
-            if (this.immersiveStormsFogModifier.shouldApply(null, cameraEntity)) {
-                this.immersiveStormsFogModifier.applyStartEndModifier(data, cameraEntity, cameraPos, world, viewDistance, tickCounter);
+            if (this.immersiveStormsFogModifier.shouldApply(world)) {
+                this.immersiveStormsFogModifier.applyStartEndModifier(data, cameraEntity.getPos(), world, tickCounter);
             }
         }
     }

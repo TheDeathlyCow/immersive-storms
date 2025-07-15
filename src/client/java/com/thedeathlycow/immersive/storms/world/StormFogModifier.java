@@ -66,7 +66,12 @@ public class StormFogModifier extends FogModifier {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         World world = cameraEntity.getWorld();
 
-        return config.isEnableFogChanges() && submersionType == CameraSubmersionType.ATMOSPHERIC && world.isRaining();
+        if (config.isEnableFogChanges() && submersionType == CameraSubmersionType.ATMOSPHERIC && world.isRaining()) {
+            WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, cameraEntity.getBlockPos(), true);
+            return sampledType.getWeatherData(world) != null;
+        }
+
+        return false;
     }
 
     private static Vec3d lerpFogDistance(

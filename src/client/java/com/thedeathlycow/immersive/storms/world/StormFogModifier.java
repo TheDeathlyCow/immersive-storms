@@ -6,7 +6,6 @@ import com.thedeathlycow.immersive.storms.mixin.client.WorldAccessor;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.FogData;
 import net.minecraft.client.world.ClientWorld;
@@ -22,6 +21,35 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 public class StormFogModifier {
+
+    public Vec3d sampleWeatherFogColor(
+            ClientWorld world,
+            Vec3d pos
+    ) {
+        final float rainGradient = world.getRainGradient(1f);
+
+        return CubicSampler.sampleColor(
+                pos,
+                (x, y, z) -> {
+                    RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(x, y, z);
+                    WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
+
+                    Vec3d biomeColor = Vec3d.unpackRgb(biome.value().getFogColor());
+                    int color = sampledType.getColor();
+
+                    if (color >= 0) {
+                        return ISMath.lerp(
+                                rainGradient,
+                                biomeColor,
+                                Vec3d.unpackRgb(color)
+                        );
+                    } else {
+                        return biomeColor;
+                    }
+                }
+        );
+    }
+
     public void applyStartEndModifier(
             FogData data,
             Vec3d cameraPos,
@@ -45,30 +73,6 @@ public class StormFogModifier {
         updateFogRadius(data, rainDistance, thunderDistance, rainGradient, thunderGradient, config);
     }
 
-    public int modifyFogColor(
-            ClientWorld world,
-            Camera camera,
-            float skyDarkness,
-            int baseFogColor
-    ) {
-        if (!this.shouldApply(world)) {
-            return baseFogColor;
-        }
-
-        RegistryEntry<Biome> biome = world.getBiomeAccess().getBiome(camera.getBlockPos());
-        WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
-
-        int sampledColor = sampledType.getColor();
-
-        if (sampledColor < 0) {
-            return baseFogColor;
-        }
-
-        Vec3d mixed = ISMath.lerp(0.5f, Vec3d.unpackRgb(sampledColor), Vec3d.unpackRgb(baseFogColor)).multiply(255);
-
-        return ((int)mixed.x << 16) | ((int)mixed.y << 8) | ((int)mixed.z);
-    }
-
     public boolean shouldApply(World world) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         return config.isEnableFogChanges()
@@ -88,7 +92,7 @@ public class StormFogModifier {
         // start is stored in X and end in Y
         return CubicSampler.sampleColor(pos, (x, y, z) -> {
             samplePos.set(x, y, z);
-            WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, true);
+            WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, false);
 
             WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
             if (fogData != null) {

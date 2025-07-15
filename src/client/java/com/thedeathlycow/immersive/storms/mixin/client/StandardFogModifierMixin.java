@@ -14,15 +14,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.CubicSampler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(StandardFogModifier.class)
 public abstract class StandardFogModifierMixin {
-    @Unique
-    protected final StormFogModifier immersiveStormsFogModifier = new StormFogModifier();
-
     @WrapOperation(
             method = "getFogColor",
             at = @At(
@@ -43,8 +40,8 @@ public abstract class StandardFogModifierMixin {
     private static class AtmosphericFogModifierMixin extends StandardFogModifierMixin {
         @Override
         protected Vec3d modifyBaseFogColor(Vec3d pos, CubicSampler.RgbFetcher rgbFetcher, Operation<Vec3d> original, ClientWorld world) {
-            if (this.immersiveStormsFogModifier.shouldApply(world)) {
-                return this.immersiveStormsFogModifier.sampleWeatherFogColor(world, pos);
+            if (StormFogModifier.shouldApply(world)) {
+                return StormFogModifier.sampleWeatherFogColor(world, pos, Biome::getFogColor);
             } else {
                 return super.modifyBaseFogColor(pos, rgbFetcher, original, world);
             }
@@ -64,8 +61,8 @@ public abstract class StandardFogModifierMixin {
         ) {
             original.call(data, cameraEntity, cameraPos, world, viewDistance, tickCounter);
 
-            if (this.immersiveStormsFogModifier.shouldApply(world)) {
-                this.immersiveStormsFogModifier.applyStartEndModifier(data, cameraEntity.getEyePos(), world, tickCounter);
+            if (StormFogModifier.shouldApply(world)) {
+                StormFogModifier.applyStartEndModifier(data, cameraEntity.getEyePos(), world, tickCounter);
             }
         }
     }

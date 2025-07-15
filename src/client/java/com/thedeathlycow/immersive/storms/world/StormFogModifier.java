@@ -19,12 +19,13 @@ import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 public class StormFogModifier {
-
-    public Vec3d sampleWeatherFogColor(
+    public static Vec3d sampleWeatherFogColor(
             ClientWorld world,
-            Vec3d pos
+            Vec3d pos,
+            ToIntFunction<Biome> biomeColorSupplier
     ) {
         final float rainGradient = world.getRainGradient(1f);
 
@@ -34,7 +35,7 @@ public class StormFogModifier {
                     RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(x, y, z);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
 
-                    Vec3d biomeColor = Vec3d.unpackRgb(biome.value().getFogColor());
+                    Vec3d biomeColor = Vec3d.unpackRgb(biomeColorSupplier.applyAsInt(biome.value()));
                     int color = sampledType.getColor();
 
                     if (color >= 0) {
@@ -50,7 +51,7 @@ public class StormFogModifier {
         );
     }
 
-    public void applyStartEndModifier(
+    public static void applyStartEndModifier(
             FogData data,
             Vec3d cameraPos,
             ClientWorld world,
@@ -73,7 +74,7 @@ public class StormFogModifier {
         updateFogRadius(data, rainDistance, thunderDistance, rainGradient, thunderGradient, config);
     }
 
-    public boolean shouldApply(World world) {
+    public static boolean shouldApply(World world) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         return config.isEnableFogChanges()
                 && world.getRainGradient(1f) > 0f

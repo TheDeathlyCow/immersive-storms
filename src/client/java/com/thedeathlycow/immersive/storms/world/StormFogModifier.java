@@ -124,5 +124,8 @@ public class StormFogModifier {
 
         data.environmentalStart = fogStart;
         data.environmentalEnd = fogEnd;
+
+        data.skyEnd = data.environmentalEnd;
+        data.cloudEnd = data.environmentalEnd;
     }
 }

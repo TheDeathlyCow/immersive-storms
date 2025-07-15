@@ -20,7 +20,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
-    public static final Vector3f COLOR = Vec3d.unpackRgb(WeatherEffectType.SANDSTORM.getColor()).toVector3f();
+    public static final Vector3f COLOR = Vec3d.unpackRgb(0xD9AA84).toVector3f();
 
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;

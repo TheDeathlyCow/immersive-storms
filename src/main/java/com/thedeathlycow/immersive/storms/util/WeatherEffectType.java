@@ -17,7 +17,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            0xD9AA84,
+            0xd96e38,
             new WeatherData(WeatherData.LIGHT_FOG, true),
             new WeatherData(WeatherData.THICK_FOG, true),
             false

@@ -112,15 +112,12 @@ public class StormFogModifier {
             float thunderGradient,
             ImmersiveStormsConfig config
     ) {
-        float fogStart = MathHelper.lerp(rainGradient, data.environmentalStart, (float) rainDistance.x);
         float fogEnd = MathHelper.lerp(rainGradient, data.environmentalEnd, (float) rainDistance.y);
 
         if (thunderDistance != null) {
-            fogStart = MathHelper.lerp(thunderGradient, fogStart, (float) thunderDistance.x);
             fogEnd = MathHelper.lerp(thunderGradient, fogEnd, (float) thunderDistance.y);
         }
 
-        fogStart *= config.getFogDistanceMultiplier();
         fogEnd *= config.getFogDistanceMultiplier();
 
         if (fogEnd < data.environmentalEnd) {

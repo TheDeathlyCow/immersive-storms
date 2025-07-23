@@ -124,24 +124,31 @@ public final class StormFogModifier {
 
         fogEnd *= config.getFogDistanceMultiplier();
 
-        if (fogEnd < data.environmentalEnd) {
-            float reduction = fogEnd / data.environmentalEnd;
+        float reduction = fogEnd / data.environmentalEnd;
 
+        if (reduction < 1.0f) {
             data.environmentalEnd = fogEnd;
             data.skyEnd *= reduction;
             data.cloudEnd *= reduction;
+        }
 
-            if (ImmersiveStormsClient.isDistantHorizonsLoaded()) {
-                setFogDistanceForDistantHorizons(reduction);
-            }
+        if (ImmersiveStormsClient.isDistantHorizonsLoaded()) {
+            setFogDistanceForDistantHorizons(reduction);
         }
     }
 
     private static void setFogDistanceForDistantHorizons(double reduction) {
         IDhApiConfig config = DhApi.Delayed.configs;
-        if (config != null && reduction < 1) {
-            config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1);
-            config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1);
+        if (config != null) {
+            if (reduction < 1.0) {
+                config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1);
+                config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1);
+                config.graphics().fog().enableVanillaFog().setValue(true);
+            } else {
+                config.graphics().fog().farFog().farFogStartDistance().clearValue();
+                config.graphics().fog().farFog().farFogEndDistance().clearValue();
+                config.graphics().fog().enableVanillaFog().clearValue();
+            }
         }
     }
 

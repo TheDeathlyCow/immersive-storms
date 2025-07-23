@@ -58,9 +58,5 @@ public class ImmersiveStormsClient implements ClientModInitializer {
 
     private static void checkDistantHorizons() {
         isDistantHorizonsLoaded = FabricLoader.getInstance().isModLoaded("distanthorizons");
-
-        if (isDistantHorizonsLoaded) {
-            DistantHorizonsPatch.bindDhEvents(getConfig());
-        }
     }
 }

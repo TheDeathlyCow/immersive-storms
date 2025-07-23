@@ -12,8 +12,6 @@
   "text.autoconfig.immersive-storms.option.enableFogChanges.@Tooltip": "Toggle for all fog density and color changing features",
   "text.autoconfig.immersive-storms.option.enableSandstormFog": "Enable sandstorm fog changes",
   "text.autoconfig.immersive-storms.option.enableSandstormFog.@Tooltip": "Toggles the fog density and color changes for sandstorms",
-  "text.autoconfig.immersive-storms.option.enableVanillaFogWithDH": "Enable vanilla fog with Distant Horizons",
-  "text.autoconfig.immersive-storms.option.enableVanillaFogWithDH.@Tooltip": "Automatically enables the vanilla fog rendering option with Distant Horizons",
   "text.autoconfig.immersive-storms.option.fogDistanceMultiplier": "Fog distance multiplier",
   "text.autoconfig.immersive-storms.option.fogDistanceMultiplier.@Tooltip": "Adjusts how close fog closes in during weather, must be positive",
   "text.autoconfig.immersive-storms.option.sandstorm": "Sandstorm Config",

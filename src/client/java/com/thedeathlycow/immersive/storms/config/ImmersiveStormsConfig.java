@@ -54,11 +54,6 @@ public class ImmersiveStormsConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     SandstormConfig sandstorm = new SandstormConfig();
 
-    @OptionName("Enable vanilla fog with Distant Horizons")
-    @Comment("Automatically enables the vanilla fog rendering option with Distant Horizons")
-    @ConfigEntry.Gui.Tooltip
-    boolean enableVanillaFogWithDH = true;
-
     public boolean isEnableFogChanges() {
         return enableFogChanges;
     }
@@ -91,10 +86,6 @@ public class ImmersiveStormsConfig implements ConfigData {
 
     public SandstormConfig getSandstorm() {
         return sandstorm;
-    }
-
-    public boolean isEnableVanillaFogWithDH() {
-        return enableVanillaFogWithDH;
     }
 
     @Override

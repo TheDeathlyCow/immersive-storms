@@ -1,5 +1,7 @@
 package com.thedeathlycow.immersive.storms.world;
 
+import com.seibel.distanthorizons.api.DhApi;
+import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.mixin.client.WorldAccessor;
@@ -128,6 +130,18 @@ public final class StormFogModifier {
             data.environmentalEnd = fogEnd;
             data.skyEnd *= reduction;
             data.cloudEnd *= reduction;
+
+            if (ImmersiveStormsClient.isDistantHorizonsLoaded()) {
+                setFogDistanceForDistantHorizons(reduction);
+            }
+        }
+    }
+
+    private static void setFogDistanceForDistantHorizons(double reduction) {
+        IDhApiConfig config = DhApi.Delayed.configs;
+        if (config != null && reduction < 1) {
+            config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1);
+            config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1);
         }
     }
 

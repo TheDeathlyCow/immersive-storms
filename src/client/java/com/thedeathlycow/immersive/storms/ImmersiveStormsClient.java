@@ -17,9 +17,12 @@ import net.fabricmc.loader.api.FabricLoader;
 public class ImmersiveStormsClient implements ClientModInitializer {
     private static ConfigHolder<ImmersiveStormsConfig> configHolder = null;
 
+    private static boolean isDistantHorizonsLoaded = false;
+
     @Override
     public void onInitializeClient() {
         registerConfig();
+        checkDistantHorizons();
 
         boolean disableSandstormEffects = getConfig().getSandstorm().isDetectParticleRain()
                 && FabricLoader.getInstance().isModLoaded("particlerain");
@@ -45,7 +48,19 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         return configHolder.getConfig();
     }
 
+    public static boolean isDistantHorizonsLoaded() {
+        return isDistantHorizonsLoaded;
+    }
+
     private static void registerConfig() {
         configHolder = AutoConfig.register(ImmersiveStormsConfig.class, JanksonConfigSerializer::new);
+    }
+
+    private static void checkDistantHorizons() {
+        isDistantHorizonsLoaded = FabricLoader.getInstance().isModLoaded("distanthorizons");
+
+        if (isDistantHorizonsLoaded) {
+            DistantHorizonsPatch.bindDhEvents(getConfig());
+        }
     }
 }

@@ -15,7 +15,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
-    private static ConfigHolder<ImmersiveStormsConfig> configHolder = null;
+    private static ImmersiveStormsConfig configHolder = null;
 
     private static boolean isDistantHorizonsLoaded = false;
 

@@ -9,12 +9,16 @@ import dev.isxander.yacl3.config.v2.api.autogen.FloatSlider;
 import dev.isxander.yacl3.config.v2.api.autogen.TickBox;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
+import java.nio.file.Path;
+
 public class ImmersiveStormsConfig {
+    static final Path PATH = ImmersiveStorms.getConfigDir().resolve("general.json5");
+
     public static final ConfigClassHandler<ImmersiveStormsConfig> HANDLER = ConfigClassHandler.createBuilder(ImmersiveStormsConfig.class)
             .id(ImmersiveStorms.id("general"))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
-                            .setPath(ImmersiveStorms.getConfigDir().resolve("general.json5"))
+                            .setPath(PATH)
                             .setJson5(true)
                             .build()
             )

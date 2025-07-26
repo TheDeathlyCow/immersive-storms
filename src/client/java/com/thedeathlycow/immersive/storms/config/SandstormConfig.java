@@ -9,12 +9,16 @@ import dev.isxander.yacl3.config.v2.api.autogen.IntSlider;
 import dev.isxander.yacl3.config.v2.api.autogen.TickBox;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
+import java.nio.file.Path;
+
 public class SandstormConfig {
+    static final Path PATH = ImmersiveStorms.getConfigDir().resolve("sandstorm.json5");
+
     public static final ConfigClassHandler<SandstormConfig> HANDLER = ConfigClassHandler.createBuilder(SandstormConfig.class)
             .id(ImmersiveStorms.id("sandstorm"))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
-                            .setPath(ImmersiveStorms.getConfigDir().resolve("sandstorm.json5"))
+                            .setPath(PATH)
                             .setJson5(true)
                             .build()
             )

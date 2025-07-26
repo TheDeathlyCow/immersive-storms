@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms;
 
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.config.Updater;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.BiomeWindEffects;
@@ -45,8 +46,11 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     }
 
     private static void registerConfig() {
+        Updater.initialize();
         ImmersiveStormsConfig.HANDLER.load();
+        ImmersiveStormsConfig.HANDLER.save();
         SandstormConfig.HANDLER.load();
+        SandstormConfig.HANDLER.save();
     }
 
     private static void checkDistantHorizons() {

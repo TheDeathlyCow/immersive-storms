@@ -27,33 +27,33 @@ public class SandstormConfig {
     private static final String CATEGORY = "sandstorms";
 
     @AutoGen(category = CATEGORY)
-    @OptionName("Enable sandstorm particles")
-    @NoComment
+    @Translate.Name("Enable sandstorm particles")
+    @Translate.NoComment
     @TickBox
     @SerialEntry
     boolean enableSandstormParticles = true;
 
     @AutoGen(category = CATEGORY)
-    @OptionName("Enable sandstorm sounds")
-    @NoComment
+    @Translate.Name("Enable sandstorm sounds")
+    @Translate.NoComment
     @TickBox
     @SerialEntry
     boolean enableSandstormSounds = true;
 
     @AutoGen(category = CATEGORY)
-    @OptionName("Detect Particle Rain")
+    @Translate.Name("Detect Particle Rain")
     @TickBox
     @SerialEntry(comment = "Will disable sandstorm particles and sounds automatically if the mod Particle Rain is detected")
     boolean detectParticleRain = true;
 
     @AutoGen(category = CATEGORY)
-    @OptionName("Sandstorm particle render distance")
+    @Translate.Name("Sandstorm particle render distance")
     @IntSlider(min = 1, max = 100, step = 1)
     @SerialEntry(comment = "How many blocks away to render sandstorm particles, must be positive")
     int sandstormParticleRenderDistance = 20;
 
     @AutoGen(category = CATEGORY)
-    @OptionName("Sandstorm particle density")
+    @Translate.Name("Sandstorm particle density")
     @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
     @SerialEntry(comment = "Multiplier for how frequently sandstorm particles should appear, must be positive. Bigger values = more common.")
     float sandstormParticleDensityMultiplier = 1.0f;

@@ -17,6 +17,8 @@
   "yacl3.config.immersive-storms:general.fogDistanceMultiplier": "Fog distance multiplier",
   "yacl3.config.immersive-storms:general.fogDistanceMultiplier.desc": "Adjusts how close fog closes in during weather, must be positive",
   "yacl3.config.immersive-storms:general.title": "Immersive Storms Config",
+  "yacl3.config.immersive-storms:general.version": "Schema version",
+  "yacl3.config.immersive-storms:general.version.desc": "Config version, do not touch! Changing this value may result in unexpected behaviour.",
   "yacl3.config.immersive-storms:general.windParticleChanceMultiplier": "Wind particle chance multiplier",
   "yacl3.config.immersive-storms:general.windParticleChanceMultiplier.desc": "Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive",
   "yacl3.config.immersive-storms:sandstorm.category.desc": "Specific settings for sandstorms",
@@ -28,5 +30,7 @@
   "yacl3.config.immersive-storms:sandstorm.sandstormParticleDensityMultiplier": "Sandstorm particle density",
   "yacl3.config.immersive-storms:sandstorm.sandstormParticleDensityMultiplier.desc": "Multiplier for how frequently sandstorm particles should appear, must be positive. Bigger values = more common.",
   "yacl3.config.immersive-storms:sandstorm.sandstormParticleRenderDistance": "Sandstorm particle render distance",
-  "yacl3.config.immersive-storms:sandstorm.sandstormParticleRenderDistance.desc": "How many blocks away to render sandstorm particles, must be positive"
+  "yacl3.config.immersive-storms:sandstorm.sandstormParticleRenderDistance.desc": "How many blocks away to render sandstorm particles, must be positive",
+  "yacl3.config.immersive-storms:sandstorm.version": "Schema version",
+  "yacl3.config.immersive-storms:sandstorm.version.desc": "Config version, do not touch! Changing this value may result in unexpected behaviour."
 }

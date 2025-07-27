@@ -25,6 +25,11 @@ public class ImmersiveStormsConfig {
             .build();
 
     private static final String GENERAL_CATEGORY = "general";
+    private static final int VERSION = 1;
+
+    @Translate.Name("Schema version")
+    @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
+    int version = VERSION;
 
     @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable all fog changes")

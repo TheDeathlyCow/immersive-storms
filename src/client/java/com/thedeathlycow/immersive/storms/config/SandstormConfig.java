@@ -26,6 +26,12 @@ public class SandstormConfig {
 
     private static final String CATEGORY = "sandstorms";
 
+    private static final int VERSION = 1;
+
+    @Translate.Name("Schema version")
+    @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
+    int version = VERSION;
+
     @AutoGen(category = CATEGORY)
     @Translate.Name("Enable sandstorm particles")
     @Translate.NoComment

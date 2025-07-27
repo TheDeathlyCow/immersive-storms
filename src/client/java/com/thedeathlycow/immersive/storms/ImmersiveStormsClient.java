@@ -1,22 +1,19 @@
 package com.thedeathlycow.immersive.storms;
 
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.config.Updater;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.BiomeWindEffects;
 import com.thedeathlycow.immersive.storms.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.world.SandstormSounds;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
-    private static ConfigHolder<ImmersiveStormsConfig> configHolder = null;
-
     private static boolean isDistantHorizonsLoaded = false;
 
     @Override
@@ -41,11 +38,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     }
 
     public static ImmersiveStormsConfig getConfig() {
-        if (configHolder == null) {
-            registerConfig();
-        }
-
-        return configHolder.getConfig();
+        return ImmersiveStormsConfig.HANDLER.instance();
     }
 
     public static boolean isDistantHorizonsLoaded() {
@@ -53,7 +46,11 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     }
 
     private static void registerConfig() {
-        configHolder = AutoConfig.register(ImmersiveStormsConfig.class, JanksonConfigSerializer::new);
+        Updater.initialize();
+        ImmersiveStormsConfig.HANDLER.load();
+        ImmersiveStormsConfig.HANDLER.save();
+        SandstormConfig.HANDLER.load();
+        SandstormConfig.HANDLER.save();
     }
 
     private static void checkDistantHorizons() {

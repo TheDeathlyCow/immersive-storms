@@ -2,57 +2,82 @@ package com.thedeathlycow.immersive.storms.config;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
+import dev.isxander.yacl3.config.v2.api.autogen.FloatSlider;
+import dev.isxander.yacl3.config.v2.api.autogen.TickBox;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
-@Config(name = ImmersiveStorms.MOD_ID)
-public class ImmersiveStormsConfig implements ConfigData {
-    @OptionName("Enable all fog changes")
-    @Comment("Toggle for all fog density and color changing features")
-    @ConfigEntry.Gui.Tooltip
+import java.nio.file.Path;
+
+public class ImmersiveStormsConfig {
+    static final Path PATH = ImmersiveStorms.getConfigDir().resolve("general.json5");
+
+    public static final ConfigClassHandler<ImmersiveStormsConfig> HANDLER = ConfigClassHandler.createBuilder(ImmersiveStormsConfig.class)
+            .id(ImmersiveStorms.id("general"))
+            .serializer(
+                    config -> GsonConfigSerializerBuilder.create(config)
+                            .setPath(PATH)
+                            .setJson5(true)
+                            .build()
+            )
+            .build();
+
+    private static final String GENERAL_CATEGORY = "general";
+    private static final int VERSION = 1;
+
+    @Translate.Name("Schema version")
+    @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
+    int version = VERSION;
+
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable all fog changes")
+    @TickBox
+    @SerialEntry(comment = "Toggle for all fog density and color changing features")
     boolean enableFogChanges = true;
 
-    @OptionName("Enable sandstorm fog changes")
-    @Comment("Toggles the fog density and color changes for sandstorms")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable sandstorm fog changes")
+    @TickBox
+    @SerialEntry(comment = "Toggles the fog density and color changes for sandstorms")
     boolean enableSandstormFog = true;
 
-    @OptionName("Enable blizzard fog changes")
-    @Comment("Toggles the fog density and color changes for blizzards")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable blizzard fog changes")
+    @TickBox
+    @SerialEntry(comment = "Toggles the fog density and color changes for blizzards")
     boolean enableBlizzardFog = true;
 
-    @OptionName("Enable dense fog changes")
-    @Comment("Toggles the fog density and color changes for dense fog (affects Pale Gardens and Swamps)")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable dense fog changes")
+    @TickBox
+    @SerialEntry(comment = "Toggles the fog density and color changes for dense fog (affects Pale Gardens and Swamps)")
     boolean enableDenseFog = true;
 
-    @OptionName("Enable ambient wind particles")
-    @Comment("Enables ambient wind particles in windy biomes")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable ambient wind particles")
+    @TickBox
+    @SerialEntry(comment = "Enables ambient wind particles in windy biomes")
     boolean enableAmbientWindParticles = true;
 
-    @OptionName("Enable ambient wind sounds")
-    @Comment("Enables ambient wind sounds in windy biomes, has no effect in deserts/badlands due to vanilla mechanic")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable ambient wind sounds")
+    @TickBox
+    @SerialEntry(comment = "Enables ambient wind sounds in windy biomes, has no effect in deserts/badlands due to vanilla mechanic")
     boolean enableAmbientWindSounds = true;
 
-    @OptionName("Fog distance multiplier")
-    @Comment("Adjusts how close fog closes in during weather, must be positive")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Fog distance multiplier")
+    @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
+    @SerialEntry(comment = "Adjusts how close fog closes in during weather, must be positive")
     float fogDistanceMultiplier = 1.0f;
 
-    @OptionName("Wind particle chance multiplier")
-    @Comment("Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Wind particle chance multiplier")
+    @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
+    @SerialEntry(comment = "Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive")
     float windParticleChanceMultiplier = 1.0f;
-
-    @OptionName("Sandstorm Config")
-    @NoComment
-    @ConfigEntry.Gui.CollapsibleObject
-    SandstormConfig sandstorm = new SandstormConfig();
 
     public boolean isEnableFogChanges() {
         return enableFogChanges;
@@ -84,20 +109,8 @@ public class ImmersiveStormsConfig implements ConfigData {
         return windParticleChanceMultiplier;
     }
 
+    @Deprecated
     public SandstormConfig getSandstorm() {
-        return sandstorm;
-    }
-
-    @Override
-    public void validatePostLoad() throws ValidationException {
-        ConfigData.super.validatePostLoad();
-
-        if (this.fogDistanceMultiplier <= 0f) {
-            throw new ValidationException("Fog distance multiplier must be positive");
-        }
-
-        if (this.windParticleChanceMultiplier <= 0f) {
-            throw new ValidationException("Wind particle chance multiplier must be positive");
-        }
+        return SandstormConfig.HANDLER.instance();
     }
 }

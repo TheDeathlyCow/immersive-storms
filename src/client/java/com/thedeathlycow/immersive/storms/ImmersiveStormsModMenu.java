@@ -16,8 +16,8 @@ public class ImmersiveStormsModMenu implements ModMenuApi {
     private static final String GENERAL_PREFIX = Translate.prefixKey(ImmersiveStormsConfig.HANDLER);
     private static final String SANDSTORM_PREFIX = Translate.prefixKey(SandstormConfig.HANDLER);
     public static final String TITLE = GENERAL_PREFIX + ".title";
-    public static final String GENERAL_CATEGORY = GENERAL_PREFIX + ".category.main";
-    public static final String SANDSTORM_CATEGORY = SANDSTORM_PREFIX + ".category.main";
+    public static final String GENERAL_CATEGORY = GENERAL_PREFIX + ".category.general";
+    public static final String SANDSTORM_CATEGORY = SANDSTORM_PREFIX + ".category.sandstorms";
     public static final String GENERAL_CATEGORY_DESC = GENERAL_PREFIX + ".category.desc";
     public static final String SANDSTORM_CATEGORY_DESC = SANDSTORM_PREFIX + ".category.desc";
 

@@ -1,7 +1,7 @@
 {
   "subtitles.immersive-storms.weather.strong_wind": "Wind blows strongly",
   "yacl3.config.immersive-storms:general.category.desc": "General settings for Immersive Storms",
-  "yacl3.config.immersive-storms:general.category.main": "General Settings",
+  "yacl3.config.immersive-storms:general.category.general": "General Settings",
   "yacl3.config.immersive-storms:general.enableAmbientWindParticles": "Enable ambient wind particles",
   "yacl3.config.immersive-storms:general.enableAmbientWindParticles.desc": "Enables ambient wind particles in windy biomes",
   "yacl3.config.immersive-storms:general.enableAmbientWindSounds": "Enable ambient wind sounds",
@@ -20,7 +20,7 @@
   "yacl3.config.immersive-storms:general.windParticleChanceMultiplier": "Wind particle chance multiplier",
   "yacl3.config.immersive-storms:general.windParticleChanceMultiplier.desc": "Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive",
   "yacl3.config.immersive-storms:sandstorm.category.desc": "Specific settings for sandstorms",
-  "yacl3.config.immersive-storms:sandstorm.category.main": "Sandstorm Settings",
+  "yacl3.config.immersive-storms:sandstorm.category.sandstorms": "Sandstorm Settings",
   "yacl3.config.immersive-storms:sandstorm.detectParticleRain": "Detect Particle Rain",
   "yacl3.config.immersive-storms:sandstorm.detectParticleRain.desc": "Will disable sandstorm particles and sounds automatically if the mod Particle Rain is detected",
   "yacl3.config.immersive-storms:sandstorm.enableSandstormParticles": "Enable sandstorm particles",

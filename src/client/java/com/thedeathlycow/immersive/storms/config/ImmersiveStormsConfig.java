@@ -24,51 +24,51 @@ public class ImmersiveStormsConfig {
             )
             .build();
 
-    private static final String MAIN_CATEGORY = "main";
+    private static final String GENERAL_CATEGORY = "general";
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable all fog changes")
     @TickBox
     @SerialEntry(comment = "Toggle for all fog density and color changing features")
     boolean enableFogChanges = true;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable sandstorm fog changes")
     @TickBox
     @SerialEntry(comment = "Toggles the fog density and color changes for sandstorms")
     boolean enableSandstormFog = true;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable blizzard fog changes")
     @TickBox
     @SerialEntry(comment = "Toggles the fog density and color changes for blizzards")
     boolean enableBlizzardFog = true;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable dense fog changes")
     @TickBox
     @SerialEntry(comment = "Toggles the fog density and color changes for dense fog (affects Pale Gardens and Swamps)")
     boolean enableDenseFog = true;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable ambient wind particles")
     @TickBox
     @SerialEntry(comment = "Enables ambient wind particles in windy biomes")
     boolean enableAmbientWindParticles = true;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable ambient wind sounds")
     @TickBox
     @SerialEntry(comment = "Enables ambient wind sounds in windy biomes, has no effect in deserts/badlands due to vanilla mechanic")
     boolean enableAmbientWindSounds = true;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Fog distance multiplier")
     @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
     @SerialEntry(comment = "Adjusts how close fog closes in during weather, must be positive")
     float fogDistanceMultiplier = 1.0f;
 
-    @AutoGen(category = MAIN_CATEGORY)
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Wind particle chance multiplier")
     @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
     @SerialEntry(comment = "Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive")

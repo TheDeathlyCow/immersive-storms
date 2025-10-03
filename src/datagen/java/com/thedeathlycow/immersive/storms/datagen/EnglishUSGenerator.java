@@ -1,21 +1,21 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
+import com.thedeathlycow.immersive.storms.ImmersiveStormsModMenu;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.config.NoComment;
-import com.thedeathlycow.immersive.storms.config.OptionName;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.sound.SoundEvent;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
 
 public class EnglishUSGenerator extends FabricLanguageProvider {
-    private static final String BASE_PREFIX = "text.autoconfig.immersive-storms";
+    private static final String BASE_PREFIX = "yacl3.config.immersive-storms";
     private static final String SANDSTORM_PREFIX = BASE_PREFIX + ".option.sandstorm";
 
     protected EnglishUSGenerator(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
@@ -26,34 +26,43 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder builder) {
         builder.add(ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
 
-        builder.add(BASE_PREFIX + ".title", "Immersive Storms");
+        builder.add(ImmersiveStormsModMenu.TITLE, "Immersive Storms Config");
+        builder.add(ImmersiveStormsModMenu.GENERAL_CATEGORY, "General Settings");
+        builder.add(ImmersiveStormsModMenu.GENERAL_CATEGORY_DESC, "General settings for Immersive Storms");
+        builder.add(ImmersiveStormsModMenu.SANDSTORM_CATEGORY, "Sandstorm Settings");
+        builder.add(ImmersiveStormsModMenu.SANDSTORM_CATEGORY_DESC, "Specific settings for sandstorms");
 
-        generateConfigOptionTranslations(BASE_PREFIX + ".option", builder, ImmersiveStormsConfig.class);
-        generateConfigOptionTranslations(SANDSTORM_PREFIX, builder, SandstormConfig.class);
+        generateConfigOptionTranslations(ImmersiveStormsConfig.HANDLER, builder);
+        generateConfigOptionTranslations(SandstormConfig.HANDLER, builder);
     }
 
-    private void generateConfigOptionTranslations(
-            String prefix,
-            TranslationBuilder builder,
-            Class<?> configClass
+    private <T> void generateConfigOptionTranslations(
+            ConfigClassHandler<T> handler,
+            TranslationBuilder builder
     ) {
-        for (Field field : configClass.getDeclaredFields()) {
+        final String prefix = Translate.prefixKey(handler);
+
+        for (Field field : handler.configClass().getDeclaredFields()) {
+            SerialEntry entry = field.getAnnotation(SerialEntry.class);
+            if (entry == null) {
+                continue;
+            }
+
+            Translate.Name nameData = field.getAnnotation(Translate.Name.class);
             String nameKey = configOption(prefix, field.getName());
 
-            OptionName nameData = field.getAnnotation(OptionName.class);
             if (nameData != null) {
                 builder.add(nameKey, nameData.value());
             } else {
                 throw new IllegalStateException("Option name missing for" + nameKey);
             }
 
-            Comment commentData = field.getAnnotation(Comment.class);
-            String commentKey = tooltip(prefix, field.getName());
+            String comment = entry.comment();
+            String commentKey = commentKey(prefix, field.getName());
 
-            if (commentData != null) {
-                String comment = commentData.value();
+            if (comment != null && !comment.isEmpty()) {
                 builder.add(commentKey, comment);
-            } else if (field.getAnnotation(NoComment.class) == null) {
+            } else if (field.getAnnotation(Translate.NoComment.class) == null) {
                 throw new IllegalStateException("Missing comment or @NoComment marker for " + commentKey);
             }
         }
@@ -63,7 +72,7 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
         return prefix + "." + name;
     }
 
-    private static String tooltip(String prefix, String name) {
-        return configOption(prefix, name) + ".@Tooltip";
+    private static String commentKey(String prefix, String name) {
+        return configOption(prefix, name) + ".desc";
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
 public class DustGrainParticle extends AbstractDustParticle<DustGrainParticleEffect> {
@@ -31,20 +32,19 @@ public class DustGrainParticle extends AbstractDustParticle<DustGrainParticleEff
 
     @Environment(EnvType.CLIENT)
     public static class Factory implements ParticleFactory<DustGrainParticleEffect> {
-
         private final SpriteProvider spriteProvider;
 
         public Factory(SpriteProvider spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        @Nullable
         @Override
-        public Particle createParticle(
+        public @Nullable Particle createParticle(
                 DustGrainParticleEffect parameters,
                 ClientWorld world,
                 double x, double y, double z,
-                double velocityX, double velocityY, double velocityZ
+                double velocityX, double velocityY, double velocityZ,
+                Random random
         ) {
             return new DustGrainParticle(
                     world,

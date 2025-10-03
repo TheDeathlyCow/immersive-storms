@@ -1,33 +1,67 @@
 package com.thedeathlycow.immersive.storms.config;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
+import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
+import dev.isxander.yacl3.config.v2.api.autogen.FloatSlider;
+import dev.isxander.yacl3.config.v2.api.autogen.IntSlider;
+import dev.isxander.yacl3.config.v2.api.autogen.TickBox;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
-@Config(name = ImmersiveStorms.MOD_ID + ".sandstorm")
-public class SandstormConfig implements ConfigData {
-    @OptionName("Enable sandstorm particles")
-    @NoComment
+import java.nio.file.Path;
+
+public class SandstormConfig {
+    static final Path PATH = ImmersiveStorms.getConfigDir().resolve("sandstorm.json5");
+
+    public static final ConfigClassHandler<SandstormConfig> HANDLER = ConfigClassHandler.createBuilder(SandstormConfig.class)
+            .id(ImmersiveStorms.id("sandstorm"))
+            .serializer(
+                    config -> GsonConfigSerializerBuilder.create(config)
+                            .setPath(PATH)
+                            .setJson5(true)
+                            .build()
+            )
+            .build();
+
+    private static final String CATEGORY = "sandstorms";
+
+    private static final int VERSION = 1;
+
+    @Translate.Name("Schema version")
+    @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
+    int version = VERSION;
+
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Enable sandstorm particles")
+    @Translate.NoComment
+    @TickBox
+    @SerialEntry
     boolean enableSandstormParticles = true;
 
-    @OptionName("Enable sandstorm sounds")
-    @NoComment
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Enable sandstorm sounds")
+    @Translate.NoComment
+    @TickBox
+    @SerialEntry
     boolean enableSandstormSounds = true;
 
-    @OptionName("Detect Particle Rain")
-    @Comment("Will disable sandstorm particles and sounds automatically if the mod Particle Rain is detected")
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Detect Particle Rain")
+    @TickBox
+    @SerialEntry(comment = "Will disable sandstorm particles and sounds automatically if the mod Particle Rain is detected")
     boolean detectParticleRain = true;
 
-    @OptionName("Sandstorm particle render distance")
-    @Comment("How many blocks away to render sandstorm particles, must be positive")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Sandstorm particle render distance")
+    @IntSlider(min = 1, max = 100, step = 1)
+    @SerialEntry(comment = "How many blocks away to render sandstorm particles, must be positive")
     int sandstormParticleRenderDistance = 20;
 
-    @OptionName("Sandstorm particle density")
-    @Comment("Multiplier for how frequently sandstorm particles should appear, must be positive. Bigger values = more common.")
-    @ConfigEntry.Gui.Tooltip
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Sandstorm particle density")
+    @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
+    @SerialEntry(comment = "Multiplier for how frequently sandstorm particles should appear, must be positive. Bigger values = more common.")
     float sandstormParticleDensityMultiplier = 1.0f;
 
     public boolean isEnableSandstormParticles() {
@@ -48,17 +82,5 @@ public class SandstormConfig implements ConfigData {
 
     public float getSandstormParticleDensityMultiplier() {
         return sandstormParticleDensityMultiplier;
-    }
-
-    @Override
-    public void validatePostLoad() throws ValidationException {
-        ConfigData.super.validatePostLoad();
-        if (this.sandstormParticleRenderDistance <= 0) {
-            throw new ValidationException("Sandstorm particle render distance must be positive");
-        }
-
-        if (this.sandstormParticleDensityMultiplier <= 0f) {
-            throw new ValidationException("Sandstorm particle density multiplier must be positive");
-        }
     }
 }

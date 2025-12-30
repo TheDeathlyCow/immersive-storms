@@ -4,17 +4,33 @@ import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Updater;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
+import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.world.BiomeWindEffects;
 import com.thedeathlycow.immersive.storms.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.world.SandstormSounds;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.world.biome.Biome;
+
+import java.util.function.Predicate;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
     private static boolean isDistantHorizonsLoaded = false;
+
+    public static Predicate<BiomeSelectionContext> clientTag(TagKey<Biome> tag) {
+        return context -> ClientTags.isInWithLocalFallback(tag, context.getBiomeRegistryEntry());
+    }
 
     @Override
     public void onInitializeClient() {
@@ -35,6 +51,15 @@ public class ImmersiveStormsClient implements ClientModInitializer {
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);
+
+        BiomeModifications.create(ImmersiveStorms.id("environment_attributes"))
+                .add(
+                        ModificationPhase.ADDITIONS,
+                        clientTag(ISBiomeTags.HAS_SANDSTORMS),
+                        (selection, modification) -> {
+                            modification.getAttributes().set(ISEnvironmentAttributes.SANDSTORM_COLOR, WeatherEffectType.SANDSTORM.getColor());
+                        }
+                );
     }
 
     public static ImmersiveStormsConfig getConfig() {

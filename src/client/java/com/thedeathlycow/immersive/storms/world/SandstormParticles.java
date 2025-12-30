@@ -1,6 +1,7 @@
 package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
+import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
@@ -20,7 +21,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
-    public static final Vector3f COLOR = Vec3d.unpackRgb(0xD9AA84).toVector3f();
+    public static final Vector3f COLOR = ISMath.unpackRgb(0xD9AA84);
 
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;

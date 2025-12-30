@@ -1,5 +1,6 @@
 package com.thedeathlycow.immersive.storms;
 
+import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import net.fabricmc.api.ModInitializer;
@@ -19,6 +20,7 @@ public class ImmersiveStorms implements ModInitializer {
     public void onInitialize() {
         ISParticleTypes.initialize();
         ISSoundEvents.initialize();
+        ISEnvironmentAttributes.initialize();
     }
 
     public static Identifier id(String path) {

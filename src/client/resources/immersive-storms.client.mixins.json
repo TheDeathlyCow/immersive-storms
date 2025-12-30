@@ -4,8 +4,7 @@
     "compatibilityLevel": "JAVA_21",
     "client": [
         "ClientWorldMixin",
-        "StandardFogModifierMixin",
-        "StandardFogModifierMixin$AtmosphericFogModifierMixin"
+        "AtmosphericFogModifierMixin"
     ],
     "injectors": {
         "defaultRequire": 1

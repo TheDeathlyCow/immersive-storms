@@ -3,9 +3,8 @@
     "package": "com.thedeathlycow.immersive.storms.mixin.client",
     "compatibilityLevel": "JAVA_21",
     "client": [
-        "ClientWorldMixin",
-        "StandardFogModifierMixin",
-        "StandardFogModifierMixin$AtmosphericFogModifierMixin"
+        "AtmosphericFogModifierMixin",
+        "SkyRenderingMixin"
     ],
     "injectors": {
         "defaultRequire": 1

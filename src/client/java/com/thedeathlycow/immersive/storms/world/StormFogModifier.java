@@ -12,41 +12,46 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.FogData;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.CubicSampler;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.joml.Vector3fc;
 
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 public final class StormFogModifier {
-    public static Vec3d sampleWeatherFogColor(
+
+    public static int sampleWeatherFogColor(
             ClientWorld world,
             Vec3d pos,
-            ToIntFunction<Biome> biomeColorSupplier
+            float tickProgress,
+            int originalColor
     ) {
-        final float rainGradient = world.getRainGradient(1f);
+        final float rainGradient = world.getRainGradient(tickProgress);
+        final var accumulator = new WeightedVector3fAccumulator();
+        Vector3fc originalBiomeColorVector = ColorHelper.toRgbVector(originalColor);
 
-        return CubicSampler.sampleColor(
-                pos,
+        WeightedInterpolation.interpolate(
+                pos.multiply(0.25),
                 (x, y, z) -> {
-                    RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(x, y, z);
+                    RegistryEntry<Biome> biome = world.getBiomeForNoiseGen(x, y, z);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
 
-                    Vec3d biomeColor = Vec3d.unpackRgb(biomeColorSupplier.applyAsInt(biome.value()));
                     int color = sampledType.getColor();
 
                     if (color >= 0) {
-                        return ISMath.lerp(rainGradient, biomeColor, Vec3d.unpackRgb(color));
+                        return ISMath.lerp(rainGradient, originalBiomeColorVector, ISMath.unpackRgb(color));
                     } else {
-                        return biomeColor;
+                        return originalBiomeColorVector;
                     }
-                }
+                },
+                accumulator
         );
+
+        return accumulator.getPackedColor();
     }
 
     public static void applyStartEndModifier(
@@ -61,11 +66,11 @@ public final class StormFogModifier {
         final float rainGradient = world.getRainGradient(tickProgress);
         final float thunderGradient = world.getThunderGradient(tickProgress);
 
-        var baseRadius = new Vec3d(data.environmentalStart, data.environmentalEnd, 0);
+        var baseRadius = new Vector2f(data.environmentalStart, data.environmentalEnd);
 
-        Vec3d rainDistance = lerpFogDistance(cameraPos, world, baseRadius, WeatherEffectType::getRainWeatherData);
+        Vector2fc rainDistance = lerpFogDistance(cameraPos, world, baseRadius, WeatherEffectType::getRainWeatherData);
 
-        Vec3d thunderDistance = thunderGradient > 0
+        Vector2fc thunderDistance = thunderGradient > 0
                 ? lerpFogDistance(cameraPos, world, baseRadius, WeatherEffectType::getThunderWeatherData)
                 : null;
 
@@ -79,47 +84,54 @@ public final class StormFogModifier {
                 && ((WorldAccessor) world).invokeCanHaveWeather();
     }
 
-    private static Vec3d lerpFogDistance(
+    private static Vector2fc lerpFogDistance(
             Vec3d pos,
             World world,
-            Vec3d baseRadius,
+            Vector2fc baseRadius,
             Function<WeatherEffectType, WeatherEffectType.WeatherData> fogDataSupplier
     ) {
         var samplePos = new BlockPos.Mutable();
+        final var accumulator = new WeightedVector2fAccumulator();
         final int undergroundFogCutoff = world.getSeaLevel();
 
-        // tri lerp fog distances to make less jarring biome transition
+        // interpolate fog distances to make less jarring biome transition
         // start is stored in X and end in Y
-        return CubicSampler.sampleColor(pos, (x, y, z) -> {
-            samplePos.set(x, y, z);
+        WeightedInterpolation.interpolate(
+                pos,
+                (x, y, z) -> {
+                    samplePos.set(x, y, z);
 
-            if (y < undergroundFogCutoff) {
-                return baseRadius;
-            }
+                    if (y < undergroundFogCutoff) {
+                        return baseRadius;
+                    }
 
-            WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, false);
+                    WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, false);
 
-            WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
-            if (fogData != null) {
-                return fogData.fogDistance();
-            }
+                    WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
+                    if (fogData != null) {
+                        return fogData.fogDistance();
+                    }
 
-            return baseRadius;
-        });
+                    return baseRadius;
+                },
+                accumulator
+        );
+
+        return accumulator.getAverageVector();
     }
 
     private static void updateFogRadius(
             FogData data,
-            Vec3d rainDistance,
-            @Nullable Vec3d thunderDistance,
+            Vector2fc rainDistance,
+            @Nullable Vector2fc thunderDistance,
             float rainGradient,
             float thunderGradient,
             ImmersiveStormsConfig config
     ) {
-        float fogEnd = MathHelper.lerp(rainGradient, data.environmentalEnd, (float) rainDistance.y);
+        float fogEnd = MathHelper.lerp(rainGradient, data.environmentalEnd, rainDistance.y());
 
         if (thunderDistance != null) {
-            fogEnd = MathHelper.lerp(thunderGradient, fogEnd, (float) thunderDistance.y);
+            fogEnd = MathHelper.lerp(thunderGradient, fogEnd, thunderDistance.y());
         }
 
         fogEnd *= config.getFogDistanceMultiplier();

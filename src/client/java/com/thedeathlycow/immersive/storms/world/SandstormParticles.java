@@ -1,11 +1,12 @@
 package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.util.ISMath;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.client.MinecraftClient;
@@ -13,14 +14,11 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
 import org.joml.Vector3f;
 
-import java.util.Objects;
-
 public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
-    public static final Vector3f COLOR = Vec3d.unpackRgb(0xD9AA84).toVector3f();
+    public static final Vector3f COLOR = ISMath.unpackRgb(0xD9AA84);
 
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;

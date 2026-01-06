@@ -9,22 +9,12 @@ import com.thedeathlycow.immersive.storms.world.BiomeWindEffects;
 import com.thedeathlycow.immersive.storms.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.world.SandstormSounds;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.biome.Biome;
-
-import java.util.function.Predicate;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
     private static boolean isDistantHorizonsLoaded = false;
-
-    public static Predicate<BiomeSelectionContext> clientTag(TagKey<Biome> tag) {
-        return context -> ClientTags.isInWithLocalFallback(tag, context.getBiomeRegistryEntry());
-    }
 
     @Override
     public void onInitializeClient() {

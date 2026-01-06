@@ -11,15 +11,69 @@ import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.minecraft.client.render.fog.FogData;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.WeightedInterpolation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.ToIntFunction;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public final class StormFogModifier {
+    private static class ColorAverageAccumulator implements WeightedInterpolation.Accumulator<Vector3fc> {
+        private final Vector3f sumVector = new Vector3f();
+        private double totalWeight;
+
+        @Override
+        public void accumulate(double weight, Vector3fc value) {
+            var weightedValue = new Vector3f(
+                    (float) (weight * value.x()),
+                    (float) (weight * value.y()),
+                    (float) (weight * value.z())
+            );
+
+            sumVector.add(weightedValue);
+
+            totalWeight += weight;
+        }
+
+        public int getPackedColor() {
+            Vector3f average = this.sumVector.mul((float) (1.0 / totalWeight), new Vector3f());
+            return ISMath.packRgb(average);
+        }
+    }
+
+    public static int sampleWeatherFogColor(
+            ClientWorld world,
+            Vec3d pos,
+            float tickProgress,
+            int originalColor
+    ) {
+        final float rainGradient = world.getRainGradient(tickProgress);
+        final var accum = new ColorAverageAccumulator();
+        Vector3fc originalBiomeColorVector = ColorHelper.toRgbVector(originalColor);
+
+        WeightedInterpolation.interpolate(
+                pos.multiply(0.25),
+                (x, y, z) -> {
+                    RegistryEntry<Biome> biome = world.getBiomeForNoiseGen(x, y, z);
+                    WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
+
+                    int color = sampledType.getColor();
+
+                    if (color >= 0) {
+                        return ISMath.lerp(rainGradient, originalBiomeColorVector, ISMath.unpackRgb(color));
+                    } else {
+                        return originalBiomeColorVector;
+                    }
+                },
+                accum
+        );
+
+        return accum.getPackedColor();
+    }
 //
 
 

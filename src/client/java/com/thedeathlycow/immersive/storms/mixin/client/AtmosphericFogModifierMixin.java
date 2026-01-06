@@ -9,6 +9,8 @@ import net.minecraft.client.render.fog.AtmosphericFogModifier;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(AtmosphericFogModifier.class)
@@ -24,13 +26,7 @@ public abstract class AtmosphericFogModifierMixin {
         int originalColor = original.call(world, camera, viewDistance, skyDarkness);
 
         if (StormFogModifier.shouldApply(world)) {
-            int sandstormColor = camera.getEnvironmentAttributeInterpolator().get(
-                    ISEnvironmentAttributes.SANDSTORM_COLOR,
-                    skyDarkness
-            );
-            float rainGradient = world.getRainGradient(skyDarkness);
-
-            return ColorHelper.lerp(rainGradient, originalColor, sandstormColor);
+            return StormFogModifier.sampleWeatherFogColor(world, camera.getCameraPos(), skyDarkness, originalColor);
         } else {
             return originalColor;
         }

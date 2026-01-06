@@ -14,7 +14,6 @@ import com.thedeathlycow.immersive.storms.world.SandstormSounds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -52,11 +51,13 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);
 
+        // TODO: test in client only environment
         BiomeModifications.create(ImmersiveStorms.id("environment_attributes"))
                 .add(
                         ModificationPhase.ADDITIONS,
                         clientTag(ISBiomeTags.HAS_SANDSTORMS),
                         (selection, modification) -> {
+                            ImmersiveStorms.LOGGER.info("modifying env attributes");
                             modification.getAttributes().set(ISEnvironmentAttributes.SANDSTORM_COLOR, WeatherEffectType.SANDSTORM.getColor());
                         }
                 );

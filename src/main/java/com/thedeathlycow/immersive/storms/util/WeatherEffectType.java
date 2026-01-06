@@ -4,11 +4,12 @@ import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 
 import java.util.function.BiPredicate;
 
@@ -125,10 +126,10 @@ public enum WeatherEffectType implements StringIdentifiable {
     }
 
     public record WeatherData(
-            Vec3d fogDistance,
+            Vector2fc fogDistance,
             boolean windy
     ) {
-        private static final Vec3d LIGHT_FOG = new Vec3d(32, 64, 0);
-        private static final Vec3d THICK_FOG = new Vec3d(16, 32, 0);
+        private static final Vector2fc LIGHT_FOG = new Vector2f(32, 64);
+        private static final Vector2fc THICK_FOG = new Vector2f(16, 32);
     }
 }

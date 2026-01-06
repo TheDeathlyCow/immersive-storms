@@ -5,7 +5,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.world.StormFogModifier;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.fog.AtmosphericFogModifier;
+import net.minecraft.client.render.fog.FogData;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
@@ -32,21 +34,21 @@ public abstract class AtmosphericFogModifierMixin {
         }
     }
 
-//    @WrapMethod(
-//            method = "applyStartEndModifier"
-//    )
-//    private void modifyFogDistance(
-//            FogData data,
-//            Camera camera,
-//            ClientWorld world,
-//            float f,
-//            RenderTickCounter tickCounter,
-//            Operation<Void> original
-//    ) {
-//        original.call(data, camera, world, f, tickCounter);
-//
-//        if (StormFogModifier.shouldApply(world)) {
-//            StormFogModifier.applyStartEndModifier(data, camera.getEyePos(), world, tickCounter);
-//        }
-//    }
+    @WrapMethod(
+            method = "applyStartEndModifier"
+    )
+    private void modifyFogDistance(
+            FogData data,
+            Camera camera,
+            ClientWorld world,
+            float f,
+            RenderTickCounter tickCounter,
+            Operation<Void> original
+    ) {
+        original.call(data, camera, world, f, tickCounter);
+
+        if (StormFogModifier.shouldApply(world)) {
+            StormFogModifier.applyStartEndModifier(data, camera.getCameraPos(), world, tickCounter);
+        }
+    }
 }

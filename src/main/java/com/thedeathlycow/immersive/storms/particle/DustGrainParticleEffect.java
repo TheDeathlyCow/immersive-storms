@@ -10,7 +10,6 @@ import net.minecraft.particle.AbstractDustParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.ColorHelper;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 public class DustGrainParticleEffect extends AbstractDustParticleEffect {

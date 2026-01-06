@@ -1,10 +1,10 @@
 package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
-import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;

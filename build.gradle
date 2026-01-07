@@ -136,7 +136,7 @@ publishMods {
 	curseforge {
 		accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
 		projectId = "1288370"
-		minecraftVersions.addAll("1.21.9", "1.21.10")
+		minecraftVersions.addAll("1.21.11")
 
 		javaVersions.add(JavaVersion.VERSION_21)
 
@@ -149,7 +149,7 @@ publishMods {
 	modrinth {
 		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
 		projectId = "SdJDElEu"
-		minecraftVersions.addAll("1.21.9", "1.21.10")
+		minecraftVersions.addAll("1.21.11")
 
 		requires("fabric-api", "yacl")
 	}

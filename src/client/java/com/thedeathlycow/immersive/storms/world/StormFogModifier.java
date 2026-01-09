@@ -152,7 +152,7 @@ public final class StormFogModifier {
     private static void setFogDistanceForDistantHorizons(double reduction) {
         IDhApiConfig config = DhApi.Delayed.configs;
         if (config != null) {
-            if (reduction < 1.0) {
+            if (reduction < 0.99) {
                 config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1);
                 config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1);
                 config.graphics().fog().enableVanillaFog().setValue(true);

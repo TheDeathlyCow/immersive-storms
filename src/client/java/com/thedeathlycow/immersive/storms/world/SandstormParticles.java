@@ -9,12 +9,12 @@ import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.Vector3f;
 
 public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
@@ -25,8 +25,8 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
     private static final float BASE_PARTICLE_CHANCE = 1f / 60f;
 
     @Override
-    public void onEndTick(ClientWorld clientWorld) {
-        if (!clientWorld.isRaining() || clientWorld.getTickManager().isFrozen()) {
+    public void onEndTick(ClientLevel clientWorld) {
+        if (!clientWorld.isRaining() || clientWorld.tickRateManager().isFrozen()) {
             return;
         }
 
@@ -41,16 +41,16 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
             return;
         }
 
-        final MinecraftClient gameClient = MinecraftClient.getInstance();
-        final Camera camera = gameClient.gameRenderer.getCamera();
+        final Minecraft gameClient = Minecraft.getInstance();
+        final Camera camera = gameClient.gameRenderer.getMainCamera();
         if (camera == null) {
             return; // no camera for whatever reason
         }
 
         // main particle loop
-        final BlockPos cameraPos = camera.getBlockPos();
-        final BlockPos.Mutable pos = new BlockPos.Mutable();
-        final ParticleEffect particle = new DustGrainParticleEffect(COLOR, PARTICLE_SCALE);
+        final BlockPos cameraPos = camera.blockPosition();
+        final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        final ParticleOptions particle = new DustGrainParticleEffect(COLOR, PARTICLE_SCALE);
         final float rarity = BASE_PARTICLE_CHANCE * sandstormConfig.getSandstormParticleDensityMultiplier();
         final int cameraY = cameraPos.getY();
         final int xOffset = renderDistance / 2;
@@ -61,8 +61,8 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
                 // makes the area the particles come from look less empty
                 int adjustedX = x + xOffset;
 
-                int y = cameraY + clientWorld.random.nextBetween(-renderDistance / 2, (renderDistance + 1) / 2);
-                y = Math.max(y, clientWorld.getTopY(Heightmap.Type.MOTION_BLOCKING, adjustedX, z));
+                int y = cameraY + clientWorld.random.nextIntBetweenInclusive(-renderDistance / 2, (renderDistance + 1) / 2);
+                y = Math.max(y, clientWorld.getHeight(Heightmap.Types.MOTION_BLOCKING, adjustedX, z));
 
                 pos.set(adjustedX, y, z);
                 addParticle(clientWorld, particle, pos, rarity);
@@ -70,13 +70,13 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
         }
     }
 
-    private static void addParticle(ClientWorld world, ParticleEffect particle, BlockPos pos, float rarity) {
+    private static void addParticle(ClientLevel world, ParticleOptions particle, BlockPos pos, float rarity) {
         boolean addParticle = world.random.nextFloat() < rarity
-                && !world.hasRain(pos) // for compatibility with seasons mods
+                && !world.isRainingAt(pos) // for compatibility with seasons mods
                 && ClientTags.isInWithLocalFallback(ISBiomeTags.HAS_SANDSTORMS, world.getBiome(pos)); // faster than checking the weather effects api
 
         if (addParticle) {
-            world.addParticleClient(
+            world.addParticle(
                     particle,
                     pos.getX() + world.random.nextDouble(),
                     pos.getY() + world.random.nextDouble(),

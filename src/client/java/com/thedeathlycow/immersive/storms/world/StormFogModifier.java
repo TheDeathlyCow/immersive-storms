@@ -8,13 +8,18 @@ import com.thedeathlycow.immersive.storms.mixin.client.WorldAccessor;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.render.fog.FogData;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.fog.FogData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.attribute.GaussianSampler;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
@@ -25,19 +30,19 @@ import java.util.function.Function;
 public final class StormFogModifier {
 
     public static int sampleWeatherFogColor(
-            ClientWorld world,
-            Vec3d pos,
+            ClientLevel world,
+            Vec3 pos,
             float tickProgress,
             int originalColor
     ) {
-        final float rainGradient = world.getRainGradient(tickProgress);
+        final float rainGradient = world.getRainLevel(tickProgress);
         final var accumulator = new WeightedVector3fAccumulator();
-        Vector3fc originalBiomeColorVector = ColorHelper.toRgbVector(originalColor);
+        Vector3fc originalBiomeColorVector = ARGB.vector3fFromRGB24(originalColor);
 
-        WeightedInterpolation.interpolate(
-                pos.multiply(0.25),
+        GaussianSampler.sample(
+                pos.scale(0.25),
                 (x, y, z) -> {
-                    RegistryEntry<Biome> biome = world.getBiomeForNoiseGen(x, y, z);
+                    Holder<Biome> biome = world.getNoiseBiome(x, y, z);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
 
                     int color = sampledType.getColor();
@@ -56,15 +61,15 @@ public final class StormFogModifier {
 
     public static void applyStartEndModifier(
             FogData data,
-            Vec3d cameraPos,
-            ClientWorld world,
-            RenderTickCounter tickCounter
+            Vec3 cameraPos,
+            ClientLevel world,
+            DeltaTracker tickCounter
     ) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
 
-        final float tickProgress = tickCounter.getTickProgress(false);
-        final float rainGradient = world.getRainGradient(tickProgress);
-        final float thunderGradient = world.getThunderGradient(tickProgress);
+        final float tickProgress = tickCounter.getGameTimeDeltaPartialTick(false);
+        final float rainGradient = world.getRainLevel(tickProgress);
+        final float thunderGradient = world.getThunderLevel(tickProgress);
 
         var baseRadius = new Vector2f(data.environmentalStart, data.environmentalEnd);
 
@@ -77,26 +82,26 @@ public final class StormFogModifier {
         updateFogRadius(data, rainDistance, thunderDistance, rainGradient, thunderGradient, config);
     }
 
-    public static boolean shouldApply(World world) {
+    public static boolean shouldApply(Level world) {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         return config.isEnableFogChanges()
-                && world.getRainGradient(1f) > 0f
+                && world.getRainLevel(1f) > 0f
                 && ((WorldAccessor) world).invokeCanHaveWeather();
     }
 
     private static Vector2fc lerpFogDistance(
-            Vec3d pos,
-            World world,
+            Vec3 pos,
+            Level world,
             Vector2fc baseRadius,
             Function<WeatherEffectType, WeatherEffectType.WeatherData> fogDataSupplier
     ) {
-        var samplePos = new BlockPos.Mutable();
+        var samplePos = new BlockPos.MutableBlockPos();
         final var accumulator = new WeightedVector2fAccumulator();
         final int undergroundFogCutoff = world.getSeaLevel();
 
         // interpolate fog distances to make less jarring biome transition
         // start is stored in X and end in Y
-        WeightedInterpolation.interpolate(
+        GaussianSampler.sample(
                 pos,
                 (x, y, z) -> {
                     samplePos.set(x, y, z);
@@ -128,10 +133,10 @@ public final class StormFogModifier {
             float thunderGradient,
             ImmersiveStormsConfig config
     ) {
-        float fogEnd = MathHelper.lerp(rainGradient, data.environmentalEnd, rainDistance.y());
+        float fogEnd = Mth.lerp(rainGradient, data.environmentalEnd, rainDistance.y());
 
         if (thunderDistance != null) {
-            fogEnd = MathHelper.lerp(thunderGradient, fogEnd, thunderDistance.y());
+            fogEnd = Mth.lerp(thunderGradient, fogEnd, thunderDistance.y());
         }
 
         fogEnd *= config.getFogDistanceMultiplier();

@@ -6,12 +6,11 @@ import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
 import java.util.Optional;
 
 public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
@@ -22,8 +21,8 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
     private int timer = 0;
 
     @Override
-    public void onEndTick(ClientWorld world) {
-        if (world.getRainGradient(1f) < 0.7f || world.getTickManager().isFrozen()) {
+    public void onEndTick(ClientLevel world) {
+        if (world.getRainLevel(1f) < 0.7f || world.tickRateManager().isFrozen()) {
             return;
         }
 
@@ -35,8 +34,8 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
             return;
         }
 
-        final MinecraftClient gameClient = MinecraftClient.getInstance();
-        final Camera camera = gameClient.gameRenderer.getCamera();
+        final Minecraft gameClient = Minecraft.getInstance();
+        final Camera camera = gameClient.gameRenderer.getMainCamera();
         if (camera == null) {
             return; // no camera for whatever reason
         }
@@ -53,10 +52,10 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
 
         this.chooseSpotForWindSound(world, camera).ifPresent(
                 pos -> {
-                    world.playSoundAtBlockCenterClient(
+                    world.playLocalSound(
                             pos,
                             ISSoundEvents.WEATHER_STRONG_WIND,
-                            SoundCategory.WEATHER,
+                            SoundSource.WEATHER,
                             0.5f, 1f,
                             false
                     );
@@ -64,13 +63,13 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         );
     }
 
-    private Optional<BlockPos> chooseSpotForWindSound(ClientWorld world, Camera camera) {
-        BlockPos cameraPos = camera.getBlockPos();
+    private Optional<BlockPos> chooseSpotForWindSound(ClientLevel world, Camera camera) {
+        BlockPos cameraPos = camera.blockPosition();
 
-        int dx = world.random.nextBetween(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
-        int dy = world.random.nextBetween(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
-        int dz = world.random.nextBetween(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
-        BlockPos soundPos = cameraPos.add(dx, dy, dz);
+        int dx = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
+        int dy = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
+        int dz = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
+        BlockPos soundPos = cameraPos.offset(dx, dy, dz);
 
         WeatherEffectType.WeatherData weatherData = WeatherEffectsClient.getCurrentType(world, soundPos, true)
                 .getWeatherData(world);

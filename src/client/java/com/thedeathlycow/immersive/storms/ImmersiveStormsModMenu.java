@@ -9,8 +9,8 @@ import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class ImmersiveStormsModMenu implements ModMenuApi {
     private static final String GENERAL_PREFIX = Translate.prefixKey(ImmersiveStormsConfig.HANDLER);
@@ -24,34 +24,34 @@ public class ImmersiveStormsModMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> YetAnotherConfigLib.createBuilder()
-                .title(Text.literal("Immersive Storms Test"))
+                .title(Component.literal("Immersive Storms Test"))
                 .category(
                         ConfigCategory.createBuilder()
-                                .name(Text.translatable(TITLE))
+                                .name(Component.translatable(TITLE))
                                 .option(ButtonOption.createBuilder()
-                                        .name(Text.translatable(GENERAL_CATEGORY))
+                                        .name(Component.translatable(GENERAL_CATEGORY))
                                         .description(
                                                 OptionDescription.createBuilder()
-                                                        .text(Text.translatable(GENERAL_CATEGORY_DESC))
+                                                        .text(Component.translatable(GENERAL_CATEGORY_DESC))
                                                         .build()
                                         )
-                                        .text(Text.literal(""))
+                                        .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
-                                            MinecraftClient.getInstance()
+                                            Minecraft.getInstance()
                                                     .setScreen(ImmersiveStormsConfig.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())
                                 .option(ButtonOption.createBuilder()
-                                        .name(Text.translatable(SANDSTORM_CATEGORY))
+                                        .name(Component.translatable(SANDSTORM_CATEGORY))
                                         .description(
                                                 OptionDescription.createBuilder()
-                                                        .text(Text.translatable(SANDSTORM_CATEGORY_DESC))
+                                                        .text(Component.translatable(SANDSTORM_CATEGORY_DESC))
                                                         .build()
                                         )
-                                        .text(Text.literal(""))
+                                        .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
-                                            MinecraftClient.getInstance()
+                                            Minecraft.getInstance()
                                                     .setScreen(SandstormConfig.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));

@@ -1,15 +1,16 @@
 package com.thedeathlycow.immersive.storms.util;
 
+import WeatherEffectType;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
 public final class WeatherEffectsClient {
     public static WeatherEffectType getCurrentType(
-            World world,
+            Level world,
             BlockPos pos,
             boolean aboveSurface
     ) {
@@ -21,7 +22,7 @@ public final class WeatherEffectsClient {
         );
     }
 
-    public static boolean isWeatherEffectTypeEnabled(WeatherEffectType type, RegistryEntry<Biome> biome) {
+    public static boolean isWeatherEffectTypeEnabled(WeatherEffectType type, Holder<Biome> biome) {
         return type.getBiomeTag() != null
                 && ImmersiveStormsClient.getConfig().isEnabled(type)
                 && ClientTags.isInWithLocalFallback(type.getBiomeTag(), biome);

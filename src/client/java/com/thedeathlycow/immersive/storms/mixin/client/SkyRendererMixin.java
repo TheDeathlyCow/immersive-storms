@@ -11,7 +11,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(SkyRenderer.class)
-public class SkyRenderingMixin {
+public class SkyRendererMixin {
     @WrapMethod(
             method = "extractRenderState"
     )

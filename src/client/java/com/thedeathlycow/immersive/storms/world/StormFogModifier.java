@@ -4,7 +4,7 @@ import com.seibel.distanthorizons.api.DhApi;
 import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.mixin.client.WorldAccessor;
+import com.thedeathlycow.immersive.storms.mixin.client.LevelAccessor;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import net.minecraft.util.math.*;
 import net.minecraft.world.attribute.GaussianSampler;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -86,7 +85,7 @@ public final class StormFogModifier {
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
         return config.isEnableFogChanges()
                 && world.getRainLevel(1f) > 0f
-                && ((WorldAccessor) world).invokeCanHaveWeather();
+                && ((LevelAccessor) world).invokeCanHaveWeather();
     }
 
     private static Vector2fc lerpFogDistance(

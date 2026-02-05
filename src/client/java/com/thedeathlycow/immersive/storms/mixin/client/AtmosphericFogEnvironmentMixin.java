@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(AtmosphericFogEnvironment.class)
-public abstract class AtmosphericFogModifierMixin {
+public abstract class AtmosphericFogEnvironmentMixin {
     @WrapMethod(method = "getBaseColor")
     protected int modifyBaseFogColor(
             ClientLevel world,

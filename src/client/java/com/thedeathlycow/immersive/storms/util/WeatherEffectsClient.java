@@ -1,6 +1,5 @@
 package com.thedeathlycow.immersive.storms.util;
 
-import WeatherEffectType;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.core.BlockPos;

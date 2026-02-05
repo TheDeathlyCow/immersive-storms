@@ -14,7 +14,7 @@ public final class WeatherEffects {
             boolean aboveSurface,
             BiPredicate<WeatherEffectType, Holder<Biome>> tagInclusion
     ) {
-        if (!isWeatherEffected(world, pos, aboveSurface)) {
+        if (!isWeatherAffected(world, pos, aboveSurface)) {
             return WeatherEffectType.NONE;
         }
 
@@ -41,7 +41,7 @@ public final class WeatherEffects {
         );
     }
 
-    private static boolean isWeatherEffected(
+    private static boolean isWeatherAffected(
             Level world,
             BlockPos pos,
             boolean aboveSurface

@@ -1,9 +1,9 @@
 package com.thedeathlycow.immersive.storms.registry;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 
 public final class ISBiomeTags {
     public static final TagKey<Biome> HAS_SANDSTORMS = create("has_sandstorms");
@@ -12,7 +12,7 @@ public final class ISBiomeTags {
     public static final TagKey<Biome> IS_WINDY = create("is_windy");
 
     private static TagKey<Biome> create(String id) {
-        return TagKey.of(RegistryKeys.BIOME, ImmersiveStorms.id(id));
+        return TagKey.create(Registries.BIOME, ImmersiveStorms.id(id));
     }
 
     private ISBiomeTags() {

@@ -1,28 +1,27 @@
 package com.thedeathlycow.immersive.storms.util;
 
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-
 import java.util.function.BiPredicate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public final class WeatherEffects {
     public static WeatherEffectType getCurrentType(
-            World world,
+            Level world,
             BlockPos pos,
             boolean aboveSurface,
-            BiPredicate<WeatherEffectType, RegistryEntry<Biome>> tagInclusion
+            BiPredicate<WeatherEffectType, Holder<Biome>> tagInclusion
     ) {
         if (!isWeatherEffected(world, pos, aboveSurface)) {
             return WeatherEffectType.NONE;
         }
 
-        RegistryEntry<Biome> biome = world.getBiomeAccess().getBiomeForNoiseGen(pos);
+        Holder<Biome> biome = world.getBiomeManager().getNoiseBiomeAtPosition(pos);
         WeatherEffectType type = WeatherEffectType.forBiome(biome, tagInclusion);
 
-        if (!type.allowedWithRain() && aboveSurface && world.hasRain(pos)) {
+        if (!type.allowedWithRain() && aboveSurface && world.isRainingAt(pos)) {
             return WeatherEffectType.NONE;
         }
 
@@ -30,7 +29,7 @@ public final class WeatherEffects {
     }
 
     public static WeatherEffectType getCurrentType(
-            World world,
+            Level world,
             BlockPos pos,
             boolean aboveSurface
     ) {
@@ -38,20 +37,20 @@ public final class WeatherEffects {
                 world,
                 pos,
                 aboveSurface,
-                (type, biome) -> type.getBiomeTag() != null && biome.isIn(type.getBiomeTag())
+                (type, biome) -> type.getBiomeTag() != null && biome.is(type.getBiomeTag())
         );
     }
 
     private static boolean isWeatherEffected(
-            World world,
+            Level world,
             BlockPos pos,
             boolean aboveSurface
     ) {
         if (!world.isRaining()) {
             return false;
-        } else if (aboveSurface && !world.isSkyVisible(pos)) {
+        } else if (aboveSurface && !world.canSeeSky(pos)) {
             return false;
-        } else if (aboveSurface && world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY() > pos.getY()) {
+        } else if (aboveSurface && world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY() > pos.getY()) {
             return false;
         } else {
             return true;

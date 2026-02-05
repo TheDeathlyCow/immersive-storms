@@ -9,8 +9,7 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.registry.RegistryWrapper;
-
+import net.minecraft.core.HolderLookup;
 import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,12 +17,12 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
     private static final String BASE_PREFIX = "yacl3.config.immersive-storms";
     private static final String SANDSTORM_PREFIX = BASE_PREFIX + ".option.sandstorm";
 
-    protected EnglishUSGenerator(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+    protected EnglishUSGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, "en_us", registryLookup);
     }
 
     @Override
-    public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder builder) {
+    public void generateTranslations(HolderLookup.Provider wrapperLookup, TranslationBuilder builder) {
         builder.add(ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
 
         builder.add(ImmersiveStormsModMenu.TITLE, "Immersive Storms Config");

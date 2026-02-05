@@ -1,10 +1,10 @@
 package com.thedeathlycow.immersive.storms.world;
 
-import net.minecraft.util.math.WeightedInterpolation;
+import net.minecraft.world.attribute.GaussianSampler;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 
-public class WeightedVector2fAccumulator implements WeightedInterpolation.Accumulator<Vector2fc> {
+public class WeightedVector2fAccumulator implements GaussianSampler.Accumulator<Vector2fc> {
     private final Vector2f sumVector = new Vector2f();
     private double totalWeight;
 

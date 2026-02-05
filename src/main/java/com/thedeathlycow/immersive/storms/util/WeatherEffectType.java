@@ -1,19 +1,19 @@
 package com.thedeathlycow.immersive.storms.util;
 
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 
 import java.util.function.BiPredicate;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
-public enum WeatherEffectType implements StringIdentifiable {
+public enum WeatherEffectType implements StringRepresentable {
     NONE,
     SANDSTORM(
             "sandstorm",
@@ -76,7 +76,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 
@@ -90,7 +90,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     }
 
     @Nullable
-    public WeatherEffectType.WeatherData getWeatherData(World world) {
+    public WeatherEffectType.WeatherData getWeatherData(Level world) {
         if (this.thunderWeatherData != null && world.isThundering()) {
             return this.thunderWeatherData;
         } else if (world.isRaining()) {
@@ -115,7 +115,7 @@ public enum WeatherEffectType implements StringIdentifiable {
     }
 
     @ApiStatus.Internal
-    public static WeatherEffectType forBiome(RegistryEntry<Biome> biome, BiPredicate<WeatherEffectType, RegistryEntry<Biome>> allowed) {
+    public static WeatherEffectType forBiome(Holder<Biome> biome, BiPredicate<WeatherEffectType, Holder<Biome>> allowed) {
         for (WeatherEffectType value : values()) {
             if (allowed.test(value, biome)) {
                 return value;

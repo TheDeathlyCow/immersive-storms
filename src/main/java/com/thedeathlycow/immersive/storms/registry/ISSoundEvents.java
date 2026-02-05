@@ -1,9 +1,9 @@
 package com.thedeathlycow.immersive.storms.registry;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.sounds.SoundEvent;
 
 public final class ISSoundEvents {
     public static final SoundEvent WEATHER_STRONG_WIND = register("weather.strong_wind");
@@ -13,9 +13,9 @@ public final class ISSoundEvents {
     }
 
     private static SoundEvent register(String name) {
-        SoundEvent event = SoundEvent.of(ImmersiveStorms.id(name));
+        SoundEvent event = SoundEvent.createVariableRangeEvent(ImmersiveStorms.id(name));
 
-        return Registry.register(Registries.SOUND_EVENT, event.id(), event);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, event.location(), event);
     }
 
     private ISSoundEvents() {

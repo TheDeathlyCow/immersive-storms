@@ -40,7 +40,7 @@ public class BiomeConfig {
     int version = VERSION;
 
     @AutoGen(category = CATEGORY)
-    @Translate.Name("Exclude biomes")
+    @Translate.Name("Excluded biomes")
     @ListGroup(
             valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
             controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
@@ -48,9 +48,22 @@ public class BiomeConfig {
     @SerialEntry(comment = "Exclude specific biomes from custom weather effects")
     List<ResourceKey<Biome>> excludeBiomes = new ArrayList<>();
 
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Sandstorm biomes")
+    @ListGroup(
+            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
+            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+    )
+    @SerialEntry(comment = "Add new biomes to be affected by sandstorms.")
+    List<ResourceKey<Biome>> sandstormBiomes = new ArrayList<>();
+
     public boolean isBiomeExcluded(Holder<Biome> biomeHolder) {
         return biomeHolder.unwrapKey()
                 .map(key -> this.excludeBiomes.contains(key))
                 .orElse(false);
+    }
+
+    public static BiomeConfig getConfig() {
+        return HANDLER.instance();
     }
 }

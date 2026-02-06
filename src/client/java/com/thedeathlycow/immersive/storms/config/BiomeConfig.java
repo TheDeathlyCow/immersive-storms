@@ -1,6 +1,7 @@
 package com.thedeathlycow.immersive.storms.config;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
@@ -13,10 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BiomeConfig {
     static final Path PATH = ImmersiveStorms.getConfigDir().resolve("biomes.json5");
@@ -57,9 +55,40 @@ public class BiomeConfig {
     @SerialEntry(comment = "Add new biomes to be affected by sandstorms.")
     List<ResourceKey<Biome>> sandstormBiomes = new ArrayList<>();
 
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Blizzard biomes")
+    @ListGroup(
+            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
+            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+    )
+    @SerialEntry(comment = "Add new biomes to be affected by blizzards.")
+    List<ResourceKey<Biome>> blizzardBiomes = new ArrayList<>();
+
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Dense fog biomes")
+    @ListGroup(
+            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
+            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+    )
+    @SerialEntry(comment = "Add new biomes to be affected by dense fog.")
+    List<ResourceKey<Biome>> denseFogBiomes = new ArrayList<>();
+
     public boolean isBiomeExcluded(Holder<Biome> biomeHolder) {
         return biomeHolder.unwrapKey()
                 .map(key -> this.excludeBiomes.contains(key))
+                .orElse(false);
+    }
+
+    public boolean isIncluded(WeatherEffectType type, Holder<Biome> biomeHolder) {
+        List<ResourceKey<Biome>> inclusion = switch (type) {
+            case SANDSTORM -> this.sandstormBiomes;
+            case BLIZZARD -> this.blizzardBiomes;
+            case DENSE_FOG -> this.denseFogBiomes;
+            default -> Collections.emptyList();
+        };
+
+        return biomeHolder.unwrapKey()
+                .map(inclusion::contains)
                 .orElse(false);
     }
 

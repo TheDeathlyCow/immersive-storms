@@ -7,13 +7,16 @@ import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.Vector3f;
 
@@ -71,9 +74,11 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
     }
 
     private static void addParticle(ClientLevel world, ParticleOptions particle, BlockPos pos, float rarity) {
+        Holder<Biome> biome = world.getBiomeManager().getNoiseBiomeAtPosition(pos);
+
         boolean addParticle = world.random.nextFloat() < rarity
-                && !world.isRainingAt(pos) // for compatibility with seasons mods
-                && ClientTags.isInWithLocalFallback(ISBiomeTags.HAS_SANDSTORMS, world.getBiome(pos)); // faster than checking the weather effects api
+                && biome.value().getPrecipitationAt(pos, world.getSeaLevel()) == Biome.Precipitation.NONE
+                && WeatherEffectsClient.isWeatherEffectTypeEnabled(WeatherEffectType.SANDSTORM, biome);
 
         if (addParticle) {
             world.addParticle(

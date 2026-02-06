@@ -26,7 +26,7 @@ public final class WeatherEffectsClient {
         return type.getBiomeTag() != null
                 && ImmersiveStormsClient.getConfig().isEnabled(type)
                 && !BiomeConfig.getConfig().isBiomeExcluded(biome)
-                && ClientTags.isInWithLocalFallback(type.getBiomeTag(), biome);
+                && (ClientTags.isInWithLocalFallback(type.getBiomeTag(), biome) || BiomeConfig.getConfig().isIncluded(type, biome));
     }
 
     private WeatherEffectsClient() {

@@ -1,5 +1,10 @@
 {
   "subtitles.immersive-storms.weather.strong_wind": "Wind blows strongly",
+  "yacl3.config.immersive-storms:biomes.category.biomes": "Biome Settings",
+  "yacl3.config.immersive-storms:biomes.category.desc": "Configure how different biomes are affected by weather types",
+  "yacl3.config.immersive-storms:biomes.sandstormBiomes": "Sandstorm biomes",
+  "yacl3.config.immersive-storms:biomes.version": "Schema version",
+  "yacl3.config.immersive-storms:biomes.version.desc": "Config version, do not touch! Changing this value may result in unexpected behaviour.",
   "yacl3.config.immersive-storms:general.category.desc": "General settings for Immersive Storms",
   "yacl3.config.immersive-storms:general.category.general": "General Settings",
   "yacl3.config.immersive-storms:general.enableAmbientWindParticles": "Enable ambient wind particles",

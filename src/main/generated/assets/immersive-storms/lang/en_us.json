@@ -9,7 +9,7 @@
   "yacl3.config.immersive-storms:biomes.excludeBiomes": "Excluded biomes",
   "yacl3.config.immersive-storms:biomes.excludeBiomes.desc": "Exclude specific biomes from custom weather effects",
   "yacl3.config.immersive-storms:biomes.sandstormBiomes": "Sandstorm biomes",
-  "yacl3.config.immersive-storms:biomes.sandstormBiomes.desc": "Add new biomes to be affected by sandstorms.",
+  "yacl3.config.immersive-storms:biomes.sandstormBiomes.desc": "Add new biomes to be affected by sandstorms. Particles and sounds will not work in biomes where it is raining or snowing.",
   "yacl3.config.immersive-storms:biomes.version": "Schema version",
   "yacl3.config.immersive-storms:biomes.version.desc": "Config version, do not touch! Changing this value may result in unexpected behaviour.",
   "yacl3.config.immersive-storms:biomes.windyBiomes": "Windy biomes",

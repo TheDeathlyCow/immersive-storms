@@ -62,7 +62,7 @@ public class BiomeConfig {
             valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
             controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
-    @SerialEntry(comment = "Add new biomes to be affected by sandstorms.")
+    @SerialEntry(comment = "Add new biomes to be affected by sandstorms. Particles and sounds will not work in biomes where it is raining or snowing.")
     List<Identifier> sandstormBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)

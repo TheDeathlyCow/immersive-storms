@@ -21,7 +21,7 @@ public final class WeatherEffects {
         Holder<Biome> biome = world.getBiomeManager().getNoiseBiomeAtPosition(pos);
         WeatherEffectType type = WeatherEffectType.forBiome(biome, tagInclusion);
 
-        if (!type.allowedWithRain() && aboveSurface && world.isRainingAt(pos)) {
+        if (aboveSurface && !type.allowedWithRain() && world.precipitationAt(pos) != Biome.Precipitation.NONE) {
             return WeatherEffectType.NONE;
         }
 

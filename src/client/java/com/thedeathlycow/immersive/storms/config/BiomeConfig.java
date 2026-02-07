@@ -10,7 +10,7 @@ import dev.isxander.yacl3.config.v2.api.autogen.ListGroup;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 
 import java.nio.file.Path;
@@ -25,6 +25,14 @@ public class BiomeConfig {
             .id(ImmersiveStorms.id("biomes"))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
+                            .appendGsonBuilder(gsonBuilder -> {
+                                gsonBuilder.registerTypeHierarchyAdapter(
+                                        Identifier.class,
+                                        new IdentifierController.GsonAdapter()
+                                );
+
+                                return gsonBuilder;
+                            })
                             .setPath(PATH)
                             .setJson5(true)
                             .build()
@@ -42,56 +50,56 @@ public class BiomeConfig {
     @AutoGen(category = CATEGORY)
     @Translate.Name("Excluded biomes")
     @ListGroup(
-            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
-            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+            valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
+            controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
     @SerialEntry(comment = "Exclude specific biomes from custom weather effects")
-    List<ResourceKey<Biome>> excludeBiomes = new ArrayList<>();
+    List<Identifier> excludeBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Sandstorm biomes")
     @ListGroup(
-            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
-            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+            valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
+            controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
     @SerialEntry(comment = "Add new biomes to be affected by sandstorms.")
-    List<ResourceKey<Biome>> sandstormBiomes = new ArrayList<>();
+    List<Identifier> sandstormBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Blizzard biomes")
     @ListGroup(
-            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
-            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+            valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
+            controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
     @SerialEntry(comment = "Add new biomes to be affected by blizzards.")
-    List<ResourceKey<Biome>> blizzardBiomes = new ArrayList<>();
+    List<Identifier> blizzardBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Dense fog biomes")
     @ListGroup(
-            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
-            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+            valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
+            controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
     @SerialEntry(comment = "Add new biomes to be affected by dense fog.")
-    List<ResourceKey<Biome>> denseFogBiomes = new ArrayList<>();
+    List<Identifier> denseFogBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Windy biomes")
     @ListGroup(
-            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
-            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+            valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
+            controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
     @SerialEntry(comment = "Add new biomes to be affected by wind particles.")
-    List<ResourceKey<Biome>> windyBiomes = new ArrayList<>();
+    List<Identifier> windyBiomes = new ArrayList<>();
 
     public boolean isBiomeExcluded(Holder<Biome> biomeHolder) {
         return biomeHolder.unwrapKey()
-                .map(key -> this.excludeBiomes.contains(key))
+                .map(key -> this.excludeBiomes.contains(key.identifier()))
                 .orElse(false);
     }
 
     public boolean isIncluded(WeatherEffectType type, Holder<Biome> biomeHolder) {
-        List<ResourceKey<Biome>> inclusion = switch (type) {
+        List<Identifier> inclusion = switch (type) {
             case SANDSTORM -> this.sandstormBiomes;
             case BLIZZARD -> this.blizzardBiomes;
             case DENSE_FOG -> this.denseFogBiomes;
@@ -99,13 +107,13 @@ public class BiomeConfig {
         };
 
         return biomeHolder.unwrapKey()
-                .map(inclusion::contains)
+                .map(key -> inclusion.contains(key.identifier()))
                 .orElse(false);
     }
 
     public boolean isWindy(Holder<Biome> biomeHolder) {
         return ClientTags.isInWithLocalFallback(ISBiomeTags.IS_WINDY, biomeHolder)
-                || biomeHolder.unwrapKey().map(key -> this.windyBiomes.contains(key)).orElse(false);
+                || biomeHolder.unwrapKey().map(key -> this.windyBiomes.contains(key.identifier())).orElse(false);
     }
 
     public static BiomeConfig getConfig() {

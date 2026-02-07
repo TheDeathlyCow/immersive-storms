@@ -12,6 +12,8 @@
   "yacl3.config.immersive-storms:biomes.sandstormBiomes.desc": "Add new biomes to be affected by sandstorms.",
   "yacl3.config.immersive-storms:biomes.version": "Schema version",
   "yacl3.config.immersive-storms:biomes.version.desc": "Config version, do not touch! Changing this value may result in unexpected behaviour.",
+  "yacl3.config.immersive-storms:biomes.windyBiomes": "Windy biomes",
+  "yacl3.config.immersive-storms:biomes.windyBiomes.desc": "Add new biomes to be affected by wind particles.",
   "yacl3.config.immersive-storms:general.category.desc": "General settings for Immersive Storms",
   "yacl3.config.immersive-storms:general.category.general": "General Settings",
   "yacl3.config.immersive-storms:general.enableAmbientWindParticles": "Enable ambient wind particles",

@@ -1,20 +1,22 @@
 package com.thedeathlycow.immersive.storms.config;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
 import dev.isxander.yacl3.config.v2.api.autogen.ListGroup;
-import dev.isxander.yacl3.config.v2.api.autogen.TickBox;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BiomeConfig {
     static final Path PATH = ImmersiveStorms.getConfigDir().resolve("biomes.json5");
@@ -29,7 +31,7 @@ public class BiomeConfig {
             )
             .build();
 
-    private static final String CATEGORY = "default";
+    private static final String CATEGORY = "biomes";
 
     private static final int VERSION = 1;
 
@@ -73,6 +75,15 @@ public class BiomeConfig {
     @SerialEntry(comment = "Add new biomes to be affected by dense fog.")
     List<ResourceKey<Biome>> denseFogBiomes = new ArrayList<>();
 
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Windy biomes")
+    @ListGroup(
+            valueFactory = ResourceKeyListGroup.BiomeListGroup.class,
+            controllerFactory = ResourceKeyListGroup.BiomeListGroup.class
+    )
+    @SerialEntry(comment = "Add new biomes to be affected by wind particles.")
+    List<ResourceKey<Biome>> windyBiomes = new ArrayList<>();
+
     public boolean isBiomeExcluded(Holder<Biome> biomeHolder) {
         return biomeHolder.unwrapKey()
                 .map(key -> this.excludeBiomes.contains(key))
@@ -90,6 +101,11 @@ public class BiomeConfig {
         return biomeHolder.unwrapKey()
                 .map(inclusion::contains)
                 .orElse(false);
+    }
+
+    public boolean isWindy(Holder<Biome> biomeHolder) {
+        return ClientTags.isInWithLocalFallback(ISBiomeTags.IS_WINDY, biomeHolder)
+                || biomeHolder.unwrapKey().map(key -> this.windyBiomes.contains(key)).orElse(false);
     }
 
     public static BiomeConfig getConfig() {

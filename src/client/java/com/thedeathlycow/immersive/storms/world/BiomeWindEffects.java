@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
+import com.thedeathlycow.immersive.storms.config.BiomeConfig;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
@@ -160,7 +161,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
 
         @Nullable
         public static ParticleColor forBiome(Holder<Biome> biome) {
-            if (ClientTags.isInWithLocalFallback(ISBiomeTags.IS_WINDY, biome)) {
+            if (BiomeConfig.getConfig().isWindy(biome)) {
                 for (ParticleColor value : values()) {
                     if (ClientTags.isInWithLocalFallback(value.tag, biome)) {
                         return value;

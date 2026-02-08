@@ -3,13 +3,16 @@ package com.thedeathlycow.immersive.storms.util;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.joml.Vector3fc;
 
 import java.util.function.BiPredicate;
 
@@ -79,9 +82,20 @@ public enum WeatherEffectType implements StringRepresentable {
         return biomeTag;
     }
 
-    public int getFogColor(Level level) {
-        WeatherEffectType.WeatherData data = this.getWeatherData(level);
-        return data != null ? data.fogColor() : -1;
+    public Vector3fc getFogColor(Vector3fc originalFogColor, float rainLevel, float thunderLevel) {
+        if (this.thunderWeatherData == null && this.rainWeatherData == null) {
+            return originalFogColor;
+        }
+        Vector3fc rainColor = fogColorOrElse(this.rainWeatherData, originalFogColor);
+        Vector3fc thunderColor = fogColorOrElse(this.thunderWeatherData, originalFogColor);
+
+        return ISMath.lerp2(rainLevel, thunderLevel, originalFogColor, rainColor, rainColor, thunderColor);
+    }
+
+    private static Vector3fc fogColorOrElse(@Nullable WeatherData data, Vector3fc base) {
+        return data != null && data.fogColor() != null
+                ? data.fogColor()
+                : base;
     }
 
     @Nullable
@@ -124,9 +138,13 @@ public enum WeatherEffectType implements StringRepresentable {
     public record WeatherData(
             Vector2fc fogDistance,
             boolean windy,
-            int fogColor
+            @Nullable Vector3fc fogColor
     ) {
         private static final Vector2fc LIGHT_FOG = new Vector2f(32, 64);
         private static final Vector2fc THICK_FOG = new Vector2f(16, 32);
+
+        public WeatherData(Vector2fc fogDistance, boolean windy, int fogColor) {
+            this(fogDistance, windy, fogColor > -1 ? ARGB.vector3fFromRGB24(fogColor) : null);
+        }
     }
 }

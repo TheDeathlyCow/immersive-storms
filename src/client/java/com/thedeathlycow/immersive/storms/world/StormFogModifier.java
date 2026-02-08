@@ -38,7 +38,6 @@ public final class StormFogModifier {
     ) {
         final float rainLevel = level.getRainLevel(tickProgress);
         final float thunderLevel = level.getThunderLevel(tickProgress);
-        final float delta = (thunderLevel > 0f ? thunderLevel : rainLevel) * FOG_COLOR_BLEND_PERCENT;
 
         final var accumulator = new WeightedVector3fAccumulator();
         Vector3fc originalBiomeColorVector = ARGB.vector3fFromRGB24(originalColor);
@@ -48,14 +47,7 @@ public final class StormFogModifier {
                 (x, y, z) -> {
                     Holder<Biome> biome = level.getNoiseBiome(x, y, z);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
-
-                    int color = sampledType.getFogColor(level);
-
-                    if (color >= 0) {
-                        return ISMath.lerp(delta, originalBiomeColorVector, ARGB.vector3fFromRGB24(color));
-                    } else {
-                        return originalBiomeColorVector;
-                    }
+                    return sampledType.getFogColor(originalBiomeColorVector, rainLevel, thunderLevel);
                 },
                 accumulator
         );

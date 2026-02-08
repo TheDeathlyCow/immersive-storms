@@ -18,15 +18,15 @@ public enum WeatherEffectType implements StringRepresentable {
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            new WeatherData(WeatherData.LIGHT_FOG, true, 0xd96e38),
-            new WeatherData(WeatherData.THICK_FOG, true, 0xd96e38),
+            new WeatherData(WeatherData.LIGHT_FOG, true, 0xD96E38),
+            new WeatherData(WeatherData.THICK_FOG, true, 0xD96E38),
             false
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, false, 0xBBBBBB),
+            new WeatherData(WeatherData.LIGHT_FOG, false, 0x77797A),
             false
     ),
     DENSE_FOG(

@@ -28,6 +28,7 @@ import org.joml.Vector3fc;
 import java.util.function.Function;
 
 public final class StormFogModifier {
+    private static final float FOG_COLOR_BLEND_PERCENT = 0.75f;
 
     public static int sampleWeatherFogColor(
             ClientLevel level,
@@ -37,7 +38,7 @@ public final class StormFogModifier {
     ) {
         final float rainLevel = level.getRainLevel(tickProgress);
         final float thunderLevel = level.getThunderLevel(tickProgress);
-        final float delta = thunderLevel > 0f ? thunderLevel : rainLevel;
+        final float delta = (thunderLevel > 0f ? thunderLevel : rainLevel) * FOG_COLOR_BLEND_PERCENT;
 
         final var accumulator = new WeightedVector3fAccumulator();
         Vector3fc originalBiomeColorVector = ARGB.vector3fFromRGB24(originalColor);

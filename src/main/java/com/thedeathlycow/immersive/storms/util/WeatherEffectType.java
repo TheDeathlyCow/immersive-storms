@@ -1,42 +1,39 @@
 package com.thedeathlycow.immersive.storms.util;
 
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 
 import java.util.function.BiPredicate;
-import net.minecraft.core.Holder;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
 
 public enum WeatherEffectType implements StringRepresentable {
     NONE,
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            0xd96e38,
-            new WeatherData(WeatherData.LIGHT_FOG, true),
-            new WeatherData(WeatherData.THICK_FOG, true),
+            new WeatherData(WeatherData.LIGHT_FOG, true, 0xd96e38),
+            new WeatherData(WeatherData.THICK_FOG, true, 0xd96e38),
             false
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
-            0xBBBBBB,
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, false),
+            new WeatherData(WeatherData.LIGHT_FOG, false, 0xBBBBBB),
             false
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
-            -1,
-            new WeatherData(WeatherData.LIGHT_FOG, false),
-            new WeatherData(WeatherData.THICK_FOG, false),
+            new WeatherData(WeatherData.LIGHT_FOG, false, -1),
+            new WeatherData(WeatherData.THICK_FOG, false, -1),
             true
     );
 
@@ -44,8 +41,6 @@ public enum WeatherEffectType implements StringRepresentable {
 
     @Nullable
     private final TagKey<Biome> biomeTag;
-
-    private final int color;
 
     @Nullable
     private final WeatherEffectType.WeatherData rainWeatherData;
@@ -56,20 +51,18 @@ public enum WeatherEffectType implements StringRepresentable {
     private final boolean allowedWithRain;
 
     WeatherEffectType() {
-        this("none", null, -1, null, null, true);
+        this("none", null, null, null, true);
     }
 
     WeatherEffectType(
             String name,
             @Nullable TagKey<Biome> biomeTag,
-            int color,
             @Nullable WeatherEffectType.WeatherData rainWeatherData,
             @Nullable WeatherEffectType.WeatherData thunderWeatherData,
             boolean allowedWithRain
     ) {
         this.name = name;
         this.biomeTag = biomeTag;
-        this.color = color;
         this.rainWeatherData = rainWeatherData;
         this.thunderWeatherData = thunderWeatherData;
         this.allowedWithRain = allowedWithRain;
@@ -85,15 +78,16 @@ public enum WeatherEffectType implements StringRepresentable {
         return biomeTag;
     }
 
-    public int getColor() {
-        return color;
+    public int getFogColor(Level level) {
+        WeatherEffectType.WeatherData data = this.getWeatherData(level);
+        return data != null ? data.fogColor() : -1;
     }
 
     @Nullable
     public WeatherEffectType.WeatherData getWeatherData(Level world) {
-        if (this.thunderWeatherData != null && world.isThundering()) {
+        if (this.thunderWeatherData != null && world.getThunderLevel(1f) > 0f) {
             return this.thunderWeatherData;
-        } else if (world.isRaining()) {
+        } else if (world.getRainLevel(1f) > 0f) {
             return this.rainWeatherData;
         } else {
             return null;
@@ -127,7 +121,8 @@ public enum WeatherEffectType implements StringRepresentable {
 
     public record WeatherData(
             Vector2fc fogDistance,
-            boolean windy
+            boolean windy,
+            int fogColor
     ) {
         private static final Vector2fc LIGHT_FOG = new Vector2f(32, 64);
         private static final Vector2fc THICK_FOG = new Vector2f(16, 32);

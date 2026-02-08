@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.seibel.distanthorizons.api.DhApi;
 import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
+import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.mixin.client.LevelAccessor;
@@ -29,25 +30,28 @@ import java.util.function.Function;
 public final class StormFogModifier {
 
     public static int sampleWeatherFogColor(
-            ClientLevel world,
+            ClientLevel level,
             Vec3 pos,
             float tickProgress,
             int originalColor
     ) {
-        final float rainGradient = world.getRainLevel(tickProgress);
+        final float rainLevel = level.getRainLevel(tickProgress);
+        final float thunderLevel = level.getThunderLevel(tickProgress);
+        final float delta = thunderLevel > 0f ? thunderLevel : rainLevel;
+
         final var accumulator = new WeightedVector3fAccumulator();
         Vector3fc originalBiomeColorVector = ARGB.vector3fFromRGB24(originalColor);
 
         GaussianSampler.sample(
                 pos.scale(0.25),
                 (x, y, z) -> {
-                    Holder<Biome> biome = world.getNoiseBiome(x, y, z);
+                    Holder<Biome> biome = level.getNoiseBiome(x, y, z);
                     WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
 
-                    int color = sampledType.getColor();
+                    int color = sampledType.getFogColor(level);
 
                     if (color >= 0) {
-                        return ISMath.lerp(rainGradient, originalBiomeColorVector, ISMath.unpackRgb(color));
+                        return ISMath.lerp(delta, originalBiomeColorVector, ARGB.vector3fFromRGB24(color));
                     } else {
                         return originalBiomeColorVector;
                     }

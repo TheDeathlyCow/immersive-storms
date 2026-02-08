@@ -1,5 +1,6 @@
 package com.thedeathlycow.immersive.storms;
 
+import com.thedeathlycow.immersive.storms.config.BiomeConfig;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Updater;
@@ -51,6 +52,8 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         ImmersiveStormsConfig.HANDLER.save();
         SandstormConfig.HANDLER.load();
         SandstormConfig.HANDLER.save();
+        BiomeConfig.HANDLER.load();
+        BiomeConfig.HANDLER.save();
     }
 
     private static void checkDistantHorizons() {

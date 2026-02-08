@@ -1,6 +1,7 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsModMenu;
+import com.thedeathlycow.immersive.storms.config.BiomeConfig;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Translate;
@@ -30,9 +31,12 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
         builder.add(ImmersiveStormsModMenu.GENERAL_CATEGORY_DESC, "General settings for Immersive Storms");
         builder.add(ImmersiveStormsModMenu.SANDSTORM_CATEGORY, "Sandstorm Settings");
         builder.add(ImmersiveStormsModMenu.SANDSTORM_CATEGORY_DESC, "Specific settings for sandstorms");
+        builder.add(ImmersiveStormsModMenu.BIOMES_CATEGORY, "Biome Settings");
+        builder.add(ImmersiveStormsModMenu.BIOMES_CATEGORY_DESC, "Configure how different biomes are affected by weather types");
 
         generateConfigOptionTranslations(ImmersiveStormsConfig.HANDLER, builder);
         generateConfigOptionTranslations(SandstormConfig.HANDLER, builder);
+        generateConfigOptionTranslations(BiomeConfig.HANDLER, builder);
     }
 
     private <T> void generateConfigOptionTranslations(

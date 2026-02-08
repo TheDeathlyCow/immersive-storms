@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import com.thedeathlycow.immersive.storms.config.BiomeConfig;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Translate;
@@ -15,11 +16,14 @@ import net.minecraft.network.chat.Component;
 public class ImmersiveStormsModMenu implements ModMenuApi {
     private static final String GENERAL_PREFIX = Translate.prefixKey(ImmersiveStormsConfig.HANDLER);
     private static final String SANDSTORM_PREFIX = Translate.prefixKey(SandstormConfig.HANDLER);
+    private static final String BIOMES_PREFIX = Translate.prefixKey(BiomeConfig.HANDLER);
     public static final String TITLE = GENERAL_PREFIX + ".title";
     public static final String GENERAL_CATEGORY = GENERAL_PREFIX + ".category.general";
     public static final String SANDSTORM_CATEGORY = SANDSTORM_PREFIX + ".category.sandstorms";
+    public static final String BIOMES_CATEGORY = BIOMES_PREFIX + ".category.biomes";
     public static final String GENERAL_CATEGORY_DESC = GENERAL_PREFIX + ".category.desc";
     public static final String SANDSTORM_CATEGORY_DESC = SANDSTORM_PREFIX + ".category.desc";
+    public static final String BIOMES_CATEGORY_DESC = BIOMES_PREFIX + ".category.desc";
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
@@ -53,6 +57,20 @@ public class ImmersiveStormsModMenu implements ModMenuApi {
                                         .action((yaclScreen, buttonOption) -> {
                                             Minecraft.getInstance()
                                                     .setScreen(SandstormConfig.HANDLER
+                                                            .generateGui()
+                                                            .generateScreen(yaclScreen));
+                                        }).build())
+                                .option(ButtonOption.createBuilder()
+                                        .name(Component.translatable(BIOMES_CATEGORY))
+                                        .description(
+                                                OptionDescription.createBuilder()
+                                                        .text(Component.translatable(BIOMES_CATEGORY_DESC))
+                                                        .build()
+                                        )
+                                        .text(Component.literal(""))
+                                        .action((yaclScreen, buttonOption) -> {
+                                            Minecraft.getInstance()
+                                                    .setScreen(BiomeConfig.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())

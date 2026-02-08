@@ -20,21 +20,21 @@ public enum WeatherEffectType implements StringRepresentable {
             ISBiomeTags.HAS_SANDSTORMS,
             new WeatherData(WeatherData.LIGHT_FOG, true, 0xD96E38),
             new WeatherData(WeatherData.THICK_FOG, true, 0xD96E38),
-            false
+            Biome.Precipitation.NONE
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, false, 0x77797A),
-            false
+            new WeatherData(WeatherData.LIGHT_FOG, true, 0x77797A),
+            Biome.Precipitation.SNOW
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
             new WeatherData(WeatherData.LIGHT_FOG, false, -1),
             new WeatherData(WeatherData.THICK_FOG, false, -1),
-            true
+            null
     );
 
     private final String name;
@@ -48,10 +48,11 @@ public enum WeatherEffectType implements StringRepresentable {
     @Nullable
     private final WeatherEffectType.WeatherData thunderWeatherData;
 
-    private final boolean allowedWithRain;
+    @Nullable
+    private final Biome.Precipitation requiredPrecipitation;
 
     WeatherEffectType() {
-        this("none", null, null, null, true);
+        this("none", null, null, null, null);
     }
 
     WeatherEffectType(
@@ -59,13 +60,13 @@ public enum WeatherEffectType implements StringRepresentable {
             @Nullable TagKey<Biome> biomeTag,
             @Nullable WeatherEffectType.WeatherData rainWeatherData,
             @Nullable WeatherEffectType.WeatherData thunderWeatherData,
-            boolean allowedWithRain
+            Biome.Precipitation requiredPrecipitation
     ) {
         this.name = name;
         this.biomeTag = biomeTag;
         this.rainWeatherData = rainWeatherData;
         this.thunderWeatherData = thunderWeatherData;
-        this.allowedWithRain = allowedWithRain;
+        this.requiredPrecipitation = requiredPrecipitation;
     }
 
     @Override
@@ -104,8 +105,9 @@ public enum WeatherEffectType implements StringRepresentable {
         return thunderWeatherData;
     }
 
-    public boolean allowedWithRain() {
-        return this.allowedWithRain;
+    @Nullable
+    public Biome.Precipitation requiredPrecipitation() {
+        return this.requiredPrecipitation;
     }
 
     @ApiStatus.Internal

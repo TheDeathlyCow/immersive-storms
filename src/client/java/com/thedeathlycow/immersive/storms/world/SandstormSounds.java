@@ -40,10 +40,6 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
             return; // no camera for whatever reason
         }
 
-        if (!world.isRaining()) {
-            return;
-        }
-
         if (world.random.nextInt(3) >= this.timer) {
             this.timer++;
             return;

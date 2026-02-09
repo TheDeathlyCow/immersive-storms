@@ -27,8 +27,6 @@ import org.joml.Vector3fc;
 import java.util.function.Function;
 
 public final class StormFogModifier {
-    private static final float FOG_COLOR_BLEND_PERCENT = 0.75f;
-
     public static int sampleWeatherFogColor(
             ClientLevel level,
             Vec3 pos,

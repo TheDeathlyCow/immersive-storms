@@ -86,10 +86,17 @@ public enum WeatherEffectType implements StringRepresentable {
         if (this.thunderWeatherData == null && this.rainWeatherData == null) {
             return originalFogColor;
         }
+
+        final float blendPercentage = 0.75f;
+
         Vector3fc rainColor = fogColorOrElse(this.rainWeatherData, originalFogColor);
         Vector3fc thunderColor = fogColorOrElse(this.thunderWeatherData, originalFogColor);
 
-        return ISMath.lerp2(rainLevel, thunderLevel, originalFogColor, rainColor, rainColor, thunderColor);
+        return ISMath.lerp(
+                thunderLevel * blendPercentage,
+                ISMath.lerp(rainLevel * blendPercentage, originalFogColor, rainColor),
+                thunderColor
+        );
     }
 
     private static Vector3fc fogColorOrElse(@Nullable WeatherData data, Vector3fc base) {

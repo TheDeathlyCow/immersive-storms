@@ -31,10 +31,6 @@ public final class ISMath {
         );
     }
 
-    public static Vector3fc lerp2(float delta1, float delta2, Vector3fc start1, Vector3fc end1, Vector3fc start2, Vector3fc end2) {
-        return lerp(delta2, lerp(delta1, start1, end1), lerp(delta1, start2, end2));
-    }
-
     public static Vector3fc lerp(float delta, Vector3fc start, Vector3fc end) {
         if (start == end) {
             return start;

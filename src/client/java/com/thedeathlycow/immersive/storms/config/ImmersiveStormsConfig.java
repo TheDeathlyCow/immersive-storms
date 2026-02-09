@@ -25,7 +25,7 @@ public class ImmersiveStormsConfig {
             .build();
 
     private static final String GENERAL_CATEGORY = "general";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     @Translate.Name("Schema version")
     @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
@@ -68,6 +68,12 @@ public class ImmersiveStormsConfig {
     boolean enableAmbientWindSounds = true;
 
     @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable strong wind sounds")
+    @TickBox
+    @SerialEntry(comment = "Enables the strong wind sounds from sandstorms and blizzards")
+    boolean enableStrongWindSounds = true;
+
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Fog distance multiplier")
     @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
     @SerialEntry(comment = "Adjusts how close fog closes in during weather, must be positive")
@@ -99,6 +105,10 @@ public class ImmersiveStormsConfig {
 
     public boolean isEnableAmbientWindSounds() {
         return enableAmbientWindSounds;
+    }
+
+    public boolean isEnableStrongWindSounds() {
+        return enableStrongWindSounds;
     }
 
     public float getFogDistanceMultiplier() {

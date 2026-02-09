@@ -26,7 +26,7 @@ public class SandstormConfig {
 
     private static final String CATEGORY = "sandstorms";
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     @Translate.Name("Schema version")
     @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
@@ -38,13 +38,6 @@ public class SandstormConfig {
     @TickBox
     @SerialEntry
     boolean enableSandstormParticles = true;
-
-    @AutoGen(category = CATEGORY)
-    @Translate.Name("Enable sandstorm sounds")
-    @Translate.NoComment
-    @TickBox
-    @SerialEntry
-    boolean enableSandstormSounds = true;
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Detect Particle Rain")
@@ -66,10 +59,6 @@ public class SandstormConfig {
 
     public boolean isEnableSandstormParticles() {
         return enableSandstormParticles;
-    }
-
-    public boolean isEnableSandstormSounds() {
-        return enableSandstormSounds;
     }
 
     public boolean isDetectParticleRain() {

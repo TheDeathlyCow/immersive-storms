@@ -2,12 +2,11 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.seibel.distanthorizons.api.DhApi;
 import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
-import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.mixin.client.LevelAccessor;
-import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffects;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -46,7 +45,14 @@ public final class StormFogModifier {
                 pos.scale(0.25),
                 (x, y, z) -> {
                     Holder<Biome> biome = level.getNoiseBiome(x, y, z);
-                    WeatherEffectType sampledType = WeatherEffectType.forBiome(biome, WeatherEffectsClient::isWeatherEffectTypeEnabled);
+                    WeatherEffectType sampledType = WeatherEffectType.forBiome(
+                            biome,
+                            (type, biomeHolder) -> {
+                                return ImmersiveStormsClient.getConfig().isEnabled(type)
+                                        && WeatherEffectsClient.typeAffectsBiome(type, biomeHolder);
+                            }
+                    );
+
                     return sampledType.getFogColor(originalBiomeColorVector, rainLevel, thunderLevel);
                 },
                 accumulator
@@ -106,7 +112,15 @@ public final class StormFogModifier {
                         return baseRadius;
                     }
 
-                    WeatherEffectType sampledType = WeatherEffectsClient.getCurrentType(world, samplePos, false);
+                    WeatherEffectType sampledType = WeatherEffects.getCurrentType(
+                            world,
+                            samplePos,
+                            false,
+                            (type, biomeHolder) -> {
+                                return ImmersiveStormsClient.getConfig().isEnabled(type)
+                                        && WeatherEffectsClient.typeAffectsBiome(type, biomeHolder);
+                            }
+                    );
 
                     WeatherEffectType.WeatherData fogData = fogDataSupplier.apply(sampledType);
                     if (fogData != null) {

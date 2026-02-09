@@ -4,6 +4,7 @@ import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.util.WeatherEffects;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Camera;
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
+
 import java.util.Optional;
 
 public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
@@ -27,8 +29,7 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         }
 
         ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        boolean enabled = config.getSandstorm().isEnableSandstormSounds()
-                && config.isEnabled(WeatherEffectType.SANDSTORM);
+        boolean enabled = config.getSandstorm().isEnableSandstormSounds();
 
         if (!enabled) {
             return;
@@ -67,8 +68,13 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         int dz = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
         BlockPos soundPos = cameraPos.offset(dx, dy, dz);
 
-        WeatherEffectType.WeatherData weatherData = WeatherEffectsClient.getCurrentType(world, soundPos, true)
-                .getWeatherData(world);
+        WeatherEffectType.WeatherData weatherData = WeatherEffects.getCurrentType(
+                        world,
+                        soundPos,
+                        true,
+                        WeatherEffectsClient::typeAffectsBiome
+                ).getWeatherData(world);
+
         if (weatherData != null && weatherData.windy()) {
             return Optional.of(soundPos);
         }

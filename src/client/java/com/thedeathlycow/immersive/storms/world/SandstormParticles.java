@@ -4,12 +4,10 @@ import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.SandstormConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
-import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -37,7 +35,6 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
         SandstormConfig sandstormConfig = config.getSandstorm();
         final int renderDistance = sandstormConfig.getSandstormParticleRenderDistance();
         boolean enabled = sandstormConfig.isEnableSandstormParticles()
-                && config.isEnabled(WeatherEffectType.SANDSTORM)
                 && renderDistance > 0;
 
         if (!enabled) {
@@ -78,7 +75,7 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
 
         boolean addParticle = world.random.nextFloat() < rarity
                 && biome.value().getPrecipitationAt(pos, world.getSeaLevel()) == Biome.Precipitation.NONE
-                && WeatherEffectsClient.isWeatherEffectTypeEnabled(WeatherEffectType.SANDSTORM, biome);
+                && WeatherEffectsClient.typeAffectsBiome(WeatherEffectType.SANDSTORM, biome);
 
         if (addParticle) {
             world.addParticle(

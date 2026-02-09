@@ -50,7 +50,7 @@ public class BiomeConfig {
             valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
             controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
-    @SerialEntry(comment = "Exclude specific biomes from custom weather effects")
+    @SerialEntry(comment = "Exclude specific biome IDs from custom weather effects")
     List<Identifier> excludeBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
@@ -59,7 +59,7 @@ public class BiomeConfig {
             valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
             controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
-    @SerialEntry(comment = "Add new biomes to be affected by sandstorms. Particles and sounds will not work in biomes where it is raining or snowing.")
+    @SerialEntry(comment = "Add new biome IDs to be affected by sandstorms. Particles and sounds will not work in biomes where it is raining or snowing.")
     List<Identifier> sandstormBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
@@ -68,7 +68,7 @@ public class BiomeConfig {
             valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
             controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
-    @SerialEntry(comment = "Add new biomes to be affected by blizzards.")
+    @SerialEntry(comment = "Add new biomes IDs to be affected by blizzards.")
     List<Identifier> blizzardBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
@@ -77,7 +77,7 @@ public class BiomeConfig {
             valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
             controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
-    @SerialEntry(comment = "Add new biomes to be affected by dense fog.")
+    @SerialEntry(comment = "Add new biomes IDs to be affected by dense fog.")
     List<Identifier> denseFogBiomes = new ArrayList<>();
 
     @AutoGen(category = CATEGORY)
@@ -86,7 +86,7 @@ public class BiomeConfig {
             valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
             controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
     )
-    @SerialEntry(comment = "Add new biomes to be affected by wind particles.")
+    @SerialEntry(comment = "Add new biomes IDs to be affected by wind particles.")
     List<Identifier> windyBiomes = new ArrayList<>();
 
     public boolean isBiomeExcluded(Holder<Biome> biomeHolder) {

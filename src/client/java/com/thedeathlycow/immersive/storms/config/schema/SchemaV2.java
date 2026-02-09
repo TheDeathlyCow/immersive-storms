@@ -7,7 +7,6 @@ import com.thedeathlycow.immersive.storms.config.section.SandstormConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 public final class SchemaV2 {
     public static void run(int originalSchemaVersion) throws IOException {
@@ -20,11 +19,9 @@ public final class SchemaV2 {
         JsonCopyHelper.rename(generalConfig, "enableSandstormSounds", "enableStrongWindSounds");
 
         // save files
-        Path basePath = ImmersiveStorms.getConfigDir();
-        Files.createDirectories(basePath);
-
-        Files.writeString(basePath.resolve("sandstorm.json5"), sandstormConfig.toString());
-        Files.writeString(basePath.resolve("general.json5"), generalConfig.toString());
+        Files.createDirectories(ImmersiveStorms.getConfigDir());
+        Files.writeString(SandstormConfig.PATH, sandstormConfig.toString());
+        Files.writeString(ImmersiveStormsConfig.PATH, generalConfig.toString());
     }
 
     private SchemaV2() {

@@ -39,7 +39,7 @@ public final class Updater {
             }
         }
 
-        if (!Files.exists(SchemaConfig.PATH)) {
+        if (!Files.exists(SchemaConfig.PATH) && Files.exists(ImmersiveStormsConfig.PATH)) {
             SchemaConfig.HANDLER.load();
             SchemaConfig.HANDLER.instance().setSchemaVersion(1);
             SchemaConfig.HANDLER.save();

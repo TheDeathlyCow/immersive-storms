@@ -1,8 +1,8 @@
 package com.thedeathlycow.immersive.storms;
 
-import com.thedeathlycow.immersive.storms.config.BiomeConfig;
-import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.config.section.BiomeConfig;
+import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Updater;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;

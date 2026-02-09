@@ -1,9 +1,9 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsModMenu;
-import com.thedeathlycow.immersive.storms.config.BiomeConfig;
-import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.config.section.BiomeConfig;
+import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;

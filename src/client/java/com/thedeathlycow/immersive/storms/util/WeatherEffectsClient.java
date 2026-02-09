@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms.util;
 
-import com.thedeathlycow.immersive.storms.config.BiomeConfig;
+import com.thedeathlycow.immersive.storms.config.section.BiomeConfig;
 import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;

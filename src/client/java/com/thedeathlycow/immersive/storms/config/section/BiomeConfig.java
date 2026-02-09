@@ -1,6 +1,9 @@
-package com.thedeathlycow.immersive.storms.config;
+package com.thedeathlycow.immersive.storms.config.section;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.config.IdentifierController;
+import com.thedeathlycow.immersive.storms.config.IdentifierListGroup;
+import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
@@ -19,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class BiomeConfig {
-    static final Path PATH = ImmersiveStorms.getConfigDir().resolve("biomes.json5");
+    public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("biomes.json5");
 
     public static final ConfigClassHandler<BiomeConfig> HANDLER = ConfigClassHandler.createBuilder(BiomeConfig.class)
             .id(ImmersiveStorms.id("biomes"))
@@ -40,12 +43,6 @@ public class BiomeConfig {
             .build();
 
     private static final String CATEGORY = "biomes";
-
-    private static final int VERSION = 1;
-
-    @Translate.Name("Schema version")
-    @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
-    int version = VERSION;
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Excluded biomes")

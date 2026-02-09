@@ -1,6 +1,7 @@
-package com.thedeathlycow.immersive.storms.config;
+package com.thedeathlycow.immersive.storms.config.section;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -12,7 +13,7 @@ import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import java.nio.file.Path;
 
 public class ImmersiveStormsConfig {
-    static final Path PATH = ImmersiveStorms.getConfigDir().resolve("general.json5");
+    public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("general.json5");
 
     public static final ConfigClassHandler<ImmersiveStormsConfig> HANDLER = ConfigClassHandler.createBuilder(ImmersiveStormsConfig.class)
             .id(ImmersiveStorms.id("general"))
@@ -25,11 +26,6 @@ public class ImmersiveStormsConfig {
             .build();
 
     private static final String GENERAL_CATEGORY = "general";
-    private static final int VERSION = 2;
-
-    @Translate.Name("Schema version")
-    @SerialEntry(comment = "Config version, do not touch! Changing this value may result in unexpected behaviour.")
-    int version = VERSION;
 
     @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Enable all fog changes")

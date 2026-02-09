@@ -3,7 +3,7 @@ package com.thedeathlycow.immersive.storms.world;
 import com.seibel.distanthorizons.api.DhApi;
 import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.mixin.client.LevelAccessor;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffects;

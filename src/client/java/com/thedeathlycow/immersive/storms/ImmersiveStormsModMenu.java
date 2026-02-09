@@ -2,9 +2,9 @@ package com.thedeathlycow.immersive.storms;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import com.thedeathlycow.immersive.storms.config.BiomeConfig;
-import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.config.SandstormConfig;
+import com.thedeathlycow.immersive.storms.config.section.BiomeConfig;
+import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.Translate;
 import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;

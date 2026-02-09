@@ -2,8 +2,8 @@ package com.thedeathlycow.immersive.storms.world;
 
 import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.config.BiomeConfig;
-import com.thedeathlycow.immersive.storms.config.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.config.section.BiomeConfig;
+import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

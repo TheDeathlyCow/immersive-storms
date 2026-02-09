@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.config.schema.ConfigUpdater;
+import com.thedeathlycow.immersive.storms.config.schema.SchemaV2;
 import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.config.section.SchemaConfig;
@@ -23,7 +24,7 @@ import java.util.function.Supplier;
 public final class Updater {
     private static final Supplier<Int2ObjectMap<ConfigUpdater>> SCHEMAS = () -> {
         Int2ObjectMap<ConfigUpdater> map = new Int2ObjectArrayMap<>();
-//        map.put(2, SchemaV2::run);
+        map.put(2, SchemaV2::run);
         return map;
     };
 
@@ -36,6 +37,12 @@ public final class Updater {
             } catch (Exception e) {
                 ImmersiveStorms.LOGGER.error("Unable to update config file to YACL", e);
             }
+        }
+
+        if (!Files.exists(SchemaConfig.PATH)) {
+            SchemaConfig.HANDLER.load();
+            SchemaConfig.HANDLER.instance().setSchemaVersion(1);
+            SchemaConfig.HANDLER.save();
         }
 
         SchemaConfig.HANDLER.load();

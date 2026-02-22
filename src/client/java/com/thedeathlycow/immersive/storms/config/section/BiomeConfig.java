@@ -89,6 +89,15 @@ public class BiomeConfig {
     @SerialEntry(comment = "Add new biomes IDs to be affected by wind particles.")
     List<Identifier> windyBiomes = new ArrayList<>();
 
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Black rain biomes")
+    @ListGroup(
+            valueFactory = IdentifierListGroup.BiomeIdentifierGroup.class,
+            controllerFactory = IdentifierListGroup.BiomeIdentifierGroup.class
+    )
+    @SerialEntry(comment = "Add new biomes IDs to be affected by black rain.")
+    List<Identifier> blackRainBiomes = new ArrayList<>();
+
     public boolean isBiomeExcluded(Holder<Biome> biomeHolder) {
         return biomeHolder.unwrapKey()
                 .map(key -> this.excludeBiomes.contains(key.identifier()))
@@ -111,6 +120,11 @@ public class BiomeConfig {
     public boolean isWindy(Holder<Biome> biomeHolder) {
         return ClientTags.isInWithLocalFallback(ISBiomeTags.IS_WINDY, biomeHolder)
                 || biomeHolder.unwrapKey().map(key -> this.windyBiomes.contains(key.identifier())).orElse(false);
+    }
+
+    public boolean isAffectedByBlackRain(Holder<Biome> biomeHolder) {
+        return ClientTags.isInWithLocalFallback(ISBiomeTags.IS_BLACK_RAIN_AFFECTED, biomeHolder)
+                || biomeHolder.unwrapKey().map(key -> this.blackRainBiomes.contains(key.identifier())).orElse(false);
     }
 
     public static BiomeConfig getConfig() {

@@ -10,6 +10,7 @@ public final class ISBiomeTags {
     public static final TagKey<Biome> HAS_BLIZZARDS = create("has_blizzards");
     public static final TagKey<Biome> HAS_DENSE_FOG = create("has_dense_fog");
     public static final TagKey<Biome> IS_WINDY = create("is_windy");
+    public static final TagKey<Biome> IS_BLACK_RAIN_AFFECTED = create("is_black_rain_affected");
 
     private static TagKey<Biome> create(String id) {
         return TagKey.create(Registries.BIOME, ImmersiveStorms.id(id));

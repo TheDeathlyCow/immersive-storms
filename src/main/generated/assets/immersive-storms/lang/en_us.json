@@ -1,5 +1,7 @@
 {
   "subtitles.immersive-storms.weather.strong_wind": "Wind blows strongly",
+  "yacl3.config.immersive-storms:biomes.blackRainBiomes": "Black rain biomes",
+  "yacl3.config.immersive-storms:biomes.blackRainBiomes.desc": "Add new biomes IDs to be affected by black rain.",
   "yacl3.config.immersive-storms:biomes.blizzardBiomes": "Blizzard biomes",
   "yacl3.config.immersive-storms:biomes.blizzardBiomes.desc": "Add new biomes IDs to be affected by blizzards.",
   "yacl3.config.immersive-storms:biomes.category.biomes": "Biome Settings",
@@ -18,6 +20,8 @@
   "yacl3.config.immersive-storms:general.enableAmbientWindParticles.desc": "Enables ambient wind particles in windy biomes",
   "yacl3.config.immersive-storms:general.enableAmbientWindSounds": "Enable ambient wind sounds",
   "yacl3.config.immersive-storms:general.enableAmbientWindSounds.desc": "Enables ambient wind sounds in windy biomes, has no effect in deserts/badlands due to vanilla mechanic",
+  "yacl3.config.immersive-storms:general.enableBlackRain": "Enable black rain",
+  "yacl3.config.immersive-storms:general.enableBlackRain.desc": "Enables the black rain effect in biomes like the Pale Garden",
   "yacl3.config.immersive-storms:general.enableBlizzardFog": "Enable blizzard fog changes",
   "yacl3.config.immersive-storms:general.enableBlizzardFog.desc": "Toggles the fog density and color changes for blizzards",
   "yacl3.config.immersive-storms:general.enableDenseFog": "Enable dense fog changes",

@@ -11,6 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Optional;
 
@@ -44,12 +46,27 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         this.timer = 0;
 
         this.chooseSpotForWindSound(world, camera).ifPresent(
-                pos -> {
+                soundPos -> {
+                    BlockPos cameraPos = BlockPos.containing(camera.position());
+                    boolean playAboveSound = soundPos.getY() > cameraPos.getY() + 1
+                            && world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, cameraPos).getY() > Mth.floor(cameraPos.getY());
+
+                    float volume;
+                    float pitch;
+                    
+                    if (playAboveSound) {
+                        volume = 0.1f;
+                        pitch = 0.5f;
+                    } else {
+                        volume = 0.5f;
+                        pitch = 1f;
+                    }
+
                     world.playLocalSound(
-                            pos,
+                            soundPos,
                             ISSoundEvents.WEATHER_STRONG_WIND,
                             SoundSource.WEATHER,
-                            0.5f, 1f,
+                            volume, pitch,
                             false
                     );
                 }
@@ -65,11 +82,11 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         BlockPos soundPos = cameraPos.offset(dx, dy, dz);
 
         WeatherEffectType.WeatherData weatherData = WeatherEffects.getCurrentType(
-                        world,
-                        soundPos,
-                        true,
-                        WeatherEffectsClient::typeAffectsBiome
-                ).getWeatherData(world);
+                world,
+                soundPos,
+                true,
+                WeatherEffectsClient::typeAffectsBiome
+        ).getWeatherData(world);
 
         if (weatherData != null && weatherData.windy()) {
             return Optional.of(soundPos);

@@ -30,6 +30,7 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
         builder(ISBiomeTags.HAS_DENSE_FOG)
                 .add(Biomes.PALE_GARDEN)
                 .addOptionalTag(ConventionalBiomeTags.PRIMARY_WOOD_TYPE_PALE_OAK)
+                .addOptionalTag(ConventionalBiomeTags.IS_SPOOKY)
                 .addOptionalTag(ConventionalBiomeTags.IS_SWAMP);
 
         builder(ISBiomeTags.IS_WINDY)

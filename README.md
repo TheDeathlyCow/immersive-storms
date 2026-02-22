@@ -14,3 +14,4 @@ Immersive Storms uses biome tags to configure which biomes are affected by its v
 * `#immersive-storms:has_blizzards`: which biomes get blizzard fog effects during thunderstorms (default: all snowy/icy biomes)
 * `#immersive-storms:has_dense_fog`: which biomes get really dense fog during weather (default: pale gardens, swamps)
 * `#immersive-storms:is_windy`: which biomes have ambient wind particles and sounds (default: deserts, badlands, mountains, windswept hills)
+* `#immersive-storms:is_black_rain_affected`: which biomes have black rain (default: pale gardens)

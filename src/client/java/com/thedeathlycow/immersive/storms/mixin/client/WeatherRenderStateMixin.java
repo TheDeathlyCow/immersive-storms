@@ -9,13 +9,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Set;
 
 @Mixin(WeatherRenderState.class)
 public class WeatherRenderStateMixin implements WeatherRenderStateExtension {
     @Unique
-    private final Set<WeatherEffectRenderer.ColumnInstance> immersiveStorms$blackRainInstances = new HashSet<>();
+    private final Set<WeatherEffectRenderer.ColumnInstance> immersiveStorms$blackRainInstances = Collections.newSetFromMap(new IdentityHashMap<>());
 
     @Override
     @Unique

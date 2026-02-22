@@ -5,6 +5,7 @@ import com.thedeathlycow.immersive.storms.config.section.BiomeConfig;
 import com.thedeathlycow.immersive.storms.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticle;
+import com.thedeathlycow.immersive.storms.particle.PaleWaterDropParticle;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.BiomeWindEffects;
 import com.thedeathlycow.immersive.storms.world.SandstormParticles;
@@ -35,7 +36,8 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         ClientTickEvents.END_WORLD_TICK.register(new BiomeWindEffects());
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
-        particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Factory::new);
+        particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Provider::new);
+        particleRegistry.register(ISParticleTypes.PALE_RAIN, PaleWaterDropParticle.Provider::new);
     }
 
     public static ImmersiveStormsConfig getConfig() {

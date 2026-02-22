@@ -6,12 +6,16 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
+import com.thedeathlycow.immersive.storms.world.PaleRainEffect;
 import com.thedeathlycow.immersive.storms.world.WeatherRenderStateExtension;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
 import net.minecraft.client.renderer.state.WeatherRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -26,6 +30,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WeatherEffectRenderer.class)
 public class WeatherEffectRendererMixin {
     private final ThreadLocal<WeatherRenderState> sharedRenderState = new ThreadLocal<>();
+
+    //
+    // Render state extraction
+    //
 
     @WrapOperation(
             method = "extractRenderState",
@@ -44,10 +52,7 @@ public class WeatherEffectRendererMixin {
         Biome.Precipitation precipitation = original.call(instance, level, pos);
 
         if (precipitation == Biome.Precipitation.RAIN) {
-            Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(pos);
-
-            // TODO: replace with tag/config driven approach
-            isPaleRain.set(biome.is(Biomes.PALE_GARDEN));
+            isPaleRain.set(PaleRainEffect.isPaleRain(level, pos));
         } else {
             isPaleRain.set(false);
         }
@@ -85,6 +90,10 @@ public class WeatherEffectRendererMixin {
         return columnInstance;
     }
 
+    //
+    // Set rain column colour
+    //
+
     @Inject(
             method = "render",
             at = @At("HEAD")
@@ -118,7 +127,7 @@ public class WeatherEffectRendererMixin {
                     target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;setColor(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;"
             )
     )
-    private VertexConsumer setPaleRainColor(
+    private VertexConsumer setPaleRainColumnColor(
             VertexConsumer instance,
             int color,
             Operation<VertexConsumer> original,
@@ -130,10 +139,36 @@ public class WeatherEffectRendererMixin {
             boolean isPaleRain = ((WeatherRenderStateExtension) renderState).immersiveStorms$isPaleRainInstance(columnInstance);
 
             if (isPaleRain) {
-                color = ARGB.color(0, 0, 0);
+                color = ARGB.color(ARGB.alpha(color), PaleRainEffect.COLOR, PaleRainEffect.COLOR, PaleRainEffect.COLOR);
             }
         }
 
         return original.call(instance, color);
+    }
+
+    //
+    // Particle colouring
+    //
+
+    @WrapOperation(
+            method = "tickRainParticles",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
+            )
+    )
+    private void setPaleRainParticleColor(
+            ClientLevel instance,
+            ParticleOptions particle,
+            double x, double y, double z,
+            double xSpeed, double ySpeed, double zSpeed,
+            Operation<Void> original,
+            @Local(ordinal = 2) BlockPos pos
+    ) {
+        if (PaleRainEffect.isPaleRain(instance, pos)) {
+            particle = ISParticleTypes.PALE_RAIN;
+        }
+
+        original.call(instance, particle, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 }

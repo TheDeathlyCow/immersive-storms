@@ -31,11 +31,11 @@ public class DustGrainParticle extends DustParticleBase<DustGrainParticleEffect>
     }
 
     @Environment(EnvType.CLIENT)
-    public static class Factory implements ParticleProvider<DustGrainParticleEffect> {
-        private final SpriteSet spriteProvider;
+    public static class Provider implements ParticleProvider<DustGrainParticleEffect> {
+        private final SpriteSet sprite;
 
-        public Factory(SpriteSet spriteProvider) {
-            this.spriteProvider = spriteProvider;
+        public Provider(SpriteSet sprite) {
+            this.sprite = sprite;
         }
 
         @Override
@@ -51,7 +51,7 @@ public class DustGrainParticle extends DustParticleBase<DustGrainParticleEffect>
                     x, y, z,
                     velocityX, velocityY, velocityZ,
                     parameters,
-                    this.spriteProvider
+                    this.sprite
             );
         }
     }

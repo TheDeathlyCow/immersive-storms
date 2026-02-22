@@ -18,7 +18,7 @@ public final class ISParticleTypes {
             )
     );
 
-    public static final SimpleParticleType PALE_RAIN = register("pale_rain", false);
+    public static final SimpleParticleType BLACK_RAIN = register("black_rain", false);
 
     public static void initialize() {
         ImmersiveStorms.LOGGER.debug("Initialized Immersive Storms particle types");

@@ -29,6 +29,7 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
 
         builder(ISBiomeTags.HAS_DENSE_FOG)
                 .add(Biomes.PALE_GARDEN)
+                .addOptionalTag(ConventionalBiomeTags.PRIMARY_WOOD_TYPE_PALE_OAK)
                 .addOptionalTag(ConventionalBiomeTags.IS_SWAMP);
 
         builder(ISBiomeTags.IS_WINDY)
@@ -36,5 +37,10 @@ public class ISBiomeTagGenerator extends FabricTagProvider<Biome> {
                 .addOptionalTag(ConventionalBiomeTags.IS_BADLANDS)
                 .addOptionalTag(ConventionalBiomeTags.IS_MOUNTAIN)
                 .addOptionalTag(ConventionalBiomeTags.IS_WINDSWEPT);
+
+
+        builder(ISBiomeTags.IS_BLACK_RAIN_AFFECTED)
+                .add(Biomes.PALE_GARDEN)
+                .addOptionalTag(ConventionalBiomeTags.PRIMARY_WOOD_TYPE_PALE_OAK);
     }
 }

@@ -70,6 +70,12 @@ public class ImmersiveStormsConfig {
     boolean enableStrongWindSounds = true;
 
     @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Enable black rain")
+    @TickBox
+    @SerialEntry(comment = "Enables the black rain effect in biomes like the Pale Garden")
+    boolean enableBlackRain = true;
+
+    @AutoGen(category = GENERAL_CATEGORY)
     @Translate.Name("Fog distance multiplier")
     @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
     @SerialEntry(comment = "Adjusts how close fog closes in during weather, must be positive")
@@ -105,6 +111,10 @@ public class ImmersiveStormsConfig {
 
     public boolean isEnableStrongWindSounds() {
         return enableStrongWindSounds;
+    }
+
+    public boolean isEnableBlackRain() {
+        return enableBlackRain;
     }
 
     public float getFogDistanceMultiplier() {

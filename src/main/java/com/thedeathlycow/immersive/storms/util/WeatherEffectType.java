@@ -35,8 +35,8 @@ public enum WeatherEffectType implements StringRepresentable {
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
-            new WeatherData(WeatherData.LIGHT_FOG, false, -1),
             new WeatherData(WeatherData.THICK_FOG, false, -1),
+            new WeatherData(WeatherData.VERY_THICK_FOG, false, -1),
             null
     );
 
@@ -147,8 +147,9 @@ public enum WeatherEffectType implements StringRepresentable {
             boolean windy,
             @Nullable Vector3fc fogColor
     ) {
-        private static final Vector2fc LIGHT_FOG = new Vector2f(32, 64);
-        private static final Vector2fc THICK_FOG = new Vector2f(16, 32);
+        private static final Vector2fc LIGHT_FOG = new Vector2f(64, 128);
+        private static final Vector2fc THICK_FOG = new Vector2f(32, 64);
+        private static final Vector2fc VERY_THICK_FOG = new Vector2f(16, 32);
 
         public WeatherData(Vector2fc fogDistance, boolean windy, int fogColor) {
             this(fogDistance, windy, fogColor > -1 ? ARGB.vector3fFromRGB24(fogColor) : null);

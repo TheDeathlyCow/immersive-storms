@@ -4,7 +4,9 @@
     "compatibilityLevel": "JAVA_21",
     "client": [
         "AtmosphericFogEnvironmentMixin",
-        "SkyRendererMixin"
+        "SkyRendererMixin",
+        "WeatherEffectRendererMixin",
+        "WeatherRenderStateMixin"
     ],
     "injectors": {
         "defaultRequire": 1

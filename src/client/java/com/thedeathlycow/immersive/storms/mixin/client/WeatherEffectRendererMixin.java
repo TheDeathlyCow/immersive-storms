@@ -98,6 +98,19 @@ public class WeatherEffectRendererMixin {
         this.sharedRenderState.set(renderState);
     }
 
+    @Inject(
+            method = "render",
+            at = @At("TAIL")
+    )
+    private void clearWeatherRenderState(
+            MultiBufferSource bufferSource,
+            Vec3 cameraPosition,
+            WeatherRenderState renderState,
+            CallbackInfo ci
+    ) {
+        this.sharedRenderState.remove();
+    }
+
     @WrapOperation(
             method = "renderInstances",
             at = @At(

@@ -1,0 +1,14 @@
+{
+    "required": true,
+    "package": "com.thedeathlycow.immersive.storms.mixin.compat.client",
+    "plugin": "com.thedeathlycow.immersive.storms.mixin.compat.client.Plugin",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "mixins": [
+        "particlerain.present.TintTypeMixin"
+    ]
+}

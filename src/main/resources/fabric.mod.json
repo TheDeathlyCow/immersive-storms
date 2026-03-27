@@ -31,6 +31,10 @@
 		{
 			"config": "immersive-storms.client.mixins.json",
 			"environment": "client"
+		},
+		{
+			"config": "immersive-storms.compat.mixins.json",
+			"environment": "client"
 		}
 	],
 	"depends": {

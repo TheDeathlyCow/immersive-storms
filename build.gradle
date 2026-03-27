@@ -80,6 +80,7 @@ dependencies {
 
 	compileOnly "maven.modrinth:DistantHorizonsApi:${project.distant_horizons_api_version}"
 	modCompileOnly "maven.modrinth:particle-rain:${project.particle_rain_version}"
+	modCompileOnly "maven.modrinth:subtle-effects:${project.subtle_effects_version}"
 }
 
 processResources {

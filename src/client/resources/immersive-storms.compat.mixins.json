@@ -4,6 +4,7 @@
     "plugin": "com.thedeathlycow.immersive.storms.mixin.compat.client.Plugin",
     "compatibilityLevel": "JAVA_21",
     "client": [
+        "subtle_effects.present.WeatherEffectRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

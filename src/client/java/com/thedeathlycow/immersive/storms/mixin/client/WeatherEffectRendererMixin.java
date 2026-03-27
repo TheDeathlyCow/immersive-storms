@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.BlackRainEffect;
 import com.thedeathlycow.immersive.storms.world.WeatherRenderStateExtension;
@@ -45,7 +46,7 @@ public class WeatherEffectRendererMixin {
             Level level,
             BlockPos pos,
             Operation<Biome.Precipitation> original,
-            @Share("is_black_rain") LocalBooleanRef isBlackRain
+            @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID) LocalBooleanRef isBlackRain
     ) {
         Biome.Precipitation precipitation = original.call(instance, level, pos);
 
@@ -76,7 +77,7 @@ public class WeatherEffectRendererMixin {
             int lightCoords,
             float partialTick,
             Operation<WeatherEffectRenderer.ColumnInstance> original,
-            @Share("is_black_rain") LocalBooleanRef isBlackRain,
+            @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID) LocalBooleanRef isBlackRain,
             @Local(argsOnly = true) WeatherRenderState weatherRenderState
     ) {
         WeatherEffectRenderer.ColumnInstance columnInstance = original.call(instance, random, ticks, x, bottomY, topY, z, lightCoords, partialTick);

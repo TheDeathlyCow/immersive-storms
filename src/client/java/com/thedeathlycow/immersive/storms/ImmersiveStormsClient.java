@@ -12,7 +12,7 @@ import com.thedeathlycow.immersive.storms.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.world.SandstormSounds;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
@@ -35,7 +35,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
 
         ClientTickEvents.END_LEVEL_TICK.register(new BiomeWindEffects());
 
-        ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
+        ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Provider::new);
         particleRegistry.register(ISParticleTypes.BLACK_RAIN, BlackWaterDropParticle.Provider::new);
     }

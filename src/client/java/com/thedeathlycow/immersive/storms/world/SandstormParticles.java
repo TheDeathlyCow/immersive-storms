@@ -27,8 +27,8 @@ public final class SandstormParticles implements ClientTickEvents.EndLevelTick {
     private static final float BASE_PARTICLE_CHANCE = 1f / 60f;
 
     @Override
-    public void onEndTick(ClientLevel clientWorld) {
-        if (!clientWorld.isRaining() || clientWorld.tickRateManager().isFrozen()) {
+    public void onEndTick(ClientLevel level) {
+        if (!level.isRaining() || level.tickRateManager().isFrozen()) {
             return;
         }
 
@@ -62,11 +62,11 @@ public final class SandstormParticles implements ClientTickEvents.EndLevelTick {
                 // makes the area the particles come from look less empty
                 int adjustedX = x + xOffset;
 
-                int y = cameraY + clientWorld.random.nextIntBetweenInclusive(-renderDistance / 2, (renderDistance + 1) / 2);
-                y = Math.max(y, clientWorld.getHeight(Heightmap.Types.MOTION_BLOCKING, adjustedX, z));
+                int y = cameraY + level.getRandom().nextIntBetweenInclusive(-renderDistance / 2, (renderDistance + 1) / 2);
+                y = Math.max(y, level.getHeight(Heightmap.Types.MOTION_BLOCKING, adjustedX, z));
 
                 pos.set(adjustedX, y, z);
-                addParticle(clientWorld, particle, pos, rarity);
+                addParticle(level, particle, pos, rarity);
             }
         }
     }

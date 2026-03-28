@@ -11,9 +11,8 @@ import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.BlackRainEffect;
 import com.thedeathlycow.immersive.storms.world.WeatherRenderStateExtension;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
-import net.minecraft.client.renderer.state.WeatherRenderState;
+import net.minecraft.client.renderer.state.level.WeatherRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ARGB;
@@ -97,12 +96,7 @@ public class WeatherEffectRendererMixin {
             method = "render",
             at = @At("HEAD")
     )
-    private void captureWeatherRenderState(
-            MultiBufferSource bufferSource,
-            Vec3 cameraPosition,
-            WeatherRenderState renderState,
-            CallbackInfo ci
-    ) {
+    private void captureWeatherRenderState(Vec3 cameraPos, WeatherRenderState renderState, CallbackInfo ci) {
         this.sharedRenderState.set(renderState);
     }
 
@@ -110,12 +104,7 @@ public class WeatherEffectRendererMixin {
             method = "render",
             at = @At("TAIL")
     )
-    private void clearWeatherRenderState(
-            MultiBufferSource bufferSource,
-            Vec3 cameraPosition,
-            WeatherRenderState renderState,
-            CallbackInfo ci
-    ) {
+    private void clearWeatherRenderState(Vec3 cameraPos, WeatherRenderState renderState, CallbackInfo ci) {
         this.sharedRenderState.remove();
     }
 

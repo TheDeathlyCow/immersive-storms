@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms.mixin.client;
 
 import com.thedeathlycow.immersive.storms.world.WeatherRenderStateExtension;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
-import net.minecraft.client.renderer.state.WeatherRenderState;
+import net.minecraft.client.renderer.state.level.WeatherRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,5 +1,5 @@
 name: Publish Mod
-on: [workflow_dispatch] # Manual trigger
+on: [ workflow_dispatch ] # Manual trigger
 
 permissions:
   contents: write
@@ -13,8 +13,22 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
+
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+      - name: setup jdk
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
+
       - name: publish
         run: ./gradlew build publishCurseforge
         env:
@@ -27,8 +41,22 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
+
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+      - name: setup jdk
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
+        
       - name: publish
         run: ./gradlew build publishModrinth
         env:

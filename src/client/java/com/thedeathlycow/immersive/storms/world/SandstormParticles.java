@@ -14,11 +14,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.Vector3f;
 
-public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
+public final class SandstormParticles implements ClientTickEvents.EndLevelTick {
     public static final Vector3f COLOR = ISMath.unpackRgb(0xD9AA84);
 
     private static final float PARTICLE_SCALE = 10f;
@@ -70,19 +71,21 @@ public final class SandstormParticles implements ClientTickEvents.EndWorldTick {
         }
     }
 
-    private static void addParticle(ClientLevel world, ParticleOptions particle, BlockPos pos, float rarity) {
-        Holder<Biome> biome = world.getBiomeManager().getNoiseBiomeAtPosition(pos);
+    private static void addParticle(ClientLevel level, ParticleOptions particle, BlockPos pos, float rarity) {
+        Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(pos);
 
-        boolean addParticle = world.random.nextFloat() < rarity
-                && biome.value().getPrecipitationAt(pos, world.getSeaLevel()) == Biome.Precipitation.NONE
+        RandomSource random = level.getRandom();
+
+        boolean addParticle = random.nextFloat() < rarity
+                && biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Biome.Precipitation.NONE
                 && WeatherEffectsClient.typeAffectsBiome(WeatherEffectType.SANDSTORM, biome);
 
         if (addParticle) {
-            world.addParticle(
+            level.addParticle(
                     particle,
-                    pos.getX() + world.random.nextDouble(),
-                    pos.getY() + world.random.nextDouble(),
-                    pos.getZ() + world.random.nextDouble(),
+                    pos.getX() + random.nextDouble(),
+                    pos.getY() + random.nextDouble(),
+                    pos.getZ() + random.nextDouble(),
                     PARTICLE_VELOCITY, 0, 0
             );
         }

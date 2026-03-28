@@ -25,7 +25,7 @@ import org.joml.Vector2d;
 
 import java.util.function.Supplier;
 
-public class BiomeWindEffects implements ClientTickEvents.EndWorldTick {
+public class BiomeWindEffects implements ClientTickEvents.EndLevelTick {
     private static final int PARTICLES_PER_TICK = 3;
     private static final float PARTICLE_SCALE = 4f;
     private static final Vector2d PARTICLE_VELOCITY = new Vector2d(-1.0, -1.0).normalize(0.6);

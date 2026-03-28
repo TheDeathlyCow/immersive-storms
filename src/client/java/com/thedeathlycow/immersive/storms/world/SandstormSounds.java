@@ -12,11 +12,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Optional;
 
-public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
+public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
     private static final int MAX_SOUND_Y_DIFF = 10;
 
     private static final int MAX_XZ_OFFSET = 10;
@@ -24,8 +25,8 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
     private int timer = 0;
 
     @Override
-    public void onEndTick(ClientLevel world) {
-        if (world.getRainLevel(1f) < 0.7f || world.tickRateManager().isFrozen()) {
+    public void onEndTick(ClientLevel level) {
+        if (level.getRainLevel(1f) < 0.7f || level.tickRateManager().isFrozen()) {
             return;
         }
 
@@ -39,17 +40,17 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
             return; // no camera for whatever reason
         }
 
-        if (world.random.nextInt(3) >= this.timer) {
+        if (level.getRandom().nextInt(3) >= this.timer) {
             this.timer++;
             return;
         }
         this.timer = 0;
 
-        this.chooseSpotForWindSound(world, camera).ifPresent(
+        this.chooseSpotForWindSound(level, camera).ifPresent(
                 soundPos -> {
                     BlockPos cameraPos = BlockPos.containing(camera.position());
                     boolean playAboveSound = soundPos.getY() > cameraPos.getY() + 1
-                            && world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, cameraPos).getY() > Mth.floor(cameraPos.getY());
+                            && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, cameraPos).getY() > Mth.floor(cameraPos.getY());
 
                     float volume;
                     float pitch;
@@ -62,7 +63,7 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
                         pitch = 1f;
                     }
 
-                    world.playLocalSound(
+                    level.playLocalSound(
                             soundPos,
                             ISSoundEvents.WEATHER_STRONG_WIND,
                             SoundSource.WEATHER,
@@ -73,20 +74,22 @@ public final class SandstormSounds implements ClientTickEvents.EndWorldTick {
         );
     }
 
-    private Optional<BlockPos> chooseSpotForWindSound(ClientLevel world, Camera camera) {
+    private Optional<BlockPos> chooseSpotForWindSound(ClientLevel level, Camera camera) {
         BlockPos cameraPos = camera.blockPosition();
 
-        int dx = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
-        int dy = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
-        int dz = world.random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
+        RandomSource random = level.getRandom();
+
+        int dx = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
+        int dy = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
+        int dz = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
         BlockPos soundPos = cameraPos.offset(dx, dy, dz);
 
         WeatherEffectType.WeatherData weatherData = WeatherEffects.getCurrentType(
-                world,
+                level,
                 soundPos,
                 true,
                 WeatherEffectsClient::typeAffectsBiome
-        ).getWeatherData(world);
+        ).getWeatherData(level);
 
         if (weatherData != null && weatherData.windy()) {
             return Optional.of(soundPos);

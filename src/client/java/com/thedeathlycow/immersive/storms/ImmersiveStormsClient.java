@@ -27,13 +27,13 @@ public class ImmersiveStormsClient implements ClientModInitializer {
                 && FabricLoader.getInstance().isModLoaded("particlerain");
 
         if (!disableSandstormEffects) {
-            ClientTickEvents.END_WORLD_TICK.register(new SandstormParticles());
-            ClientTickEvents.END_WORLD_TICK.register(new SandstormSounds());
+            ClientTickEvents.END_LEVEL_TICK.register(new SandstormParticles());
+            ClientTickEvents.END_LEVEL_TICK.register(new SandstormSounds());
         } else {
             ImmersiveStorms.LOGGER.info("Particle Rain has been detected, disabling Immersive Storms sandstorm particle and sound effects");
         }
 
-        ClientTickEvents.END_WORLD_TICK.register(new BiomeWindEffects());
+        ClientTickEvents.END_LEVEL_TICK.register(new BiomeWindEffects());
 
         ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
         particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Provider::new);

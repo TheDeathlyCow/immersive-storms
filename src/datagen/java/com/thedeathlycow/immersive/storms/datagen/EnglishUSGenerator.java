@@ -8,7 +8,7 @@ import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
     private static final String BASE_PREFIX = "yacl3.config.immersive-storms";
     private static final String SANDSTORM_PREFIX = BASE_PREFIX + ".option.sandstorm";
 
-    protected EnglishUSGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+    protected EnglishUSGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, "en_us", registryLookup);
     }
 

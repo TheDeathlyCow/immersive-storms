@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.15-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
 	id 'maven-publish'
 	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
@@ -64,24 +64,20 @@ fabricApi {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21.10:2025.10.12@zip")
-    }
 
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 
-	modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
+	api "com.terraformersmc:modmenu:${project.modmenu_version}"
 
 	// compatibility patches
 	compileOnly "maven.modrinth:DistantHorizonsApi:${project.distant_horizons_api_version}"
-	modCompileOnly "maven.modrinth:particle-rain:${project.particle_rain_version}"
-	modCompileOnly "maven.modrinth:subtle-effects:${project.subtle_effects_version}"
+	compileOnly "maven.modrinth:particle-rain:${project.particle_rain_version}"
+	compileOnly "maven.modrinth:subtle-effects:${project.subtle_effects_version}"
 }
 
 processResources {
@@ -93,7 +89,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -102,8 +98,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -136,8 +132,8 @@ publishMods {
 	changelog = file("changelogs/${mod_version}.md").text
 	type = STABLE
 
-	file = remapJar.archiveFile
-	additionalFiles.from(remapSourcesJar.archiveFile)
+	file = jar.archiveFile
+	additionalFiles.from(sourcesJar.archiveFile)
 	displayName = "Immersive Storms ${mod_version}"
 
 	modLoaders.add("fabric")
@@ -146,9 +142,9 @@ publishMods {
 	curseforge {
 		accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
 		projectId = "1288370"
-		minecraftVersions.addAll("1.21.11")
+		minecraftVersions.addAll("26.1")
 
-		javaVersions.add(JavaVersion.VERSION_21)
+		javaVersions.add(JavaVersion.VERSION_25)
 
 		clientRequired = true
 		serverRequired = true
@@ -159,7 +155,7 @@ publishMods {
 	modrinth {
 		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
 		projectId = "SdJDElEu"
-		minecraftVersions.addAll("1.21.11")
+		minecraftVersions.addAll("26.1")
 
 		requires("fabric-api", "yacl")
 	}

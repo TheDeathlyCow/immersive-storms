@@ -162,12 +162,12 @@ public final class StormFogModifier {
         }
     }
 
-    private static void setFogDistanceForDistantHorizons(double reduction) {
+    private static void setFogDistanceForDistantHorizons(float reduction) {
         IDhApiConfig config = DhApi.Delayed.configs;
         if (config != null) {
-            if (reduction < 0.99) {
-                config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1);
-                config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1);
+            if (reduction < 0.99f) {
+                config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1f);
+                config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1f);
                 config.graphics().fog().enableVanillaFog().setValue(true);
             } else {
                 config.graphics().fog().farFog().farFogStartDistance().clearValue();

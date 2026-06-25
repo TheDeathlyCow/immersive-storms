@@ -35,7 +35,7 @@ public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
         }
 
         final Minecraft gameClient = Minecraft.getInstance();
-        final Camera camera = gameClient.gameRenderer.getMainCamera();
+        final Camera camera = gameClient.gameRenderer.mainCamera();
         if (camera == null) {
             return; // no camera for whatever reason
         }

@@ -47,7 +47,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndLevelTick {
         }
 
         final Minecraft gameClient = Minecraft.getInstance();
-        final Camera camera = gameClient.gameRenderer.getMainCamera();
+        final Camera camera = gameClient.gameRenderer.mainCamera();
         if (camera == null) {
             return;
         }

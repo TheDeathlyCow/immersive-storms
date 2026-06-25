@@ -42,7 +42,7 @@ public class ImmersiveStormsModMenu implements ModMenuApi {
                                         .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
                                             Minecraft.getInstance()
-                                                    .setScreen(ImmersiveStormsConfig.HANDLER
+                                                    .setScreenAndShow(ImmersiveStormsConfig.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())
@@ -56,7 +56,7 @@ public class ImmersiveStormsModMenu implements ModMenuApi {
                                         .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
                                             Minecraft.getInstance()
-                                                    .setScreen(SandstormConfig.HANDLER
+                                                    .setScreenAndShow(SandstormConfig.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())
@@ -70,7 +70,7 @@ public class ImmersiveStormsModMenu implements ModMenuApi {
                                         .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
                                             Minecraft.getInstance()
-                                                    .setScreen(BiomeConfig.HANDLER
+                                                    .setScreenAndShow(BiomeConfig.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())

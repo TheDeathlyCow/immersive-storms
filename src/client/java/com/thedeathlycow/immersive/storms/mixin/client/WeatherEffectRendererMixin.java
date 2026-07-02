@@ -17,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,20 +36,19 @@ public class WeatherEffectRendererMixin {
             method = "extractRenderState",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;getPrecipitationAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"
+                    target = "Lnet/minecraft/client/multiplayer/ClientLevel;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"
             )
     )
     private Biome.Precipitation checkBlackRainBiome(
-            WeatherEffectRenderer instance,
-            Level level,
+            ClientLevel instance,
             BlockPos pos,
             Operation<Biome.Precipitation> original,
             @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID) LocalBooleanRef isBlackRain
     ) {
-        Biome.Precipitation precipitation = original.call(instance, level, pos);
+        Biome.Precipitation precipitation = original.call(instance, pos);
 
         if (precipitation == Biome.Precipitation.RAIN) {
-            isBlackRain.set(BlackRainEffect.isBlackRain(level, pos));
+            isBlackRain.set(BlackRainEffect.isBlackRain(instance, pos));
         } else {
             isBlackRain.set(false);
         }
@@ -62,24 +60,24 @@ public class WeatherEffectRendererMixin {
             method = "extractRenderState",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;createRainColumnInstance(Lnet/minecraft/util/RandomSource;IIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;"
+                    target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;createRainColumnInstance(Lnet/minecraft/util/RandomSource;JIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;"
             )
     )
     private WeatherEffectRenderer.ColumnInstance extractBlackRainInstance(
             WeatherEffectRenderer instance,
             RandomSource random,
-            int ticks,
+            long ticks,
             int x,
             int bottomY,
             int topY,
             int z,
             int lightCoords,
-            float partialTick,
+            float partialTicks,
             Operation<WeatherEffectRenderer.ColumnInstance> original,
             @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID) LocalBooleanRef isBlackRain,
             @Local(argsOnly = true) WeatherRenderState weatherRenderState
     ) {
-        WeatherEffectRenderer.ColumnInstance columnInstance = original.call(instance, random, ticks, x, bottomY, topY, z, lightCoords, partialTick);
+        WeatherEffectRenderer.ColumnInstance columnInstance = original.call(instance, random, ticks, x, bottomY, topY, z, lightCoords, partialTicks);
 
         if (isBlackRain.get()) {
             ((WeatherRenderStateExtension) weatherRenderState).immersiveStorms$addBlackRainInstance(columnInstance);
@@ -119,7 +117,7 @@ public class WeatherEffectRendererMixin {
             VertexConsumer instance,
             int color,
             Operation<VertexConsumer> original,
-            @Local WeatherEffectRenderer.ColumnInstance columnInstance
+            @Local(name = "column") WeatherEffectRenderer.ColumnInstance columnInstance
     ) {
         WeatherRenderState renderState = this.sharedRenderState.get();
 
@@ -132,31 +130,5 @@ public class WeatherEffectRendererMixin {
         }
 
         return original.call(instance, color);
-    }
-
-    //
-    // Particle colouring
-    //
-
-    @WrapOperation(
-            method = "tickRainParticles",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
-            )
-    )
-    private void setBlackRainParticleColor(
-            ClientLevel instance,
-            ParticleOptions particle,
-            double x, double y, double z,
-            double xSpeed, double ySpeed, double zSpeed,
-            Operation<Void> original,
-            @Local(ordinal = 2) BlockPos pos
-    ) {
-        if (BlackRainEffect.isBlackRain(instance, pos)) {
-            particle = ISParticleTypes.BLACK_RAIN;
-        }
-
-        original.call(instance, particle, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 }

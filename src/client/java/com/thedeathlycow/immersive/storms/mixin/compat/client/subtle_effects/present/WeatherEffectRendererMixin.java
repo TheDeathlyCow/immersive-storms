@@ -22,23 +22,21 @@ public class WeatherEffectRendererMixin {
             method = "extractRenderState",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;createRainColumnInstance(Lnet/minecraft/util/RandomSource;IIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;"
+                    target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;createRainColumnInstance(Lnet/minecraft/util/RandomSource;JIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;"
             )
     )
     private WeatherEffectRenderer.ColumnInstance makeRainBlackWithSubtleEffects(
             WeatherEffectRenderer instance,
             RandomSource random,
-            int ticks,
-            int x,
-            int bottomY,
-            int topY,
-            int z,
+            long ticks,
+            int x, int bottomY, int topY, int z,
             int lightCoords,
-            float partialTick,
+            float partialTicks,
             Operation<WeatherEffectRenderer.ColumnInstance> original,
-            @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID) LocalBooleanRef isBlackRain
+            @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID
+            ) LocalBooleanRef isBlackRain
     ) {
-        WeatherEffectRenderer.ColumnInstance column = original.call(instance, random, ticks, x, bottomY, topY, z, lightCoords, partialTick);
+        WeatherEffectRenderer.ColumnInstance column = original.call(instance, random, ticks, x, bottomY, topY, z, lightCoords, partialTicks);
         RenderStateAttachmentAccessor state = ((RenderStateAttachmentAccessor) (Object) column);
 
         Vector3f color = state.subtleEffects$get(ModRenderStateAttachmentKeys.COLOR);

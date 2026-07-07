@@ -1,7 +1,6 @@
 package com.thedeathlycow.immersive.storms.world;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffects;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectsClient;
@@ -10,6 +9,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -49,12 +49,12 @@ public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
         this.chooseSpotForWindSound(level, camera).ifPresent(
                 soundPos -> {
                     BlockPos cameraPos = BlockPos.containing(camera.position());
-                    boolean playAboveSound = soundPos.getY() > cameraPos.getY() + 1
+                    boolean playAboveSound = soundPos.pos().getY() > cameraPos.getY() + 1
                             && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, cameraPos).getY() > Mth.floor(cameraPos.getY());
 
                     float volume;
                     float pitch;
-                    
+
                     if (playAboveSound) {
                         volume = 0.1f;
                         pitch = 0.5f;
@@ -64,8 +64,8 @@ public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
                     }
 
                     level.playLocalSound(
-                            soundPos,
-                            ISSoundEvents.WEATHER_STRONG_WIND,
+                            soundPos.pos(),
+                            soundPos.event(),
                             SoundSource.WEATHER,
                             volume, pitch,
                             false
@@ -74,7 +74,7 @@ public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
         );
     }
 
-    private Optional<BlockPos> chooseSpotForWindSound(ClientLevel level, Camera camera) {
+    private Optional<SoundPos> chooseSpotForWindSound(ClientLevel level, Camera camera) {
         BlockPos cameraPos = camera.blockPosition();
 
         RandomSource random = level.getRandom();
@@ -82,19 +82,23 @@ public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
         int dx = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
         int dy = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
         int dz = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
-        BlockPos soundPos = cameraPos.offset(dx, dy, dz);
+        BlockPos blockPos = cameraPos.offset(dx, dy, dz);
 
         WeatherEffectType.WeatherData weatherData = WeatherEffects.getCurrentType(
                 level,
-                soundPos,
+                blockPos,
                 true,
                 WeatherEffectsClient::typeAffectsBiome
         ).getWeatherData(level);
 
-        if (weatherData != null && weatherData.windy()) {
-            return Optional.of(soundPos);
+        SoundEvent windSound = weatherData != null ? weatherData.windSound() : null;
+        if (windSound != null) {
+            return Optional.of(new SoundPos(windSound, blockPos));
         }
 
         return Optional.empty();
+    }
+
+    private record SoundPos(SoundEvent event, BlockPos pos) {
     }
 }

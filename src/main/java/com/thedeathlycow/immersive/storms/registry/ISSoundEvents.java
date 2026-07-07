@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvent;
 
 public final class ISSoundEvents {
     public static final SoundEvent WEATHER_STRONG_WIND = register("weather.strong_wind");
+    public static final SoundEvent WEATHER_SOFT_WIND = register("weather.soft_wind");
 
     public static void initialize() {
         ImmersiveStorms.LOGGER.debug("Initialized Immersive Storms sound events");

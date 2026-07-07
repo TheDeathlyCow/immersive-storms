@@ -1,7 +1,9 @@
 package com.thedeathlycow.immersive.storms.util;
 
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import net.minecraft.core.Holder;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.StringRepresentable;
@@ -21,22 +23,22 @@ public enum WeatherEffectType implements StringRepresentable {
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            new WeatherData(WeatherData.LIGHT_FOG, true, 0xD96E38),
-            new WeatherData(WeatherData.THICK_FOG, true, 0xD96E38),
+            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND, 0xD96E38),
+            new WeatherData(WeatherData.THICK_FOG, ISSoundEvents.WEATHER_STRONG_WIND, 0xD96E38),
             Biome.Precipitation.NONE
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, true, 0x77797A),
+            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_STRONG_WIND, 0x77797A),
             Biome.Precipitation.SNOW
     ),
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
-            new WeatherData(WeatherData.THICK_FOG, false, -1),
-            new WeatherData(WeatherData.VERY_THICK_FOG, false, -1),
+            new WeatherData(WeatherData.THICK_FOG, null, -1),
+            new WeatherData(WeatherData.VERY_THICK_FOG, null, -1),
             null
     );
 
@@ -144,15 +146,15 @@ public enum WeatherEffectType implements StringRepresentable {
 
     public record WeatherData(
             Vector2fc fogDistance,
-            boolean windy,
+            @Nullable SoundEvent windSound,
             @Nullable Vector3fc fogColor
     ) {
         private static final Vector2fc LIGHT_FOG = new Vector2f(64, 128);
         private static final Vector2fc THICK_FOG = new Vector2f(32, 64);
         private static final Vector2fc VERY_THICK_FOG = new Vector2f(16, 32);
 
-        public WeatherData(Vector2fc fogDistance, boolean windy, int fogColor) {
-            this(fogDistance, windy, fogColor > -1 ? ARGB.vector3fFromRGB24(fogColor) : null);
+        public WeatherData(Vector2fc fogDistance, SoundEvent windSound, int fogColor) {
+            this(fogDistance, windSound, fogColor > -1 ? ARGB.vector3fFromRGB24(fogColor) : null);
         }
     }
 }

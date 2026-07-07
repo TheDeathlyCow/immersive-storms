@@ -6,5 +6,16 @@
             "immersive-storms:weather/wind/strong3"
         ],
         "subtitle": "subtitles.immersive-storms.weather.strong_wind"
+    },
+    "weather.soft_wind": {
+        "sounds": [
+            "immersive-storms:weather/wind/soft1",
+            "immersive-storms:weather/wind/soft2",
+            "immersive-storms:weather/wind/soft3",
+            "immersive-storms:weather/wind/soft4",
+            "immersive-storms:weather/wind/soft5",
+            "immersive-storms:weather/wind/soft6"
+        ],
+        "subtitle": "subtitles.immersive-storms.weather.soft_wind"
     }
 }

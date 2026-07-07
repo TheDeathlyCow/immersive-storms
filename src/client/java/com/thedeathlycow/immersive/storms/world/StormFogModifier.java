@@ -166,12 +166,12 @@ public final class StormFogModifier {
         IDhApiConfig config = DhApi.Delayed.configs;
         if (config != null) {
             if (reduction < 0.99f) {
-                config.graphics().fog().farFog().farFogStartDistance().setValue(reduction * 0.1f);
-                config.graphics().fog().farFog().farFogEndDistance().setValue(reduction * 0.1f);
+                config.graphics().fog().farFog().farFogMinThickness().setValue(1.0f - (reduction * 0.1f));
+                config.graphics().fog().farFog().farFogMaxThickness().setValue(1.0f);
                 config.graphics().fog().enableVanillaFog().setValue(true);
             } else {
-                config.graphics().fog().farFog().farFogStartDistance().clearValue();
-                config.graphics().fog().farFog().farFogEndDistance().clearValue();
+                config.graphics().fog().farFog().farFogMinThickness().clearValue();
+                config.graphics().fog().farFog().farFogMaxThickness().clearValue();
                 config.graphics().fog().enableVanillaFog().clearValue();
             }
         }

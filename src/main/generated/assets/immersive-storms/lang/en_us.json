@@ -1,4 +1,5 @@
 {
+  "subtitles.immersive-storms.weather.soft_wind": "Wind blows softly",
   "subtitles.immersive-storms.weather.strong_wind": "Wind blows strongly",
   "yacl3.config.immersive-storms:biomes.blackRainBiomes": "Black rain biomes",
   "yacl3.config.immersive-storms:biomes.blackRainBiomes.desc": "Add new biomes IDs to be affected by black rain.",

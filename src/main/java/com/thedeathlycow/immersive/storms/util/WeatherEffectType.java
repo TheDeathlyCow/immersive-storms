@@ -37,8 +37,8 @@ public enum WeatherEffectType implements StringRepresentable {
     DENSE_FOG(
             "dense_fog",
             ISBiomeTags.HAS_DENSE_FOG,
+            new WeatherData(WeatherData.LIGHT_FOG, null, -1),
             new WeatherData(WeatherData.THICK_FOG, null, -1),
-            new WeatherData(WeatherData.VERY_THICK_FOG, null, -1),
             null
     );
 

@@ -23,7 +23,7 @@ public enum WeatherEffectType implements StringRepresentable {
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND, 0xD96E38),
+            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND, 0xF79523),
             new WeatherData(WeatherData.THICK_FOG, ISSoundEvents.WEATHER_STRONG_WIND, 0xD96E38),
             Biome.Precipitation.NONE
     ),

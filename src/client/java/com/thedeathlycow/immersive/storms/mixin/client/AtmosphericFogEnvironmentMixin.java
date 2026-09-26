@@ -8,19 +8,20 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(AtmosphericFogEnvironment.class)
 public abstract class AtmosphericFogEnvironmentMixin {
     @WrapMethod(method = "getBaseColor")
-    protected int modifyBaseFogColor(
+    protected Vector3fc modifyBaseFogColor(
             ClientLevel world,
             Camera camera,
             int viewDistance,
             float skyDarkness,
-            Operation<Integer> original
+            Operation<Vector3fc> original
     ) {
-        int originalColor = original.call(world, camera, viewDistance, skyDarkness);
+        Vector3fc originalColor = original.call(world, camera, viewDistance, skyDarkness);
 
         if (StormFogModifier.shouldApply(world)) {
             return StormFogModifier.sampleWeatherFogColor(world, camera.position(), skyDarkness, originalColor);

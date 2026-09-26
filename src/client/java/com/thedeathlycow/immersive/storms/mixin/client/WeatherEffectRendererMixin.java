@@ -7,25 +7,25 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.world.BlackRainEffect;
 import com.thedeathlycow.immersive.storms.world.WeatherRenderStateExtension;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
 import net.minecraft.client.renderer.state.level.WeatherRenderState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WeatherEffectRenderer.class)
 public class WeatherEffectRendererMixin {
+    @Unique
     private final ThreadLocal<WeatherRenderState> sharedRenderState = new ThreadLocal<>();
 
     //
@@ -91,7 +91,7 @@ public class WeatherEffectRendererMixin {
     //
 
     @Inject(
-            method = "render",
+            method = "prepare",
             at = @At("HEAD")
     )
     private void captureWeatherRenderState(Vec3 cameraPos, WeatherRenderState renderState, CallbackInfo ci) {
@@ -99,7 +99,7 @@ public class WeatherEffectRendererMixin {
     }
 
     @Inject(
-            method = "render",
+            method = "prepare",
             at = @At("TAIL")
     )
     private void clearWeatherRenderState(Vec3 cameraPos, WeatherRenderState renderState, CallbackInfo ci) {
@@ -107,7 +107,7 @@ public class WeatherEffectRendererMixin {
     }
 
     @WrapOperation(
-            method = "renderInstances",
+            method = "prepareInstances",
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/mojang/blaze3d/vertex/VertexConsumer;setColor(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;"

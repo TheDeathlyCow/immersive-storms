@@ -27,17 +27,16 @@ import org.joml.Vector3fc;
 import java.util.function.Function;
 
 public final class StormFogModifier {
-    public static int sampleWeatherFogColor(
+    public static Vector3fc sampleWeatherFogColor(
             ClientLevel level,
             Vec3 pos,
             float tickProgress,
-            int originalColor
+            Vector3fc originalColor
     ) {
         final float rainLevel = level.getRainLevel(tickProgress);
         final float thunderLevel = level.getThunderLevel(tickProgress);
 
         final var accumulator = new WeightedVector3fAccumulator();
-        Vector3fc originalBiomeColorVector = ARGB.vector3fFromRGB24(originalColor);
 
         GaussianSampler.sample(
                 pos.scale(0.25),
@@ -51,12 +50,12 @@ public final class StormFogModifier {
                             }
                     );
 
-                    return sampledType.getFogColor(originalBiomeColorVector, rainLevel, thunderLevel);
+                    return sampledType.getFogColor(originalColor, rainLevel, thunderLevel);
                 },
                 accumulator
         );
 
-        return accumulator.getPackedColor();
+        return accumulator.getAverageVector();
     }
 
     public static void applyStartEndModifier(

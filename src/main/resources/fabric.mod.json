@@ -1,6 +1,9 @@
 {
 	"schemaVersion": 1,
 	"id": "immersive-storms",
+	"provides": [
+		"immersive_storms"
+	],
 	"version": "${version}",
 	"name": "Immersive Storms",
 	"description": "Immersive weather effects for mountains, deserts, swamps, and more!",

@@ -44,7 +44,8 @@
 		"minecraft": "~26.1-",
 		"java": ">=25",
 		"fabric-api": ">=0.145.1",
-		"yet_another_config_lib_v3": ">=3.9.1"
+		"yet_another_config_lib_v3": ">=3.9.1",
+		"yumi_mc_core": ">=${yumi_version}"
 	},
 	"suggests": {
 		"scorchful": "*",

@@ -189,9 +189,10 @@ publishMods {
 		javaVersions.add(JavaVersion.VERSION_25)
 
 		clientRequired = true
-		serverRequired = true
+		serverRequired = false
 
-		requires("fabric-api", "yacl")
+		requires("yacl")
+		optional("fabric-api", "modmenu")
 	}
 
 	modrinth {
@@ -199,6 +200,7 @@ publishMods {
 		projectId = "SdJDElEu"
 		minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
 
-		requires("fabric-api", "yacl")
+		requires("yacl")
+		optional("fabric-api", "modmenu")
 	}
 }

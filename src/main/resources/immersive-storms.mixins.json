@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "com.thedeathlycow.immersive.storms.mixin",
+	"package": "com.thedeathlycow.immersive.storms.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 	],

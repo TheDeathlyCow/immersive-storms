@@ -1,0 +1,17 @@
+{
+    "required": true,
+    "package": "com.thedeathlycow.immersive.storms.client.mixin.client",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "AtmosphericFogEnvironmentMixin",
+        "SkyRendererMixin",
+        "WeatherEffectRendererMixin",
+        "WeatherRenderStateMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "mixins": [
+        "LevelAccessor"
+    ]
+}

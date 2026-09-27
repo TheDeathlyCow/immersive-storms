@@ -30,7 +30,7 @@ public enum WeatherEffectType implements StringRepresentable {
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_STRONG_WIND, 0x77797A),
+            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND, 0x77797A),
             Biome.Precipitation.SNOW
     ),
     DENSE_FOG(

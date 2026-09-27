@@ -16,10 +16,10 @@
 	"icon": "assets/immersive-storms/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"yumi:init": [
 			"com.thedeathlycow.immersive.storms.ImmersiveStorms"
 		],
-		"client": [
+		"yumi:client_init": [
             "com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient"
 		],
 		"modmenu": [

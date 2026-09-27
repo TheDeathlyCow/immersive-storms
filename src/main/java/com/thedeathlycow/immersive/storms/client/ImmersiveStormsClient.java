@@ -11,7 +11,8 @@ import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.client.world.BiomeWindEffects;
 import com.thedeathlycow.immersive.storms.client.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.client.world.SandstormSounds;
-import net.fabricmc.api.ClientModInitializer;
+import dev.yumi.mc.core.api.ModContainer;
+import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
@@ -20,7 +21,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     private static boolean isDistantHorizonsLoaded = false;
 
     @Override
-    public void onInitializeClient() {
+    public void onInitializeClient(ModContainer mod) {
         registerConfig();
         checkDistantHorizons();
 

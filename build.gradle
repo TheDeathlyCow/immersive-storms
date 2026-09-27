@@ -17,6 +17,7 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	mavenCentral()
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven {
@@ -61,6 +62,9 @@ fabricApi {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+	api include("dev.yumi.mc.core:yumi-mc-foundation:${project.yumi_version}")
+	implementation("dev.yumi.mc.core:yumi-mc-foundation:${project.yumi_version}")
 
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 

@@ -1,0 +1,93 @@
+package com.thedeathlycow.immersive.storms.client.world;
+
+import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
+import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
+import com.thedeathlycow.immersive.storms.util.ISMath;
+import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
+import com.thedeathlycow.immersive.storms.client.cutil.WeatherEffectsClient;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
+import org.joml.Vector3f;
+
+public final class SandstormParticles implements ClientTickEvents.EndLevelTick {
+    public static final Vector3f COLOR = ISMath.unpackRgb(0xD9AA84);
+
+    private static final float PARTICLE_SCALE = 10f;
+    private static final float PARTICLE_VELOCITY = -1f;
+    private static final float BASE_PARTICLE_CHANCE = 1f / 60f;
+
+    @Override
+    public void onEndTick(ClientLevel level) {
+        if (!level.isRaining() || level.tickRateManager().isFrozen()) {
+            return;
+        }
+
+        ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
+        SandstormConfig sandstormConfig = config.getSandstorm();
+        final int renderDistance = sandstormConfig.getSandstormParticleRenderDistance();
+        boolean enabled = sandstormConfig.isEnableSandstormParticles()
+                && renderDistance > 0;
+
+        if (!enabled) {
+            return;
+        }
+
+        final Minecraft gameClient = Minecraft.getInstance();
+        final Camera camera = gameClient.gameRenderer.getMainCamera();
+        if (camera == null) {
+            return; // no camera for whatever reason
+        }
+
+        // main particle loop
+        final BlockPos cameraPos = camera.blockPosition();
+        final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        final ParticleOptions particle = new DustGrainParticleEffect(COLOR, PARTICLE_SCALE);
+        final float rarity = BASE_PARTICLE_CHANCE * sandstormConfig.getSandstormParticleDensityMultiplier();
+        final int cameraY = cameraPos.getY();
+        final int xOffset = renderDistance / 2;
+
+        for (int x = cameraPos.getX() - renderDistance; x < cameraPos.getX() + renderDistance; x++) {
+            for (int z = cameraPos.getZ() - renderDistance; z < cameraPos.getZ() + renderDistance; z++) {
+                // adjust to account for the fact that particles travel along the x-axis
+                // makes the area the particles come from look less empty
+                int adjustedX = x + xOffset;
+
+                int y = cameraY + level.getRandom().nextIntBetweenInclusive(-renderDistance / 2, (renderDistance + 1) / 2);
+                y = Math.max(y, level.getHeight(Heightmap.Types.MOTION_BLOCKING, adjustedX, z));
+
+                pos.set(adjustedX, y, z);
+                addParticle(level, particle, pos, rarity);
+            }
+        }
+    }
+
+    private static void addParticle(ClientLevel level, ParticleOptions particle, BlockPos pos, float rarity) {
+        Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(pos);
+
+        RandomSource random = level.getRandom();
+
+        boolean addParticle = random.nextFloat() < rarity
+                && biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Biome.Precipitation.NONE
+                && WeatherEffectsClient.typeAffectsBiome(WeatherEffectType.SANDSTORM, biome);
+
+        if (addParticle) {
+            level.addParticle(
+                    particle,
+                    pos.getX() + random.nextDouble(),
+                    pos.getY() + random.nextDouble(),
+                    pos.getZ() + random.nextDouble(),
+                    PARTICLE_VELOCITY, 0, 0
+            );
+        }
+    }
+}

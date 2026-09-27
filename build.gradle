@@ -41,12 +41,9 @@ repositories {
 }
 
 loom {
-	splitEnvironmentSourceSets()
-
 	mods {
 		"immersive-storms" {
 			sourceSet sourceSets.main
-			sourceSet sourceSets.client
 		}
 	}
 

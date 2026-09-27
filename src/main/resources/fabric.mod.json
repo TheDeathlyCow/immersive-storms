@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "immersive-storms",
+	"id": "immersive_storms",
 	"provides": [
-		"immersive_storms"
+		"immersive-storms"
 	],
 	"version": "${version}",
 	"name": "Immersive Storms",

@@ -36,7 +36,7 @@ public class WeatherEffectRendererMixin {
             int lightCoords,
             float partialTick,
             Operation<WeatherEffectRenderer.ColumnInstance> original,
-            @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_ID) LocalBooleanRef isBlackRain
+            @Share(value = "is_black_rain", namespace = ImmersiveStorms.MOD_NAMESPACE) LocalBooleanRef isBlackRain
     ) {
         WeatherEffectRenderer.ColumnInstance column = original.call(instance, random, ticks, x, bottomY, topY, z, lightCoords, partialTick);
         RenderStateAttachmentAccessor state = ((RenderStateAttachmentAccessor) (Object) column);

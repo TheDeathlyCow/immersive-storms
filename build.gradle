@@ -106,11 +106,18 @@ loom {
 	convertAw2At(tasks.named("jar", Jar), ["immersive-storms.classtweaker"])
 }
 
+def resourceTargets = ["fabric.mod.json", "META-INF/neoforge.mods.toml", "META-INF/jarjar/metadata.json"]
+def replaceProperties = [
+		"version": project.version,
+		"yumi_version": project.yumi_version,
+		"yacl_version": project.yacl_version
+]
+
 processResources {
 	inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
+	filesMatching(resourceTargets) {
+		expand replaceProperties
 	}
 }
 

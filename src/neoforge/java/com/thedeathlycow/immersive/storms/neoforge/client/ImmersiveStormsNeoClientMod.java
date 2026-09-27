@@ -9,6 +9,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 @Mod(value = ImmersiveStormsNeoClientMod.MOD_ID, dist = Dist.CLIENT)
@@ -17,7 +18,7 @@ public class ImmersiveStormsNeoClientMod {
 
     public ImmersiveStormsNeoClientMod(IEventBus modBus, ModContainer modContainer) {
         modBus.addListener(ImmersiveStormsNeoClientMod::registerParticles);
-        modBus.addListener(ImmersiveStormsNeoClientMod::clientLevelTick);
+        NeoForge.EVENT_BUS.addListener(ImmersiveStormsNeoClientMod::clientLevelTick);
 
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, (_, parent) -> {
             return ISConfigScreen.generateConfigScreen(parent);

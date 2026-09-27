@@ -4,10 +4,9 @@ import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.client.config.section.BiomeConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -25,7 +24,7 @@ import org.joml.Vector2d;
 
 import java.util.function.Supplier;
 
-public class BiomeWindEffects implements ClientTickEvents.EndLevelTick {
+public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
     private static final int PARTICLES_PER_TICK = 3;
     private static final float PARTICLE_SCALE = 4f;
     private static final Vector2d PARTICLE_VELOCITY = new Vector2d(-1.0, -1.0).normalize(0.6);
@@ -163,7 +162,7 @@ public class BiomeWindEffects implements ClientTickEvents.EndLevelTick {
         public static ParticleColor forBiome(Holder<Biome> biome) {
             if (BiomeConfig.getConfig().isWindy(biome)) {
                 for (ParticleColor value : values()) {
-                    if (ClientTags.isInWithLocalFallback(value.tag, biome)) {
+                    if (biome.is(value.tag)) {
                         return value;
                     }
                 }

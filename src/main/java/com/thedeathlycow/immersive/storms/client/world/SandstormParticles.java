@@ -1,13 +1,11 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
-import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
+import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
-import com.thedeathlycow.immersive.storms.client.cutil.WeatherEffectsClient;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,7 +17,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.Vector3f;
 
-public final class SandstormParticles implements ClientTickEvents.EndLevelTick {
+public final class SandstormParticles implements ISClientTickEvents.EndLevel {
     public static final Vector3f COLOR = ISMath.unpackRgb(0xD9AA84);
 
     private static final float PARTICLE_SCALE = 10f;
@@ -32,8 +30,7 @@ public final class SandstormParticles implements ClientTickEvents.EndLevelTick {
             return;
         }
 
-        ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
-        SandstormConfig sandstormConfig = config.getSandstorm();
+        SandstormConfig sandstormConfig = SandstormConfig.HANDLER.instance();
         final int renderDistance = sandstormConfig.getSandstormParticleRenderDistance();
         boolean enabled = sandstormConfig.isEnableSandstormParticles()
                 && renderDistance > 0;

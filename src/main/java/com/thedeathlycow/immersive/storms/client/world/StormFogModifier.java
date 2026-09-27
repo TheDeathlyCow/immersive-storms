@@ -7,7 +7,7 @@ import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsC
 import com.thedeathlycow.immersive.storms.client.mixin.client.LevelAccessor;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffects;
-import com.thedeathlycow.immersive.storms.client.cutil.WeatherEffectsClient;
+import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;

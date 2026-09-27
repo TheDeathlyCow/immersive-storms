@@ -1,8 +1,6 @@
-package com.thedeathlycow.immersive.storms.client.cparticle;
+package com.thedeathlycow.immersive.storms.client.particle;
 
 import com.thedeathlycow.immersive.storms.client.world.BlackRainEffect;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
@@ -19,7 +17,6 @@ public class BlackWaterDropParticle extends WaterDropParticle {
         this.bCol = BlackRainEffect.COLOR_FLOAT;
     }
 
-    @Environment(EnvType.CLIENT)
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprite;
 

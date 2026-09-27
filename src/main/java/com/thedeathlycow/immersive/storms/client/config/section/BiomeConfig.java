@@ -11,7 +11,6 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
 import dev.isxander.yacl3.config.v2.api.autogen.ListGroup;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
-import net.fabricmc.fabric.api.tag.client.v1.ClientTags;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
@@ -24,8 +23,10 @@ import java.util.List;
 public class BiomeConfig {
     public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("biomes.json5");
 
+    private static final String CATEGORY = "biomes";
+
     public static final ConfigClassHandler<BiomeConfig> HANDLER = ConfigClassHandler.createBuilder(BiomeConfig.class)
-            .id(ImmersiveStorms.id("biomes"))
+            .id(ImmersiveStorms.id(CATEGORY))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
                             .appendGsonBuilder(gsonBuilder -> {
@@ -41,8 +42,6 @@ public class BiomeConfig {
                             .build()
             )
             .build();
-
-    private static final String CATEGORY = "biomes";
 
     @AutoGen(category = CATEGORY)
     @Translate.Name("Excluded biomes")
@@ -118,12 +117,12 @@ public class BiomeConfig {
     }
 
     public boolean isWindy(Holder<Biome> biomeHolder) {
-        return ClientTags.isInWithLocalFallback(ISBiomeTags.IS_WINDY, biomeHolder)
+        return biomeHolder.is(ISBiomeTags.IS_WINDY)
                 || biomeHolder.unwrapKey().map(key -> this.windyBiomes.contains(key.identifier())).orElse(false);
     }
 
     public boolean isAffectedByBlackRain(Holder<Biome> biomeHolder) {
-        return ClientTags.isInWithLocalFallback(ISBiomeTags.IS_BLACK_RAIN_AFFECTED, biomeHolder)
+        return biomeHolder.is(ISBiomeTags.IS_BLACK_RAIN_AFFECTED)
                 || biomeHolder.unwrapKey().map(key -> this.blackRainBiomes.contains(key.identifier())).orElse(false);
     }
 

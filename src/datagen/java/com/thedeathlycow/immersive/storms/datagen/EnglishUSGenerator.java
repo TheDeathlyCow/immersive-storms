@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
-import com.thedeathlycow.immersive.storms.client.ImmersiveStormsModMenu;
+import com.thedeathlycow.immersive.storms.client.config.ISConfigScreen;
 import com.thedeathlycow.immersive.storms.client.config.section.BiomeConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
@@ -27,13 +27,13 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
         builder.add(ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
         builder.add(ISSoundEvents.WEATHER_SOFT_WIND, "Wind blows softly");
 
-        builder.add(ImmersiveStormsModMenu.TITLE, "Immersive Storms Config");
-        builder.add(ImmersiveStormsModMenu.GENERAL_CATEGORY, "General Settings");
-        builder.add(ImmersiveStormsModMenu.GENERAL_CATEGORY_DESC, "General settings for Immersive Storms");
-        builder.add(ImmersiveStormsModMenu.SANDSTORM_CATEGORY, "Sandstorm Settings");
-        builder.add(ImmersiveStormsModMenu.SANDSTORM_CATEGORY_DESC, "Specific settings for sandstorms");
-        builder.add(ImmersiveStormsModMenu.BIOMES_CATEGORY, "Biome Settings");
-        builder.add(ImmersiveStormsModMenu.BIOMES_CATEGORY_DESC, "Configure how different biomes are affected by weather types");
+        builder.add(ISConfigScreen.TITLE, "Immersive Storms Config");
+        builder.add(ISConfigScreen.GENERAL_CATEGORY, "General Settings");
+        builder.add(ISConfigScreen.GENERAL_CATEGORY_DESC, "General settings for Immersive Storms");
+        builder.add(ISConfigScreen.SANDSTORM_CATEGORY, "Sandstorm Settings");
+        builder.add(ISConfigScreen.SANDSTORM_CATEGORY_DESC, "Specific settings for sandstorms");
+        builder.add(ISConfigScreen.BIOMES_CATEGORY, "Biome Settings");
+        builder.add(ISConfigScreen.BIOMES_CATEGORY_DESC, "Configure how different biomes are affected by weather types");
 
         generateConfigOptionTranslations(ImmersiveStormsConfig.HANDLER, builder);
         generateConfigOptionTranslations(SandstormConfig.HANDLER, builder);

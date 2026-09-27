@@ -5,41 +5,41 @@ import com.thedeathlycow.immersive.storms.client.config.Updater;
 import com.thedeathlycow.immersive.storms.client.config.section.BiomeConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
-import com.thedeathlycow.immersive.storms.client.cparticle.BlackWaterDropParticle;
-import com.thedeathlycow.immersive.storms.client.cparticle.DustGrainParticle;
-import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
+import com.thedeathlycow.immersive.storms.client.particle.BlackWaterDropParticle;
+import com.thedeathlycow.immersive.storms.client.particle.ClientParticleHelper;
+import com.thedeathlycow.immersive.storms.client.particle.DustGrainParticle;
+import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.client.world.BiomeWindEffects;
 import com.thedeathlycow.immersive.storms.client.world.SandstormParticles;
 import com.thedeathlycow.immersive.storms.client.world.SandstormSounds;
+import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import dev.yumi.mc.core.api.ModContainer;
+import dev.yumi.mc.core.api.YumiMods;
 import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 
 public class ImmersiveStormsClient implements ClientModInitializer {
     private static boolean isDistantHorizonsLoaded = false;
 
     @Override
     public void onInitializeClient(ModContainer mod) {
-        registerConfig();
         checkDistantHorizons();
+        registerConfig();
 
-        boolean disableSandstormEffects = getConfig().getSandstorm().isDetectParticleRain()
-                && FabricLoader.getInstance().isModLoaded("particlerain");
+        boolean disableSandstormEffects = SandstormConfig.HANDLER.instance().isDetectParticleRain()
+                && YumiMods.get().isModLoaded("particlerain");
 
         if (!disableSandstormEffects) {
-            ClientTickEvents.END_LEVEL_TICK.register(new SandstormParticles());
-            ClientTickEvents.END_LEVEL_TICK.register(new SandstormSounds());
+            ISClientTickEvents.END_LEVEL.register(new SandstormParticles());
+            ISClientTickEvents.END_LEVEL.register(new SandstormSounds());
         } else {
             ImmersiveStorms.LOGGER.info("Particle Rain has been detected, disabling Immersive Storms sandstorm particle and sound effects");
         }
 
-        ClientTickEvents.END_LEVEL_TICK.register(new BiomeWindEffects());
+        ISClientTickEvents.END_LEVEL.register(new BiomeWindEffects());
 
-        ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
-        particleRegistry.register(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Provider::new);
-        particleRegistry.register(ISParticleTypes.BLACK_RAIN, BlackWaterDropParticle.Provider::new);
+        ClientParticleHelper particleRegistry = ClientParticleHelper.getInstance();
+        particleRegistry.registerProvider(ISParticleTypes.DUST_GRAIN, DustGrainParticle.Provider::new);
+        particleRegistry.registerProvider(ISParticleTypes.BLACK_RAIN, BlackWaterDropParticle.Provider::new);
     }
 
     public static ImmersiveStormsConfig getConfig() {
@@ -61,6 +61,6 @@ public class ImmersiveStormsClient implements ClientModInitializer {
     }
 
     private static void checkDistantHorizons() {
-        isDistantHorizonsLoaded = FabricLoader.getInstance().isModLoaded("distanthorizons");
+        isDistantHorizonsLoaded = YumiMods.get().isModLoaded("distanthorizons");
     }
 }

@@ -1,5 +1,5 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
+	id 'org.relativitymc.neo-loom' version '1.17-SNAPSHOT'
 	id 'maven-publish'
 	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
@@ -19,15 +19,25 @@ repositories {
 	// for more information about repositories.
 	mavenCentral()
 	maven { url "https://maven.shedaniel.me/" }
+	maven { url = "https://maven.architectury.dev" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven {
 		name 'Xander Maven'
 		url 'https://maven.isxander.dev/releases'
 	}
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
+	maven {
+		name = 'RelativityMC'
+		url = 'https://repo.codemc.io/repository/relativitymc/'
+	}
+	maven {
+		name = "NeoForge"
+		url = uri("https://maven.neoforged.net/releases/")
+		content {
+			includeGroupAndSubgroups("net.neoforged")
+			includeGroupAndSubgroups("cpw.mods")
+			includeGroupAndSubgroups("net.minecraftforge")
+		}
+	}
 	exclusiveContent {
 		forRepository {
 			maven {
@@ -41,14 +51,15 @@ repositories {
 	}
 }
 
-loom {
-	mods {
-		"immersive-storms" {
-			sourceSet sourceSets.main
-		}
+sourceSets {
+	fabric {
+		compileClasspath += main.compileClasspath
+		runtimeClasspath += main.runtimeClasspath
 	}
-
-	accessWidenerPath = file("src/main/resources/immersive-storms.accesswidener")
+	neoforge {
+		compileClasspath += main.compileClasspath
+		runtimeClasspath += main.runtimeClasspath
+	}
 }
 
 fabricApi {
@@ -65,20 +76,34 @@ dependencies {
 
 	api include("dev.yumi.mc.core:yumi-mc-foundation:${project.yumi_version}")
 	implementation("dev.yumi.mc.core:yumi-mc-foundation:${project.yumi_version}")
+	compileOnlyApi("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
 
-    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	fabricCompileOnly localRuntime("net.fabricmc:fabric-loader:${project.fabric_loader_version}")
+	fabricCompileOnly localRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+	fabricCompileOnly localRuntime("com.terraformersmc:modmenu:${project.modmenu_version}")
+	fabricCompileOnly localRuntime("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
-
-	api "com.terraformersmc:modmenu:${project.modmenu_version}"
+	neoforgeCompileOnly("net.neoforged:neoforge:${project.neoforge_version}:universal")
+	neoforgeCompileOnly("net.neoforged.fancymodloader:loader:${project.neoforge_loader_version}")
+	neoforgeCompileOnly("dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge")
 
 	// compatibility patches
 	compileOnly "maven.modrinth:DistantHorizonsApi:${project.distant_horizons_api_version}"
 	compileOnly "maven.modrinth:particle-rain:${project.particle_rain_version}"
 	compileOnly "maven.modrinth:subtle-effects:${project.subtle_effects_version}"
+
+	neoforgeImplementation sourceSets.main.output
+	fabricImplementation sourceSets.main.output
+
+	localRuntime sourceSets.fabric.output
+	localRuntime sourceSets.neoforge.output
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/immersive-storms.classtweaker")
+	convertAw2At(tasks.named("jar", Jar), ["immersive-storms.classtweaker"])
 }
 
 processResources {
@@ -104,11 +129,19 @@ java {
 }
 
 jar {
-	inputs.property "archivesName", project.base.archivesName
-
 	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}"}
+		rename { "${it}_${project.archives_base_name}"}
 	}
+
+	from(sourceSets.neoforge.output)
+	from(sourceSets.fabric.output)
+}
+
+sourcesJar {
+	from(sourceSets.neoforge.java.sourceDirectories)
+	from(sourceSets.neoforge.resources.sourceDirectories)
+	from(sourceSets.fabric.java.sourceDirectories)
+	from(sourceSets.fabric.resources.sourceDirectories)
 }
 
 // configure the maven publication
@@ -139,11 +172,12 @@ publishMods {
 
 	modLoaders.add("fabric")
 	modLoaders.add("quilt")
+	modLoaders.add("neoforge")
 
 	curseforge {
 		accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
 		projectId = "1288370"
-		minecraftVersions.addAll("26.1")
+		minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
 
 		javaVersions.add(JavaVersion.VERSION_25)
 
@@ -156,7 +190,7 @@ publishMods {
 	modrinth {
 		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
 		projectId = "SdJDElEu"
-		minecraftVersions.addAll("26.1")
+		minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
 
 		requires("fabric-api", "yacl")
 	}

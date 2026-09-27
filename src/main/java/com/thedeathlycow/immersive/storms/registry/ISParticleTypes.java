@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms.registry;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import com.thedeathlycow.immersive.storms.particle.ParticleHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -12,7 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 public final class ISParticleTypes {
     public static final ParticleType<DustGrainParticleEffect> DUST_GRAIN = register(
             "dust_grain",
-            FabricParticleTypes.complex(
+            ParticleHelper.getInstance().createComplex(
                     DustGrainParticleEffect.CODEC,
                     DustGrainParticleEffect.PACKET_CODEC
             )
@@ -29,7 +29,11 @@ public final class ISParticleTypes {
     }
 
     private static SimpleParticleType register(String name, boolean overrideLimiter) {
-        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, ImmersiveStorms.id(name), FabricParticleTypes.simple(overrideLimiter));
+        return Registry.register(
+                BuiltInRegistries.PARTICLE_TYPE,
+                ImmersiveStorms.id(name),
+                ParticleHelper.getInstance().createSimple(overrideLimiter)
+        );
     }
 
     private ISParticleTypes() {

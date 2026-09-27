@@ -1,8 +1,6 @@
-package com.thedeathlycow.immersive.storms.client.cparticle;
+package com.thedeathlycow.immersive.storms.client.particle;
 
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DustParticleBase;
 import net.minecraft.client.particle.Particle;
@@ -31,7 +29,6 @@ public class DustGrainParticle extends DustParticleBase<DustGrainParticleEffect>
         this.bCol = this.randomizeColor(parameters.getColor().z(), multiplier);
     }
 
-    @Environment(EnvType.CLIENT)
     public static class Provider implements ParticleProvider<DustGrainParticleEffect> {
         private final SpriteSet sprite;
 

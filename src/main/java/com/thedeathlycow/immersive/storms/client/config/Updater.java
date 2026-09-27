@@ -8,9 +8,9 @@ import com.thedeathlycow.immersive.storms.client.config.schema.SchemaV2;
 import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.SchemaConfig;
+import dev.yumi.mc.core.api.YumiMods;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +29,7 @@ public final class Updater {
     };
 
     public static void initialize() {
-        Path clothConfigPath = FabricLoader.getInstance().getConfigDir().resolve("immersive-storms.json5");
+        Path clothConfigPath = YumiMods.get().getConfigDirectory().resolve("immersive-storms.json5");
         if (Files.exists(clothConfigPath)) {
             try {
                 updateToYACL(clothConfigPath);

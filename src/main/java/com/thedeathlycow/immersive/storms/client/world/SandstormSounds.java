@@ -1,10 +1,10 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
+import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
+import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffects;
-import com.thedeathlycow.immersive.storms.client.cutil.WeatherEffectsClient;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.Optional;
 
-public final class SandstormSounds implements ClientTickEvents.EndLevelTick {
+public final class SandstormSounds implements ISClientTickEvents.EndLevel {
     private static final int MAX_SOUND_Y_DIFF = 10;
 
     private static final int MAX_XZ_OFFSET = 10;

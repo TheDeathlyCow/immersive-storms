@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.cutil;
+package com.thedeathlycow.immersive.storms.client.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

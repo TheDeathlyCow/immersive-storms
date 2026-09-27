@@ -20,10 +20,11 @@
 			"com.thedeathlycow.immersive.storms.ImmersiveStorms"
 		],
 		"yumi:client_init": [
+			"com.thedeathlycow.immersive.storms.fabric.client.ImmersiveStormsFabricClient",
             "com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient"
 		],
 		"modmenu": [
-            "com.thedeathlycow.immersive.storms.client.ImmersiveStormsModMenu"
+			"com.thedeathlycow.immersive.storms.fabric.client.ImmersiveStormsModMenu"
 		]
 	},
 	"mixins": [
@@ -37,6 +38,7 @@
 			"environment": "client"
 		}
 	],
+	"accessWidener": "immersive-storms.classtweaker",
 	"depends": {
 		"fabricloader": ">=0.18.5",
 		"minecraft": "~26.1-",
@@ -48,7 +50,6 @@
 		"scorchful": "*",
 		"modmenu": "*"
 	},
-	"accessWidener": "immersive-storms.accesswidener",
 	"custom": {
 		"modmenu": {
 			"links": {

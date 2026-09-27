@@ -1,5 +1,6 @@
 package com.thedeathlycow.immersive.storms.neoforge.client;
 
+import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.ISConfigScreen;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -12,10 +13,8 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
-@Mod(value = ImmersiveStormsNeoClientMod.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = ImmersiveStorms.MOD_ID, dist = Dist.CLIENT)
 public class ImmersiveStormsNeoClientMod {
-    public static final String MOD_ID = "immersive_storms";
-
     public ImmersiveStormsNeoClientMod(IEventBus modBus, ModContainer modContainer) {
         modBus.addListener(ImmersiveStormsNeoClientMod::registerParticles);
         NeoForge.EVENT_BUS.addListener(ImmersiveStormsNeoClientMod::clientLevelTick);

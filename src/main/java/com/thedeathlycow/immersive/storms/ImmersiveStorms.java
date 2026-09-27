@@ -2,7 +2,8 @@ package com.thedeathlycow.immersive.storms;
 
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
-import net.fabricmc.api.ModInitializer;
+import dev.yumi.mc.core.api.ModContainer;
+import dev.yumi.mc.core.api.entrypoint.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ public class ImmersiveStorms implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
-    public void onInitialize() {
+    public void onInitialize(ModContainer mod) {
         ISParticleTypes.initialize();
         ISSoundEvents.initialize();
     }

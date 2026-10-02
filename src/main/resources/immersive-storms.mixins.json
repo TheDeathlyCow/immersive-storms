@@ -1,10 +1,11 @@
 {
-	"required": true,
-	"package": "com.thedeathlycow.immersive.storms.client.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-	],
-	"injectors": {
-		"defaultRequire": 1
+    "required": true,
+    "package": "com.thedeathlycow.immersive.storms.client.mixin.common",
+    "compatibilityLevel": "JAVA_25",
+    "mixins": [
+        "LevelMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
 	}
 }

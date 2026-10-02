@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.config;
+package com.thedeathlycow.immersive.storms.client.config.data;
 
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.controller.ControllerBuilder;

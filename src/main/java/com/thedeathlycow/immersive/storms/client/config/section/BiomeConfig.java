@@ -1,8 +1,8 @@
 package com.thedeathlycow.immersive.storms.client.config.section;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.IdentifierController;
-import com.thedeathlycow.immersive.storms.client.config.IdentifierListGroup;
+import com.thedeathlycow.immersive.storms.client.config.data.IdentifierController;
+import com.thedeathlycow.immersive.storms.client.config.data.IdentifierListGroup;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;

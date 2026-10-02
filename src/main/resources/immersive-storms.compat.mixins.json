@@ -2,7 +2,7 @@
     "required": true,
     "package": "com.thedeathlycow.immersive.storms.client.mixin.compat.client",
     "plugin": "com.thedeathlycow.immersive.storms.client.mixin.compat.client.Plugin",
-    "compatibilityLevel": "JAVA_21",
+    "compatibilityLevel": "JAVA_25",
     "client": [
         "subtle_effects.present.WeatherEffectRendererMixin"
     ],

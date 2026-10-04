@@ -12,20 +12,20 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(SkyRenderer.class)
 public class SkyRendererMixin {
-    @WrapMethod(
-            method = "extractRenderState"
-    )
-    private void modifySkyColor(
-            ClientLevel world,
-            float tickProgress,
-            Camera camera,
-            SkyRenderState state,
-            Operation<Void> original
-    ) {
-        original.call(world, tickProgress, camera, state);
-
-        if (state.skybox == DimensionType.Skybox.OVERWORLD && StormFogModifier.shouldApply(world)) {
-            state.skyColor = StormFogModifier.sampleWeatherFogColor(world, camera.position(), tickProgress, state.skyColor);
-        }
-    }
+//    @WrapMethod(
+//            method = "extractRenderState"
+//    )
+//    private void modifySkyColor(
+//            ClientLevel world,
+//            float tickProgress,
+//            Camera camera,
+//            SkyRenderState state,
+//            Operation<Void> original
+//    ) {
+//        original.call(world, tickProgress, camera, state);
+//
+//        if (state.skybox == DimensionType.Skybox.OVERWORLD && StormFogModifier.shouldApply(world)) {
+//            state.skyColor = StormFogModifier.sampleWeatherFogColor(world, camera.position(), tickProgress, state.skyColor);
+//        }
+//    }
 }

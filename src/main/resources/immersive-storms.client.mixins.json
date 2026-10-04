@@ -5,14 +5,10 @@
     "client": [
         "AtmosphericFogEnvironmentMixin",
         "EnvironmentAttributeProbeMixin",
-        "SkyRendererMixin",
         "WeatherEffectRendererMixin",
         "WeatherRenderStateMixin"
     ],
     "injectors": {
         "defaultRequire": 1
-    },
-    "mixins": [
-        "LevelAccessor"
-    ]
+    }
 }

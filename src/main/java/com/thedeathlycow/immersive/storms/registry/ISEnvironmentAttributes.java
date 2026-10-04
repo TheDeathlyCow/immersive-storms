@@ -7,8 +7,8 @@ import net.minecraft.world.attribute.AttributeTypes;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 
 public final class ISEnvironmentAttributes {
-    public static final  EnvironmentAttribute<Float> STORM_FOG_END_DISTANCE_MULTIPLIER = register(
-            "visual/storm_fog_end_distance_multiplier",
+    public static final EnvironmentAttribute<Float> STORM_FOG_END_DISTANCE = register(
+            "visual/storm_fog_end_distance",
             EnvironmentAttribute.builder(AttributeTypes.FLOAT)
                     .defaultValue(1.0f)
                     .spatiallyInterpolated()

@@ -19,6 +19,7 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.attribute.modifier.ColorModifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 
@@ -91,14 +92,14 @@ public class AttributeConfigData {
                         List.of(tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT)),
                         new WeatherAttributeData(
                                 EnvironmentAttributeMap.builder()
-                                        .set(EnvironmentAttributes.FOG_COLOR, 0xF79523)
-                                        .set(EnvironmentAttributes.SKY_COLOR, 0xF79523)
-                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE_MULTIPLIER, 128f / 1024f)
+                                        .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523)
+                                        .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523)
+                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 128f / 1024f)
                                         .build(),
                                 EnvironmentAttributeMap.builder()
-                                        .set(EnvironmentAttributes.FOG_COLOR, 0xD96E38)
-                                        .set(EnvironmentAttributes.SKY_COLOR, 0xD96E38)
-                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE_MULTIPLIER, 64f / 1024f)
+                                        .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38)
+                                        .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38)
+                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 64f / 1024f)
                                         .build()
                         )
                 ))

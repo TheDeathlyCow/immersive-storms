@@ -32,21 +32,3 @@ public abstract class AtmosphericFogEnvironmentMixin {
         }
     }
 }
-
-//    @WrapMethod(method = "getBaseColor")
-//    protected int modifyBaseFogColor(
-//            ClientLevel world,
-//            Camera camera,
-//            int viewDistance,
-//            float skyDarkness,
-//            Operation<Integer> original
-//    ) {
-//        int originalColor = original.call(world, camera, viewDistance, skyDarkness);
-//
-//        if (StormFogModifier.shouldApply(world)) {
-//            return StormFogModifier.sampleWeatherFogColor(world, camera.position(), skyDarkness, originalColor);
-//        } else {
-//            return originalColor;
-//        }
-//    }
-//

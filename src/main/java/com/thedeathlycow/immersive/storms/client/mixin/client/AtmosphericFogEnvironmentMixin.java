@@ -9,41 +9,44 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(AtmosphericFogEnvironment.class)
 public abstract class AtmosphericFogEnvironmentMixin {
-    @WrapMethod(method = "getBaseColor")
-    protected int modifyBaseFogColor(
-            ClientLevel world,
-            Camera camera,
-            int viewDistance,
-            float skyDarkness,
-            Operation<Integer> original
-    ) {
-        int originalColor = original.call(world, camera, viewDistance, skyDarkness);
+    @Shadow
+    private float rainFogMultiplier;
 
-        if (StormFogModifier.shouldApply(world)) {
-            return StormFogModifier.sampleWeatherFogColor(world, camera.position(), skyDarkness, originalColor);
-        } else {
-            return originalColor;
-        }
-    }
-
-    @WrapMethod(
-            method = "setupFog"
-    )
-    private void modifyFogDistance(
-            FogData data,
+    @WrapMethod(method = "setupFog")
+    private void setStormFogDistanceOverride(
+            FogData fog,
             Camera camera,
-            ClientLevel world,
-            float f,
-            DeltaTracker tickCounter,
+            ClientLevel level,
+            float renderDistance,
+            DeltaTracker deltaTracker,
             Operation<Void> original
     ) {
-        original.call(data, camera, world, f, tickCounter);
+        original.call(fog, camera, level, renderDistance, deltaTracker);
 
-        if (StormFogModifier.shouldApply(world)) {
-            StormFogModifier.applyStartEndModifier(data, camera.position(), world, tickCounter);
+        if (this.rainFogMultiplier > 0f) {
+            StormFogModifier.applyStormFogDistance(fog, camera, level, deltaTracker);
         }
     }
 }
+
+//    @WrapMethod(method = "getBaseColor")
+//    protected int modifyBaseFogColor(
+//            ClientLevel world,
+//            Camera camera,
+//            int viewDistance,
+//            float skyDarkness,
+//            Operation<Integer> original
+//    ) {
+//        int originalColor = original.call(world, camera, viewDistance, skyDarkness);
+//
+//        if (StormFogModifier.shouldApply(world)) {
+//            return StormFogModifier.sampleWeatherFogColor(world, camera.position(), skyDarkness, originalColor);
+//        } else {
+//            return originalColor;
+//        }
+//    }
+//

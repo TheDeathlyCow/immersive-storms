@@ -4,10 +4,12 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public sealed interface UnboundRegistryObjectStream<T> permits UnboundRegistryObjectStream.Key, UnboundRegistryObjectStream.Tag {
@@ -34,7 +36,7 @@ public sealed interface UnboundRegistryObjectStream<T> permits UnboundRegistryOb
     record Key<T>(ResourceKey<T> key) implements UnboundRegistryObjectStream<T> {
         @Override
         public Stream<Holder<T>> listHolders(HolderLookup<T> lookup) {
-            return Stream.of(lookup.getOrThrow(this.key()));
+            return lookup.get(this.key()).stream().map(Function.identity());
         }
 
         @Override
@@ -46,7 +48,7 @@ public sealed interface UnboundRegistryObjectStream<T> permits UnboundRegistryOb
     record Tag<T>(TagKey<T> tag) implements UnboundRegistryObjectStream<T> {
         @Override
         public Stream<Holder<T>> listHolders(HolderLookup<T> lookup) {
-            return lookup.getOrThrow(this.tag).stream();
+            return lookup.get(this.tag).map(HolderSet.ListBacked::stream).orElseGet(Stream::empty);
         }
 
         @Override

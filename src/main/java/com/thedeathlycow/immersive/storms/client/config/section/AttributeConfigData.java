@@ -103,6 +103,28 @@ public class AttributeConfigData {
                                         .build()
                         )
                 ))
+                .add(new Entry(
+                        List.of(object(Biomes.PALE_GARDEN)),
+                        new WeatherAttributeData(
+                                EnvironmentAttributeMap.builder()
+                                        .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true)
+                                        .build(),
+                                EnvironmentAttributeMap.builder()
+                                        .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true)
+                                        .build()
+                        )
+                ))
+                .add(new Entry(
+                        List.of(object(Biomes.DARK_FOREST), object(Biomes.PALE_GARDEN), object(Biomes.SWAMP), object(Biomes.MANGROVE_SWAMP)),
+                        new WeatherAttributeData(
+                                EnvironmentAttributeMap.builder()
+                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 128f / 1024f)
+                                        .build(),
+                                EnvironmentAttributeMap.builder()
+                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 64f / 1024f)
+                                        .build()
+                        )
+                ))
                 .build();
     }
 

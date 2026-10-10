@@ -114,11 +114,11 @@ public final class Biome2WeatherAttributeMap {
             float thunderLevel = weatherAccess.thunderLevel();
 
             if (rainLevel > 0 && rainValue != null) {
-                attribute.type().stateChangeLerp().apply(rainLevel, result, rainValue.applyModifier(result));
+                result = attribute.type().stateChangeLerp().apply(rainLevel, result, rainValue.applyModifier(result));
             }
 
             if (thunderLevel > 0 && thunderValue != null) {
-                attribute.type().stateChangeLerp().apply(thunderLevel, result, thunderValue.applyModifier(result));
+                result = attribute.type().stateChangeLerp().apply(thunderLevel, result, thunderValue.applyModifier(result));
             }
 
             return result;

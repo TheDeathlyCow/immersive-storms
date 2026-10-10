@@ -85,6 +85,7 @@ public class AttributeConfigData {
                 .add(new Entry(
                                 List.of(tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT)),
                                 WeatherBasedAttributes.builder()
+                                        .setAllWeather(ISEnvironmentAttributes.HAS_SANDSTORM_DUST, true)
                                         // rain
                                         .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherBasedAttributes.Condition.RAINING)
                                         .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherBasedAttributes.Condition.RAINING)

@@ -15,7 +15,7 @@ import net.minecraft.world.attribute.WeatherAttributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,13 +23,14 @@ public final class Biome2WeatherAttributeMap {
     private final Reference2ObjectMap<Biome, WeatherBasedAttributes> biomesToAttributes = new Reference2ObjectOpenHashMap<>();
     private final Reference2ObjectMap<Biome, EnvironmentAttributeMap> patchedClearWeatherMaps = new Reference2ObjectOpenHashMap<>();
 
+    @NotNull
     public WeatherBasedAttributes getWeatherAttributes(final Biome biome) {
         return this.biomesToAttributes.getOrDefault(biome, WeatherBasedAttributes.EMPTY);
     }
 
-    @Nullable
-    public EnvironmentAttributeMap getClearWeatherMap(Biome biome) {
-        return this.patchedClearWeatherMaps.get(biome);
+    @NotNull
+    public EnvironmentAttributeMap getClearWeatherMap(Biome biome, EnvironmentAttributeMap baseAttributes) {
+        return this.patchedClearWeatherMaps.getOrDefault(biome, baseAttributes);
     }
 
     public void clear() {

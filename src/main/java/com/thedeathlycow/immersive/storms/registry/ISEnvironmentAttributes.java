@@ -29,6 +29,13 @@ public final class ISEnvironmentAttributes {
                     .syncable()
     );
 
+    public static final EnvironmentAttribute<Boolean> HAS_SANDSTORM_DUST = register(
+            "visual/has_sandstorm_dust",
+            EnvironmentAttribute.builder(AttributeTypes.BOOLEAN)
+                    .defaultValue(false)
+                    .syncable()
+    );
+
     public static void initialize() {
         ImmersiveStorms.LOGGER.debug("Initialized environment attributes");
     }

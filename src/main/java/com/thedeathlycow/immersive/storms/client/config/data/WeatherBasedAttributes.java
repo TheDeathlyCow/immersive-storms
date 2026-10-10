@@ -36,7 +36,7 @@ public record WeatherBasedAttributes(
         }
 
         public Builder putInAllWeather(final WeatherBasedAttributes data) {
-            this.clearAttributes.putAll(data.rainAttributes());
+            this.clearAttributes.putAll(data.clearAttributes());
             this.rainAttributes.putAll(data.rainAttributes());
             this.thunderAttributes.putAll(data.thunderAttributes());
             return this;

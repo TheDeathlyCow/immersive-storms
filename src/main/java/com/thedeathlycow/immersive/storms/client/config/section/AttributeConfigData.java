@@ -8,7 +8,6 @@ import com.thedeathlycow.immersive.storms.client.config.data.CodecGsonAdapter;
 import com.thedeathlycow.immersive.storms.client.config.data.IdentifierController;
 import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
-import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -112,7 +111,7 @@ public class AttributeConfigData {
                                 .build()
                 ))
                 .add(new Entry(
-                        List.of(tag(ISBiomeTags.IS_WINDY)),
+                        List.of(tag(BiomeTags.IS_MOUNTAIN), tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT), object(Biomes.WINDSWEPT_FOREST), object(Biomes.WINDSWEPT_HILLS), object(Biomes.WINDSWEPT_GRAVELLY_HILLS), object(Biomes.WINDSWEPT_SAVANNA)),
                         WeatherBasedAttributes.builder()
                                 .setAllWeather(ISEnvironmentAttributes.HAS_AMBIENT_WIND, true)
                                 .build()

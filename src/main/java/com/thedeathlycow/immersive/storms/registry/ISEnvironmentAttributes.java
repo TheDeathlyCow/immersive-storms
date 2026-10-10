@@ -22,6 +22,13 @@ public final class ISEnvironmentAttributes {
                     .syncable()
     );
 
+    public static final EnvironmentAttribute<Boolean> HAS_AMBIENT_WIND = register(
+            "visual/has_ambient_wind",
+            EnvironmentAttribute.builder(AttributeTypes.BOOLEAN)
+                    .defaultValue(false)
+                    .syncable()
+    );
+
     public static void initialize() {
         ImmersiveStorms.LOGGER.debug("Initialized environment attributes");
     }

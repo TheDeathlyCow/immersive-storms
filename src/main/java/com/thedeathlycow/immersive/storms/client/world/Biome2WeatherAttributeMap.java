@@ -1,10 +1,13 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
+import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
 import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
+import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.attribute.EnvironmentAttributeSystem;
@@ -12,66 +15,67 @@ import net.minecraft.world.attribute.WeatherAttributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import org.jspecify.annotations.Nullable;
 
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public final class Biome2WeatherAttributeMap {
-    private final Map<ResourceKey<Biome>, AttributeConfigData.WeatherAttributeData> biomesToAttributes = new IdentityHashMap<>();
+    private final Reference2ObjectMap<Biome, WeatherBasedAttributes> biomesToAttributes = new Reference2ObjectOpenHashMap<>();
+    private final Reference2ObjectMap<Biome, EnvironmentAttributeMap> patchedClearWeatherMaps = new Reference2ObjectOpenHashMap<>();
 
-    public AttributeConfigData.WeatherAttributeData getWeatherAttributes(final ResourceKey<Biome> biomeKey) {
-        return this.biomesToAttributes.getOrDefault(biomeKey, AttributeConfigData.WeatherAttributeData.EMPTY);
+    public WeatherBasedAttributes getWeatherAttributes(final Biome biome) {
+        return this.biomesToAttributes.getOrDefault(biome, WeatherBasedAttributes.EMPTY);
+    }
+
+    @Nullable
+    public EnvironmentAttributeMap getClearWeatherMap(Biome biome) {
+        return this.patchedClearWeatherMaps.get(biome);
+    }
+
+    public void clear() {
+        this.biomesToAttributes.clear();
+        this.patchedClearWeatherMaps.clear();
     }
 
     public void rebind(final HolderLookup<Biome> biomes, final AttributeConfigData data) {
         List<AttributeConfigData.Entry> entries = data.entries();
 
-        Map<ResourceKey<Biome>, WeatherAttributeDataBuilder> builders = new IdentityHashMap<>();
+        Reference2ObjectMap<Biome, WeatherBasedAttributes.Builder> builders = new Reference2ObjectOpenHashMap<>();
+        Reference2ObjectMap<Biome, EnvironmentAttributeMap> clearWeatherMaps = new Reference2ObjectOpenHashMap<>();
 
-        for (var entry : entries) {
+        for (AttributeConfigData.Entry entry : entries) {
             UnboundRegistryObjectStream.bindToHolders(entry.biomes().stream(), biomes)
                     .distinct()
-                    .map(Holder::unwrapKey)
-                    .flatMap(Optional::stream)
-                    .forEach(biomeKey -> {
-                        WeatherAttributeDataBuilder builder = builders.computeIfAbsent(
-                                biomeKey,
-                                _ -> new WeatherAttributeDataBuilder()
+                    .forEach(holder -> {
+                        Biome biome = holder.value();
+                        WeatherBasedAttributes weatherAttributes = entry.attributes();
+
+                        WeatherBasedAttributes.Builder builder = builders.computeIfAbsent(
+                                biome,
+                                _ -> WeatherBasedAttributes.builder()
                         );
-                        builder.putAll(entry.attributes());
+                        builder.putInAllWeather(weatherAttributes);
+
+                        clearWeatherMaps.computeIfAbsent(biome, (Biome b) -> merge(b.getAttributes(), weatherAttributes.clearAttributes()));
                     });
         }
 
-        Map<ResourceKey<Biome>, AttributeConfigData.WeatherAttributeData> updatedCache = new IdentityHashMap<>();
+        Reference2ObjectMap<Biome, WeatherBasedAttributes> updatedCache = new Reference2ObjectOpenHashMap<>();
 
         for (var builderEntry : builders.entrySet()) {
             updatedCache.putIfAbsent(builderEntry.getKey(), builderEntry.getValue().build());
         }
 
-        this.biomesToAttributes.clear();
+        this.clear();
         this.biomesToAttributes.putAll(updatedCache);
+        this.patchedClearWeatherMaps.putAll(clearWeatherMaps);
     }
 
-    public record WeatherAttributeDataBuilder(
-            EnvironmentAttributeMap.Builder rainAttributes,
-            EnvironmentAttributeMap.Builder thunderAttributes
-    ) {
-        public WeatherAttributeDataBuilder() {
-            this(EnvironmentAttributeMap.builder(), EnvironmentAttributeMap.builder());
-        }
-
-        public WeatherAttributeDataBuilder putAll(AttributeConfigData.WeatherAttributeData data) {
-            this.rainAttributes.putAll(data.rainAttributes());
-            this.thunderAttributes.putAll(data.thunderAttributes());
-            return this;
-        }
-
-        public AttributeConfigData.WeatherAttributeData build() {
-            return new AttributeConfigData.WeatherAttributeData(this.rainAttributes.build(), this.thunderAttributes.build());
-        }
+    private static EnvironmentAttributeMap merge(final EnvironmentAttributeMap first, final EnvironmentAttributeMap second) {
+        EnvironmentAttributeMap.Builder builder = EnvironmentAttributeMap.builder();
+        builder.putAll(first);
+        builder.putAll(second);
+        return builder.build();
     }
 
     public static void addDefaultLayers(
@@ -103,15 +107,18 @@ public final class Biome2WeatherAttributeMap {
             }
 
             Holder<Biome> biome = biomeManager.getNoiseBiomeAtPosition(pos.x, pos.y, pos.z);
-            ResourceKey<Biome> biomeKey = biome.unwrapKey().orElseThrow();
-            AttributeConfigData.WeatherAttributeData data = attributeAccess.getWeatherBasedAttributes()
-                    .getWeatherAttributes(biomeKey);
+            WeatherBasedAttributes weatherData = attributeAccess.getWeatherBasedAttributes().getWeatherAttributes(biome.value());
 
-            EnvironmentAttributeMap.Entry<Value, ?> rainValue = data.rainAttributes().get(attribute);
-            EnvironmentAttributeMap.Entry<Value, ?> thunderValue = data.thunderAttributes().get(attribute);
+            EnvironmentAttributeMap.Entry<Value, ?> clearValue = weatherData.clearAttributes().get(attribute);
+            EnvironmentAttributeMap.Entry<Value, ?> rainValue = weatherData.rainAttributes().get(attribute);
+            EnvironmentAttributeMap.Entry<Value, ?> thunderValue = weatherData.thunderAttributes().get(attribute);
 
             float rainLevel = weatherAccess.rainLevel();
             float thunderLevel = weatherAccess.thunderLevel();
+
+            if (clearValue != null) {
+                result = clearValue.applyModifier(result);
+            }
 
             if (rainLevel > 0 && rainValue != null) {
                 result = attribute.type().stateChangeLerp().apply(rainLevel, result, rainValue.applyModifier(result));

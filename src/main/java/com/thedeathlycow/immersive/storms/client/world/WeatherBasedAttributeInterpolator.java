@@ -1,11 +1,13 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
+import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
 import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
+import net.minecraft.world.attribute.GaussianSampler;
 import net.minecraft.world.attribute.SpatialAttributeInterpolator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -61,8 +63,7 @@ public final class WeatherBasedAttributeInterpolator {
             return baseAttributes;
         }
 
-        EnvironmentAttributeMap patched = this.attributeMap.getClearWeatherMap(biome);
-        return patched != null ? patched : baseAttributes;
+        return this.attributeMap.getClearWeatherMap(biome, baseAttributes);
     }
 
     public <Value> Value apply(final EnvironmentAttribute<Value> attribute, final float partialTicks, Value baseValue) {

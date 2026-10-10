@@ -40,7 +40,7 @@ public abstract class EnvironmentAttributeProbeMixin {
         this.immersiveStorms_extension.reset();
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/GaussianSampler;sample(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/attribute/GaussianSampler$Sampler;Lnet/minecraft/world/attribute/GaussianSampler$Accumulator;)V"))
     private void onTick(final Level level, final Vec3 position, CallbackInfo ci) {
         this.immersiveStorms_extension.tick(level, position);
     }
@@ -58,13 +58,7 @@ public abstract class EnvironmentAttributeProbeMixin {
         this.immersiveStorms_extension.sample(weight, biome);
     }
 
-    @WrapOperation(
-            method = "lambda$tick$0",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/attribute/SpatialAttributeInterpolator;accumulate(DLnet/minecraft/world/attribute/EnvironmentAttributeMap;)Lnet/minecraft/world/attribute/SpatialAttributeInterpolator;"
-            )
-    )
+    @WrapOperation(method = "lambda$tick$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/SpatialAttributeInterpolator;accumulate(DLnet/minecraft/world/attribute/EnvironmentAttributeMap;)Lnet/minecraft/world/attribute/SpatialAttributeInterpolator;"))
     private SpatialAttributeInterpolator applyModifiedMaps(
             SpatialAttributeInterpolator instance,
             double weight,

@@ -15,6 +15,13 @@ public final class ISEnvironmentAttributes {
                     .syncable()
     );
 
+    public static final EnvironmentAttribute<Boolean> HAS_BLACK_RAIN = register(
+            "visual/has_black_rain",
+            EnvironmentAttribute.builder(AttributeTypes.BOOLEAN)
+                    .defaultValue(false)
+                    .syncable()
+    );
+
     public static void initialize() {
         ImmersiveStorms.LOGGER.debug("Initialized environment attributes");
     }

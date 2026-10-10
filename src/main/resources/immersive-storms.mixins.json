@@ -3,6 +3,7 @@
     "package": "com.thedeathlycow.immersive.storms.mixin",
     "compatibilityLevel": "JAVA_25",
     "mixins": [
+        "EnvironmentAttributeSystemMixin",
         "LevelMixin"
     ],
     "injectors": {

@@ -2,7 +2,6 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
@@ -21,8 +20,13 @@ public final class WeatherBasedAttributeSystem {
     private @Nullable Level level;
     private @Nullable Vec3 position;
     private @Nullable Biome2WeatherAttributeMap attributeMap;
+    private final SpatialAttributeInterpolator baseInterpolator;
     private final WeatherBasedAttributeProbe rainProbe = new WeatherBasedAttributeProbe(AttributeConfigData.WeatherAttributeData::rainAttributes);
     private final WeatherBasedAttributeProbe thunderProbe = new WeatherBasedAttributeProbe(AttributeConfigData.WeatherAttributeData::thunderAttributes);
+
+    public WeatherBasedAttributeSystem(SpatialAttributeInterpolator baseInterpolator) {
+        this.baseInterpolator = baseInterpolator;
+    }
 
     public void reset() {
         this.level = null;
@@ -131,14 +135,13 @@ public final class WeatherBasedAttributeSystem {
                 return attribute.defaultValue();
             }
 
-            Value defaultValue = level.environmentAttributes().getValue(attribute, position, this.interpolator);
+            Value defaultValue = level.environmentAttributes().getValue(attribute, position, baseInterpolator);
 
             if (attribute.isSpatiallyInterpolated()) {
                 return this.interpolator.applyAttributeLayer(attribute, defaultValue);
             }
 
-            BlockPos quartPos = BlockPos.containing(position.scale(0.25));
-            Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtQuart(quartPos.getX(), quartPos.getY(), quartPos.getZ());
+            Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(position.x(), position.y(), position.z());
             AttributeConfigData.WeatherAttributeData weatherData = attributeMap.getWeatherAttributes(biome.unwrapKey().orElseThrow());
 
             return this.mapData.apply(weatherData).applyModifier(attribute, defaultValue);

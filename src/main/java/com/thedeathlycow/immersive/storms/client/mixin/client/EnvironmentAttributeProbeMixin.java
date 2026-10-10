@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.thedeathlycow.immersive.storms.client.world.WeatherBasedAttributeSystem;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeProbe;
+import net.minecraft.world.attribute.SpatialAttributeInterpolator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
@@ -15,20 +16,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.function.Function;
-
 @Mixin(EnvironmentAttributeProbe.class)
 public abstract class EnvironmentAttributeProbeMixin {
     @Shadow
     @Final
-    private Function<EnvironmentAttribute<?>, EnvironmentAttributeProbe.ValueProbe<?>> valueProbeFactory;
-
+    private SpatialAttributeInterpolator biomeInterpolator;
     @Unique
     private WeatherBasedAttributeSystem immersiveStorms_extension;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
-        this.immersiveStorms_extension = new WeatherBasedAttributeSystem();
+        this.immersiveStorms_extension = new WeatherBasedAttributeSystem(this.biomeInterpolator);
     }
 
     @Inject(method = "reset", at = @At("TAIL"))

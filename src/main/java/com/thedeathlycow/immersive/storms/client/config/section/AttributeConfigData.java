@@ -3,10 +3,12 @@ package com.thedeathlycow.immersive.storms.client.config.section;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.data.CodecGsonAdapter;
-import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
-import com.thedeathlycow.immersive.storms.client.config.data.IdentifierController;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
+import com.thedeathlycow.immersive.storms.client.config.data.CodecGsonAdapter;
+import com.thedeathlycow.immersive.storms.client.config.data.IdentifierController;
+import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
+import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
+import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -69,15 +71,8 @@ public class AttributeConfigData {
 
     public record Entry(
             List<UnboundRegistryObjectStream<Biome>> biomes,
-            WeatherAttributeData attributes
+            WeatherBasedAttributes attributes
     ) {
-    }
-
-    public record WeatherAttributeData(
-            EnvironmentAttributeMap rainAttributes,
-            EnvironmentAttributeMap thunderAttributes
-    ) {
-        public static final WeatherAttributeData EMPTY = new WeatherAttributeData(EnvironmentAttributeMap.EMPTY, EnvironmentAttributeMap.EMPTY);
     }
 
     @FunctionalInterface
@@ -89,41 +84,38 @@ public class AttributeConfigData {
         // todo: conventional tags
         return new ImmutableList.Builder<Entry>()
                 .add(new Entry(
-                        List.of(tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT)),
-                        new WeatherAttributeData(
-                                EnvironmentAttributeMap.builder()
-                                        .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523)
-                                        .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523)
-                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 128f / 1024f)
-                                        .build(),
-                                EnvironmentAttributeMap.builder()
-                                        .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38)
-                                        .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38)
-                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 64f / 1024f)
+                                List.of(tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT)),
+                                WeatherBasedAttributes.builder()
+                                        // rain
+                                        .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherBasedAttributes.Condition.RAINING)
+                                        .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherBasedAttributes.Condition.RAINING)
+                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 128f / 1024f, WeatherBasedAttributes.Condition.RAINING)
+                                        // thunder
+                                        .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherBasedAttributes.Condition.THUNDERING)
+                                        .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherBasedAttributes.Condition.THUNDERING)
+                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 64f / 1024f, WeatherBasedAttributes.Condition.THUNDERING)
                                         .build()
                         )
-                ))
+                )
                 .add(new Entry(
                         List.of(object(Biomes.PALE_GARDEN)),
-                        new WeatherAttributeData(
-                                EnvironmentAttributeMap.builder()
-                                        .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true)
-                                        .build(),
-                                EnvironmentAttributeMap.builder()
-                                        .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true)
-                                        .build()
-                        )
+                        WeatherBasedAttributes.builder()
+                                .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true, WeatherBasedAttributes.Condition.RAINING)
+                                .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true, WeatherBasedAttributes.Condition.THUNDERING)
+                                .build()
                 ))
                 .add(new Entry(
                         List.of(object(Biomes.DARK_FOREST), object(Biomes.PALE_GARDEN), object(Biomes.SWAMP), object(Biomes.MANGROVE_SWAMP)),
-                        new WeatherAttributeData(
-                                EnvironmentAttributeMap.builder()
-                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 128f / 1024f)
-                                        .build(),
-                                EnvironmentAttributeMap.builder()
-                                        .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 64f / 1024f)
-                                        .build()
-                        )
+                        WeatherBasedAttributes.builder()
+                                .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 128f / 1024f, WeatherBasedAttributes.Condition.RAINING)
+                                .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, 64f / 1024f, WeatherBasedAttributes.Condition.THUNDERING)
+                                .build()
+                ))
+                .add(new Entry(
+                        List.of(tag(ISBiomeTags.IS_WINDY)),
+                        WeatherBasedAttributes.builder()
+                                .setAllWeather(ISEnvironmentAttributes.HAS_AMBIENT_WIND, true)
+                                .build()
                 ))
                 .build();
     }

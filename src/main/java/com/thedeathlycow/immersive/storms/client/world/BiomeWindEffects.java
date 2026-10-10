@@ -7,6 +7,7 @@ import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsC
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +34,8 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
     private static final float SOUND_CHANCE = 1f / 100f;
 
     @Override
-    public void onEndTick(ClientLevel clientWorld) {
-        if (clientWorld.tickRateManager().isFrozen()) {
+    public void onEndTick(ClientLevel level) {
+        if (level.tickRateManager().isFrozen()) {
             return;
         }
 
@@ -47,29 +49,26 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
 
         final Minecraft gameClient = Minecraft.getInstance();
         final Camera camera = gameClient.gameRenderer.getMainCamera();
-        if (camera == null) {
-            return;
-        }
 
         final BlockPos cameraPos = camera.blockPosition();
         final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         final int particleRenderDistance = 20;
 
-        final RandomSource random = clientWorld.getRandom();
+        final RandomSource random = level.getRandom();
 
         for (int i = 0; i < PARTICLES_PER_TICK; i++) {
-            Holder<Biome> biome = setRandomTopPos(clientWorld, cameraPos, random, particleRenderDistance, pos);
+            setRandomTopPos(level, cameraPos, random, particleRenderDistance, pos);
 
-            ParticleColor color = ParticleColor.forBiome(biome);
+            ParticleColor color = ParticleColor.at(level, pos);
 
             if (color != null) {
-                addParticleAndSound(clientWorld, config, random, color, pos, cameraPos);
+                addParticleAndSound(level, config, random, color, pos, cameraPos);
             }
         }
     }
 
     private static void addParticleAndSound(
-            ClientLevel clientWorld,
+            ClientLevel level,
             ImmersiveStormsConfig config,
             RandomSource random,
             ParticleColor color,
@@ -86,7 +85,7 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
             ParticleOptions particle = color.getParticle();
             double speed = random.triangle(1.0, 0.5);
 
-            clientWorld.addParticle(
+            level.addParticle(
                     particle,
                     pos.getX() + random.nextDouble(),
                     pos.getY() + random.nextDouble() * 0.2 + 0.15,
@@ -96,18 +95,16 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
         }
 
         boolean tryPlaySound = enableSounds
-                && !clientWorld.isRaining()
+                && !level.isRaining()
                 && random.nextFloat() < SOUND_CHANCE;
 
         if (tryPlaySound) {
             final int soundDistance = 5;
 
-            Holder<Biome> biome = setRandomTopPos(clientWorld, cameraPos, random, soundDistance, pos);
-
-
+            setRandomTopPos(level, cameraPos, random, soundDistance, pos);
             boolean canPlaySound = Math.abs(pos.getY() - cameraPos.getY()) <= soundDistance * 2;
             if (canPlaySound) {
-                clientWorld.playLocalSound(
+                level.playLocalSound(
                         pos.getX(), pos.getY(), pos.getZ(),
                         SoundEvents.DRY_GRASS, // this is actually a generic wind sound
                         SoundSource.AMBIENT,
@@ -118,8 +115,8 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
         }
     }
 
-    private static Holder<Biome> setRandomTopPos(
-            ClientLevel world,
+    private static void setRandomTopPos(
+            ClientLevel level,
             BlockPos center,
             RandomSource random,
             int offset,
@@ -127,9 +124,8 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
     ) {
         int x = center.getX() + random.nextIntBetweenInclusive(-offset, offset);
         int z = center.getZ() + random.nextIntBetweenInclusive(-offset, offset);
-        int y = world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
         out.set(x, y, z);
-        return world.getBiomeManager().getNoiseBiomeAtPosition(out);
     }
 
     private enum ParticleColor {
@@ -159,8 +155,12 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
         }
 
         @Nullable
-        public static ParticleColor forBiome(Holder<Biome> biome) {
-            if (BiomeConfig.getConfig().isWindy(biome)) {
+        public static ParticleColor at(Level level, BlockPos pos) {
+            if (level.environmentAttributes().getValue(ISEnvironmentAttributes.HAS_AMBIENT_WIND, pos)) {
+                Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(pos);
+
+                // TODO: remove tag usage here, it does not work client-side
+                // maybe use an attribute for color?
                 for (ParticleColor value : values()) {
                     if (biome.is(value.tag)) {
                         return value;

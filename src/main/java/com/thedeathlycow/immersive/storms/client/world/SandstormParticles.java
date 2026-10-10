@@ -4,6 +4,7 @@ import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
+import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.util.ISMath;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import net.minecraft.client.Camera;
@@ -41,9 +42,6 @@ public final class SandstormParticles implements ISClientTickEvents.EndLevel {
 
         final Minecraft gameClient = Minecraft.getInstance();
         final Camera camera = gameClient.gameRenderer.getMainCamera();
-        if (camera == null) {
-            return; // no camera for whatever reason
-        }
 
         // main particle loop
         final BlockPos cameraPos = camera.blockPosition();
@@ -75,7 +73,7 @@ public final class SandstormParticles implements ISClientTickEvents.EndLevel {
 
         boolean addParticle = random.nextFloat() < rarity
                 && biome.value().getPrecipitationAt(pos, level.getSeaLevel()) == Biome.Precipitation.NONE
-                && WeatherEffectsClient.typeAffectsBiome(WeatherEffectType.SANDSTORM, biome);
+                && level.environmentAttributes().getValue(ISEnvironmentAttributes.HAS_SANDSTORM_DUST, pos);
 
         if (addParticle) {
             level.addParticle(

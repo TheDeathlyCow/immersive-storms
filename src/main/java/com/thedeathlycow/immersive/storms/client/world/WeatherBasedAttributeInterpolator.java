@@ -1,30 +1,30 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
-import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
+import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
+import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
-import net.minecraft.world.attribute.GaussianSampler;
 import net.minecraft.world.attribute.SpatialAttributeInterpolator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
-import java.util.function.Function;
 
-public final class WeatherBasedAttributeSystem {
+public final class WeatherBasedAttributeInterpolator {
     private @Nullable Level level;
     private @Nullable Vec3 position;
     private @Nullable Biome2WeatherAttributeMap attributeMap;
     private final SpatialAttributeInterpolator baseInterpolator;
-    private final WeatherBasedAttributeProbe rainProbe = new WeatherBasedAttributeProbe(AttributeConfigData.WeatherAttributeData::rainAttributes);
-    private final WeatherBasedAttributeProbe thunderProbe = new WeatherBasedAttributeProbe(AttributeConfigData.WeatherAttributeData::thunderAttributes);
+    private final WeatherBasedAttributeProbe rainProbe = new WeatherBasedAttributeProbe(WeatherBasedAttributes.Condition.RAINING);
+    private final WeatherBasedAttributeProbe thunderProbe = new WeatherBasedAttributeProbe(WeatherBasedAttributes.Condition.THUNDERING);
 
-    public WeatherBasedAttributeSystem(SpatialAttributeInterpolator baseInterpolator) {
+    public WeatherBasedAttributeInterpolator(SpatialAttributeInterpolator baseInterpolator) {
         this.baseInterpolator = baseInterpolator;
     }
 
@@ -43,18 +43,26 @@ public final class WeatherBasedAttributeSystem {
 
         this.rainProbe.tick();
         this.thunderProbe.tick();
+    }
 
-        GaussianSampler.sample(
-                position.scale(0.25),
-                level.getBiomeManager()::getNoiseBiomeAtQuart,
-                (weight, biome) -> {
-                    biome.unwrapKey().ifPresent(key -> {
-                        AttributeConfigData.WeatherAttributeData data = this.attributeMap.getWeatherAttributes(key);
-                        this.rainProbe.accumulate(weight, data.rainAttributes());
-                        this.thunderProbe.accumulate(weight, data.thunderAttributes());
-                    });
-                }
-        );
+    public void sample(double weight, Holder<Biome> biome) {
+        if (this.attributeMap == null) {
+            return;
+        }
+
+        WeatherBasedAttributes data = this.attributeMap.getWeatherAttributes(biome.value());
+        this.rainProbe.accumulate(weight, data.rainAttributes());
+        this.thunderProbe.accumulate(weight, data.thunderAttributes());
+    }
+
+    @NotNull
+    public EnvironmentAttributeMap getClearWeatherMap(Biome biome, EnvironmentAttributeMap baseAttributes) {
+        if (this.attributeMap == null) {
+            return baseAttributes;
+        }
+
+        EnvironmentAttributeMap patched = this.attributeMap.getClearWeatherMap(biome);
+        return patched != null ? patched : baseAttributes;
     }
 
     public <Value> Value apply(final EnvironmentAttribute<Value> attribute, final float partialTicks, Value baseValue) {
@@ -81,10 +89,10 @@ public final class WeatherBasedAttributeSystem {
     public final class WeatherBasedAttributeProbe {
         private final SpatialAttributeInterpolator interpolator = new SpatialAttributeInterpolator();
         private final Map<EnvironmentAttribute<?>, ValueProbe<?>> valueProbes = new Reference2ObjectOpenHashMap<>();
-        private final Function<AttributeConfigData.WeatherAttributeData, EnvironmentAttributeMap> mapData;
+        private final WeatherBasedAttributes.Condition condition;
 
-        public WeatherBasedAttributeProbe(Function<AttributeConfigData.WeatherAttributeData, EnvironmentAttributeMap> mapData) {
-            this.mapData = mapData;
+        public WeatherBasedAttributeProbe(WeatherBasedAttributes.Condition condition) {
+            this.condition = condition;
         }
 
         public void tick() {
@@ -101,17 +109,27 @@ public final class WeatherBasedAttributeSystem {
             this.interpolator.accumulate(weight, attributes);
         }
 
-        @SuppressWarnings("unchecked")
         public <Value> Value apply(
                 final EnvironmentAttribute<Value> attribute,
                 final float weatherLevel,
                 final float partialTicks,
                 final Value baseValue
         ) {
-            ValueProbe<Value> valueProbe = (ValueProbe<Value>) this.valueProbes.computeIfAbsent(
-                    attribute, attr -> new ValueProbe<>(attr, this.interpolator, this.mapData)
+            ValueProbe<Value> valueProbe = this.getOrCreate(attribute);
+            return attribute.type().stateChangeLerp().apply(weatherLevel, baseValue, valueProbe.get(attribute, partialTicks));
+        }
+
+        @SuppressWarnings("unchecked")
+        private <Value> ValueProbe<Value> getOrCreate(final EnvironmentAttribute<Value> attribute) {
+            return (ValueProbe<Value>) this.valueProbes.computeIfAbsent(
+                    attribute, attr -> new ValueProbe<>(attr, this.interpolator, this.condition)
             );
-            return attribute.type().stateChangeLerp().apply(weatherLevel, baseValue, valueProbe.get(attribute, weatherLevel));
+        }
+
+        @SuppressWarnings("unchecked")
+        @Nullable
+        private <Value> ValueProbe<Value> getOrNull(final EnvironmentAttribute<Value> attribute) {
+            return (ValueProbe<Value>) this.valueProbes.get(attribute);
         }
     }
 
@@ -119,11 +137,11 @@ public final class WeatherBasedAttributeSystem {
         private Value lastValue;
         private @Nullable Value newValue;
         private final SpatialAttributeInterpolator interpolator;
-        private final Function<AttributeConfigData.WeatherAttributeData, EnvironmentAttributeMap> mapData;
+        private final WeatherBasedAttributes.Condition condition;
 
-        public ValueProbe(final EnvironmentAttribute<Value> attribute, final SpatialAttributeInterpolator interpolator, final Function<AttributeConfigData.WeatherAttributeData, EnvironmentAttributeMap> mapData) {
+        public ValueProbe(final EnvironmentAttribute<Value> attribute, final SpatialAttributeInterpolator interpolator, final WeatherBasedAttributes.Condition condition) {
             this.interpolator = interpolator;
-            this.mapData = mapData;
+            this.condition = condition;
             Value value = this.getValueFromPosition(attribute);
             this.lastValue = value;
             this.newValue = value;
@@ -142,9 +160,9 @@ public final class WeatherBasedAttributeSystem {
             }
 
             Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(position.x(), position.y(), position.z());
-            AttributeConfigData.WeatherAttributeData weatherData = attributeMap.getWeatherAttributes(biome.unwrapKey().orElseThrow());
+            WeatherBasedAttributes weatherData = attributeMap.getWeatherAttributes(biome.value());
 
-            return this.mapData.apply(weatherData).applyModifier(attribute, defaultValue);
+            return weatherData.forCondition(this.condition).applyModifier(attribute, defaultValue);
         }
 
         public boolean tick() {

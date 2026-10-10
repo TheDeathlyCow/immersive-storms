@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms.mixin;
 
 import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
 import com.thedeathlycow.immersive.storms.client.world.Biome2WeatherAttributeMap;
-import com.thedeathlycow.immersive.storms.client.world.LevelExtension;
+import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -16,13 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Level.class)
 public abstract class LevelMixin implements LevelAccessor, LevelExtension {
     @Unique
-    private Biome2WeatherAttributeMap immersiveStorms_attributeMap = new Biome2WeatherAttributeMap();
+    private Biome2WeatherAttributeMap immersiveStorms_attributeMap;
 
     @Inject(
             method = "<init>", at = @At("TAIL")
     )
     private void onInit(CallbackInfo ci) {
-        this.immersiveStorms_attributeMap.rebind(this.registryAccess().lookupOrThrow(Registries.BIOME), AttributeConfigData.HANDLER.instance());
+        immersiveStorms_attributeMap = new Biome2WeatherAttributeMap();
+        this.immersiveStorms$rebindAttributeMap(AttributeConfigData.HANDLER.instance());
     }
 
     @Override

@@ -1,13 +1,12 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
-import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
+import com.thedeathlycow.immersive.storms.client.config.data.WeatherCondition;
 import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
-import net.minecraft.world.attribute.GaussianSampler;
 import net.minecraft.world.attribute.SpatialAttributeInterpolator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -23,8 +22,8 @@ public final class WeatherBasedAttributeInterpolator {
     private @Nullable Vec3 position;
     private @Nullable Biome2WeatherAttributeMap attributeMap;
     private final SpatialAttributeInterpolator baseInterpolator;
-    private final WeatherBasedAttributeProbe rainProbe = new WeatherBasedAttributeProbe(WeatherBasedAttributes.Condition.RAINING);
-    private final WeatherBasedAttributeProbe thunderProbe = new WeatherBasedAttributeProbe(WeatherBasedAttributes.Condition.THUNDERING);
+    private final WeatherBasedAttributeProbe rainProbe = new WeatherBasedAttributeProbe(WeatherCondition.RAINING);
+    private final WeatherBasedAttributeProbe thunderProbe = new WeatherBasedAttributeProbe(WeatherCondition.THUNDERING);
 
     public WeatherBasedAttributeInterpolator(SpatialAttributeInterpolator baseInterpolator) {
         this.baseInterpolator = baseInterpolator;
@@ -90,9 +89,9 @@ public final class WeatherBasedAttributeInterpolator {
     public final class WeatherBasedAttributeProbe {
         private final SpatialAttributeInterpolator interpolator = new SpatialAttributeInterpolator();
         private final Map<EnvironmentAttribute<?>, ValueProbe<?>> valueProbes = new Reference2ObjectOpenHashMap<>();
-        private final WeatherBasedAttributes.Condition condition;
+        private final WeatherCondition condition;
 
-        public WeatherBasedAttributeProbe(WeatherBasedAttributes.Condition condition) {
+        public WeatherBasedAttributeProbe(WeatherCondition condition) {
             this.condition = condition;
         }
 
@@ -138,9 +137,9 @@ public final class WeatherBasedAttributeInterpolator {
         private Value lastValue;
         private @Nullable Value newValue;
         private final SpatialAttributeInterpolator interpolator;
-        private final WeatherBasedAttributes.Condition condition;
+        private final WeatherCondition condition;
 
-        public ValueProbe(final EnvironmentAttribute<Value> attribute, final SpatialAttributeInterpolator interpolator, final WeatherBasedAttributes.Condition condition) {
+        public ValueProbe(final EnvironmentAttribute<Value> attribute, final SpatialAttributeInterpolator interpolator, final WeatherCondition condition) {
             this.interpolator = interpolator;
             this.condition = condition;
             Value value = this.getValueFromPosition(attribute);

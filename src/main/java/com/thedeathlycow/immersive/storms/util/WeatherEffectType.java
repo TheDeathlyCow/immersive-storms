@@ -22,15 +22,15 @@ public enum WeatherEffectType implements StringRepresentable {
     SANDSTORM(
             "sandstorm",
             ISBiomeTags.HAS_SANDSTORMS,
-            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND, 0xF79523),
-            new WeatherData(WeatherData.THICK_FOG, ISSoundEvents.WEATHER_STRONG_WIND, 0xD96E38),
+            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND.value(), 0xF79523),
+            new WeatherData(WeatherData.THICK_FOG, ISSoundEvents.WEATHER_STRONG_WIND.value(), 0xD96E38),
             Biome.Precipitation.NONE
     ),
     BLIZZARD(
             "blizzard",
             ISBiomeTags.HAS_BLIZZARDS,
             null,
-            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND, 0x77797A),
+            new WeatherData(WeatherData.LIGHT_FOG, ISSoundEvents.WEATHER_SOFT_WIND.value(), 0x77797A),
             Biome.Precipitation.SNOW
     ),
     DENSE_FOG(

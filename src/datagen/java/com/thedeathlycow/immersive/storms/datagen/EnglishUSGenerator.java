@@ -24,8 +24,8 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider wrapperLookup, TranslationBuilder builder) {
-        builder.add(ISSoundEvents.WEATHER_STRONG_WIND, "Wind blows strongly");
-        builder.add(ISSoundEvents.WEATHER_SOFT_WIND, "Wind blows softly");
+        builder.add(ISSoundEvents.WEATHER_STRONG_WIND.value(), "Wind blows strongly");
+        builder.add(ISSoundEvents.WEATHER_SOFT_WIND.value(), "Wind blows softly");
 
         builder.add(ISConfigScreen.TITLE, "Immersive Storms Config");
         builder.add(ISConfigScreen.GENERAL_CATEGORY, "General Settings");

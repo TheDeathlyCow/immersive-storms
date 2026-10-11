@@ -1,8 +1,10 @@
 package com.thedeathlycow.immersive.storms.registry;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.sound.StormSounds;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.attribute.AttributeTypes;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 
@@ -33,6 +35,13 @@ public final class ISEnvironmentAttributes {
             "visual/has_sandstorm_dust",
             EnvironmentAttribute.builder(AttributeTypes.BOOLEAN)
                     .defaultValue(false)
+                    .syncable()
+    );
+
+    public static final EnvironmentAttribute<StormSounds> STORM_SOUNDS = register(
+            "audio/storm_sounds",
+            EnvironmentAttribute.builder(ISAttributeTypes.STORM_SOUNDS)
+                    .defaultValue(StormSounds.EMPTY)
                     .syncable()
     );
 

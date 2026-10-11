@@ -19,7 +19,7 @@ public record WeatherBasedAttributes(
         return new Builder();
     }
 
-    public EnvironmentAttributeMap forCondition(Condition condition) {
+    public EnvironmentAttributeMap forCondition(WeatherCondition condition) {
         return switch (condition) {
             case CLEAR -> this.clearAttributes;
             case RAINING -> this.rainAttributes;
@@ -63,7 +63,7 @@ public record WeatherBasedAttributes(
             return this;
         }
 
-        public Builder putAll(final EnvironmentAttributeMap attributes, final Condition condition) {
+        public Builder putAll(final EnvironmentAttributeMap attributes, final WeatherCondition condition) {
             this.forCondition(condition).putAll(attributes);
             return this;
         }
@@ -72,7 +72,7 @@ public record WeatherBasedAttributes(
                 final EnvironmentAttribute<Value> attribute,
                 final AttributeModifier<Value, Parameter> modifier,
                 final Parameter value,
-                final Condition condition
+                final WeatherCondition condition
         ) {
             attribute.type().checkAllowedModifier(modifier);
             this.forCondition(condition).modify(attribute, modifier, value);
@@ -82,7 +82,7 @@ public record WeatherBasedAttributes(
         public <Value> Builder set(
                 final EnvironmentAttribute<Value> attribute,
                 final Value value,
-                final Condition condition
+                final WeatherCondition condition
         ) {
             this.forCondition(condition).set(attribute, value);
             return this;
@@ -96,7 +96,7 @@ public record WeatherBasedAttributes(
             );
         }
 
-        private EnvironmentAttributeMap.Builder forCondition(Condition condition) {
+        private EnvironmentAttributeMap.Builder forCondition(WeatherCondition condition) {
             return switch (condition) {
                 case CLEAR -> this.clearAttributes;
                 case RAINING -> this.rainAttributes;
@@ -105,9 +105,4 @@ public record WeatherBasedAttributes(
         }
     }
 
-    public enum Condition {
-        CLEAR,
-        RAINING,
-        THUNDERING
-    }
 }

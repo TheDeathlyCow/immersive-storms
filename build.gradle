@@ -66,7 +66,7 @@ fabricApi {
 	configureDataGeneration {
 		client = true
 		createSourceSet = true
-		modId = "immersive-storms-datagen"
+		modId = "immersive_storms_datagen"
 	}
 }
 
@@ -85,6 +85,11 @@ dependencies {
 	fabricCompileOnly localRuntime("com.terraformersmc:modmenu:${project.modmenu_version}")
 	fabricCompileOnly localRuntime("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
 
+	datagenImplementation("net.fabricmc:fabric-loader:${project.fabric_loader_version}")
+	datagenImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+	datagenImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	datagenImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
+
 	neoforgeCompileOnly("net.neoforged:neoforge:${project.neoforge_version}:universal")
 	neoforgeCompileOnly("net.neoforged.fancymodloader:loader:${project.neoforge_loader_version}")
 	neoforgeCompileOnly("dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge")
@@ -96,6 +101,7 @@ dependencies {
 
 	neoforgeImplementation sourceSets.main.output
 	fabricImplementation sourceSets.main.output
+	datagenImplementation sourceSets.main.output
 
 	localRuntime sourceSets.fabric.output
 	localRuntime sourceSets.neoforge.output

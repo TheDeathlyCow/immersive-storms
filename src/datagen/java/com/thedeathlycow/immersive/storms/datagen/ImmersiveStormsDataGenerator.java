@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ImmersiveStormsDataGenerator implements DataGeneratorEntrypoint {
-    public static final String MOD_ID = ImmersiveStorms.MOD_NAMESPACE + "-datagen";
+    public static final String MOD_ID = ImmersiveStorms.MOD_ID + "_datagen";
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 

@@ -3,6 +3,8 @@ package com.thedeathlycow.immersive.storms.client.world;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
+import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
+import com.thedeathlycow.immersive.storms.sound.StormSounds;
 import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import com.thedeathlycow.immersive.storms.util.WeatherEffects;
 import net.minecraft.client.Camera;
@@ -81,19 +83,9 @@ public final class SandstormSounds implements ISClientTickEvents.EndLevel {
         int dz = random.nextIntBetweenInclusive(-MAX_XZ_OFFSET, MAX_SOUND_Y_DIFF);
         BlockPos blockPos = cameraPos.offset(dx, dy, dz);
 
-        WeatherEffectType.WeatherData weatherData = WeatherEffects.getCurrentType(
-                level,
-                blockPos,
-                true,
-                WeatherEffectsClient::typeAffectsBiome
-        ).getWeatherData(level);
+        StormSounds sounds = level.environmentAttributes().getValue(ISEnvironmentAttributes.STORM_SOUNDS, cameraPos);
 
-        SoundEvent windSound = weatherData != null ? weatherData.windSound() : null;
-        if (windSound != null) {
-            return Optional.of(new SoundPos(windSound, blockPos));
-        }
-
-        return Optional.empty();
+        return sounds.windSound().map(event -> new SoundPos(event.value(), blockPos));
     }
 
     private record SoundPos(SoundEvent event, BlockPos pos) {

@@ -2,11 +2,8 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
-import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.sound.StormSounds;
-import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
-import com.thedeathlycow.immersive.storms.util.WeatherEffects;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

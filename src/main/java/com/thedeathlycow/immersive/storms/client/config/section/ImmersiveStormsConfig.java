@@ -2,7 +2,6 @@ package com.thedeathlycow.immersive.storms.client.config.section;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
-import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
@@ -89,16 +88,6 @@ public class ImmersiveStormsConfig {
 
     public boolean isEnableFogChanges() {
         return enableFogChanges;
-    }
-
-    public boolean isEnabled(WeatherEffectType type) {
-        return switch (type) {
-            case SANDSTORM -> this.enableSandstormFog;
-            case BLIZZARD -> this.enableBlizzardFog;
-            case DENSE_FOG -> this.enableDenseFog;
-            case NONE -> false;
-            case null -> false;
-        };
     }
 
     public boolean isEnableAmbientWindParticles() {

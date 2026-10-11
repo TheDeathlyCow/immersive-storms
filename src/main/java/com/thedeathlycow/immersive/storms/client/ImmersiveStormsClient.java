@@ -3,7 +3,6 @@ package com.thedeathlycow.immersive.storms.client;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Updater;
 import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
-import com.thedeathlycow.immersive.storms.client.config.section.BiomeConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.client.particle.BlackWaterDropParticle;
@@ -55,7 +54,6 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         Updater.initialize();
         ImmersiveStormsConfig.HANDLER.load();
         SandstormConfig.HANDLER.load();
-        BiomeConfig.HANDLER.load();
         AttributeConfigData.HANDLER.load();
     }
 

@@ -2,11 +2,9 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
-import com.thedeathlycow.immersive.storms.client.util.WeatherEffectsClient;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.util.ISMath;
-import com.thedeathlycow.immersive.storms.util.WeatherEffectType;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

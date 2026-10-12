@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.registry;
+package com.thedeathlycow.immersive.storms.registry.tag;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import net.minecraft.core.registries.Registries;

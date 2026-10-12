@@ -1,7 +1,9 @@
-package com.thedeathlycow.immersive.storms.client.config;
+package com.thedeathlycow.immersive.storms.client.config.ui;
 
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.client.config.Translate;
+import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
 import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.OptionDescription;
@@ -11,13 +13,16 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class ISConfigScreen {
-    private static final String GENERAL_PREFIX = Translate.prefixKey(ImmersiveStormsConfig.HANDLER);
-    private static final String SANDSTORM_PREFIX = Translate.prefixKey(SandstormConfig.HANDLER);
+    private static final String GENERAL_PREFIX = Translate.prefixKey(GeneralSettings.HANDLER);
+    private static final String SANDSTORM_PREFIX = Translate.prefixKey(SandstormSettings.HANDLER);
+    private static final String ADVANCED_PREFIX = Translate.prefixKey(AdvancedSettings.HANDLER);
     public static final String TITLE = GENERAL_PREFIX + ".title";
     public static final String GENERAL_CATEGORY = GENERAL_PREFIX + ".category.general";
     public static final String SANDSTORM_CATEGORY = SANDSTORM_PREFIX + ".category.sandstorms";
+    public static final String ADVANCED_CATEGORY = ADVANCED_PREFIX + ".category.sandstorms";
     public static final String GENERAL_CATEGORY_DESC = GENERAL_PREFIX + ".category.desc";
     public static final String SANDSTORM_CATEGORY_DESC = SANDSTORM_PREFIX + ".category.desc";
+    public static final String ADVANCED_CATEGORY_DESC = ADVANCED_PREFIX + ".category.desc";
 
     public static Screen generateConfigScreen(Screen parent) {
         return YetAnotherConfigLib.createBuilder()
@@ -35,7 +40,7 @@ public class ISConfigScreen {
                                         .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
                                             Minecraft.getInstance()
-                                                    .setScreen(ImmersiveStormsConfig.HANDLER
+                                                    .setScreen(GeneralSettings.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())
@@ -49,7 +54,7 @@ public class ISConfigScreen {
                                         .text(Component.literal(""))
                                         .action((yaclScreen, buttonOption) -> {
                                             Minecraft.getInstance()
-                                                    .setScreen(SandstormConfig.HANDLER
+                                                    .setScreen(SandstormSettings.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
                                         }).build())

@@ -4,17 +4,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
-import com.thedeathlycow.immersive.storms.client.config.data.*;
-import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.client.config.controller.IdentifierController;
+import com.thedeathlycow.immersive.storms.client.config.data.CodecGsonAdapter;
+import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
+import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
+import com.thedeathlycow.immersive.storms.client.config.data.WeatherCondition;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
+import com.thedeathlycow.immersive.storms.registry.tag.CommonBiomeTags;
+import com.thedeathlycow.immersive.storms.registry.tag.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.sound.StormSounds;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
-import dev.yumi.commons.event.Event;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
@@ -28,20 +31,11 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.util.List;
 
-public class AttributeConfigData {
-    public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("attribute_data.json5");
+public class AdvancedSettings {
+    public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("advanced.json5");
 
-    public static final Event<Identifier, SavedCallback> ON_SAVED = ImmersiveStorms.EVENT_MANAGER.create(
-            SavedCallback.class,
-            listeners -> data -> {
-                for (SavedCallback listener : listeners) {
-                    listener.onSave(data);
-                }
-            }
-    );
-
-    public static final ConfigClassHandler<AttributeConfigData> HANDLER = ConfigClassHandler.createBuilder(AttributeConfigData.class)
-            .id(ImmersiveStorms.id("attribute_data"))
+    public static final ConfigClassHandler<AdvancedSettings> HANDLER = ConfigClassHandler.createBuilder(AdvancedSettings.class)
+            .id(ImmersiveStorms.id("advanced"))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
                             .appendGsonBuilder(gsonBuilder -> {
@@ -78,16 +72,10 @@ public class AttributeConfigData {
     ) {
     }
 
-    @FunctionalInterface
-    public interface SavedCallback {
-        void onSave(AttributeConfigData data);
-    }
-
     private static List<Entry> defaultPreset() {
-        // todo: conventional tags
         return new ImmutableList.Builder<Entry>()
                 .add(new Entry(
-                        sandstormBiomes(),
+                        sandstormBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .setAllWeather(ISEnvironmentAttributes.HAS_SANDSTORM_DUST, true)
                                 // rain
@@ -103,27 +91,27 @@ public class AttributeConfigData {
                                 .build()
                 ))
                 .add(new Entry(
-                        blackRainBiomes(),
+                        blackRainBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true, WeatherCondition.RAINING)
                                 .set(ISEnvironmentAttributes.HAS_BLACK_RAIN, true, WeatherCondition.THUNDERING)
                                 .build()
                 ))
                 .add(new Entry(
-                        denseFogBiomes(),
+                        denseFogBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.RAINING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, THICK_FOG, WeatherCondition.THUNDERING)
                                 .build()
                 ))
                 .add(new Entry(
-                        windyBiomes(),
+                        windyBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .setAllWeather(ISEnvironmentAttributes.HAS_AMBIENT_WIND, true)
                                 .build()
                 ))
                 .add(new Entry(
-                        blizzardBiomes(),
+                        blizzardBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xFFFFFF, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.THUNDERING)
@@ -133,24 +121,65 @@ public class AttributeConfigData {
                 .build();
     }
 
-    private static List<UnboundRegistryObjectStream<Biome>> sandstormBiomes() {
-        return List.of(tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT));
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> sandstormBiomes() {
+        return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
+                .add(tag(ISBiomeTags.HAS_SANDSTORMS))
+                .add(tag(BiomeTags.IS_BADLANDS))
+                .add(tag(BiomeTags.IS_SAVANNA))
+                .add(tag(CommonBiomeTags.IS_BADLANDS))
+                .add(tag(CommonBiomeTags.IS_DESERT))
+                .add(tag(CommonBiomeTags.IS_SAVANNA))
+                .add(object(Biomes.DESERT));
     }
 
-    private static List<UnboundRegistryObjectStream<Biome>> blackRainBiomes() {
-        return List.of(object(Biomes.PALE_GARDEN));
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> blackRainBiomes() {
+        return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
+                .add(tag(ISBiomeTags.IS_BLACK_RAIN_AFFECTED))
+                .add(tag(CommonBiomeTags.PRIMARY_WOOD_TYPE_PALE_OAK))
+                .add(tag(CommonBiomeTags.IS_NETHER))
+                .add(tag(CommonBiomeTags.IS_END))
+                .add(tag(BiomeTags.IS_NETHER))
+                .add(tag(BiomeTags.IS_END))
+                .add(object(Biomes.PALE_GARDEN));
     }
 
-    private static List<UnboundRegistryObjectStream<Biome>> denseFogBiomes() {
-        return List.of(object(Biomes.DARK_FOREST), object(Biomes.PALE_GARDEN), object(Biomes.SWAMP), object(Biomes.MANGROVE_SWAMP));
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> denseFogBiomes() {
+        return blackRainBiomes()
+                .add(tag(ISBiomeTags.HAS_DENSE_FOG))
+                .add(tag(CommonBiomeTags.IS_SPOOKY))
+                .add(tag(CommonBiomeTags.IS_SWAMP))
+                .add(object(Biomes.DEEP_DARK))
+                .add(object(Biomes.DARK_FOREST))
+                .add(object(Biomes.SWAMP))
+                .add(object(Biomes.MANGROVE_SWAMP));
     }
 
-    private static List<UnboundRegistryObjectStream<Biome>> windyBiomes() {
-        return List.of(tag(BiomeTags.IS_MOUNTAIN), tag(BiomeTags.IS_BADLANDS), tag(BiomeTags.IS_SAVANNA), object(Biomes.DESERT), object(Biomes.WINDSWEPT_FOREST), object(Biomes.WINDSWEPT_HILLS), object(Biomes.WINDSWEPT_GRAVELLY_HILLS), object(Biomes.WINDSWEPT_SAVANNA));
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> windyBiomes() {
+        return sandstormBiomes()
+                .add(tag(BiomeTags.IS_MOUNTAIN))
+                .add(object(Biomes.WINDSWEPT_FOREST))
+                .add(object(Biomes.WINDSWEPT_HILLS))
+                .add(object(Biomes.WINDSWEPT_GRAVELLY_HILLS))
+                .add(object(Biomes.WINDSWEPT_SAVANNA));
     }
 
-    private static List<UnboundRegistryObjectStream<Biome>> blizzardBiomes() {
-        return List.of(tag(ISBiomeTags.HAS_BLIZZARDS));
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> blizzardBiomes() {
+        return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
+                .add(tag(ISBiomeTags.HAS_BLIZZARDS))
+                .add(tag(CommonBiomeTags.IS_ICY))
+                .add(tag(CommonBiomeTags.IS_AQUATIC_ICY))
+                .add(tag(CommonBiomeTags.IS_SNOWY))
+                .add(object(Biomes.SNOWY_PLAINS))
+                .add(object(Biomes.SNOWY_BEACH))
+                .add(object(Biomes.SNOWY_TAIGA))
+                .add(object(Biomes.SNOWY_SLOPES))
+                .add(object(Biomes.JAGGED_PEAKS))
+                .add(object(Biomes.FROZEN_OCEAN))
+                .add(object(Biomes.FROZEN_PEAKS))
+                .add(object(Biomes.DEEP_FROZEN_OCEAN))
+                .add(object(Biomes.FROZEN_RIVER))
+                .add(object(Biomes.GROVE))
+                .add(object(Biomes.SNOWY_BEACH));
     }
 
     private static <T> UnboundRegistryObjectStream<T> object(ResourceKey<T> key) {

@@ -5,9 +5,9 @@ import com.google.gson.JsonParser;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.schema.ConfigUpdater;
 import com.thedeathlycow.immersive.storms.client.config.schema.SchemaV2;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
-import com.thedeathlycow.immersive.storms.client.config.section.SchemaConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.SettingsSchema;
 import dev.yumi.mc.core.api.YumiMods;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -39,17 +39,17 @@ public final class Updater {
             }
         }
 
-        if (!Files.exists(SchemaConfig.PATH) && Files.exists(ImmersiveStormsConfig.PATH)) {
-            SchemaConfig.HANDLER.load();
-            SchemaConfig.HANDLER.instance().setSchemaVersion(1);
-            SchemaConfig.HANDLER.save();
+        if (!Files.exists(SettingsSchema.PATH) && Files.exists(GeneralSettings.PATH)) {
+            SettingsSchema.HANDLER.load();
+            SettingsSchema.HANDLER.instance().setSchemaVersion(1);
+            SettingsSchema.HANDLER.save();
         }
 
-        SchemaConfig.HANDLER.load();
-        SchemaConfig schemaConfig = SchemaConfig.HANDLER.instance();
+        SettingsSchema.HANDLER.load();
+        SettingsSchema settingsSchema = SettingsSchema.HANDLER.instance();
 
-        final int latestSchemaVersion = SchemaConfig.CONFIG_VERSION;
-        final int currentSchemaVersion = schemaConfig.getSchemaVersion();
+        final int latestSchemaVersion = SettingsSchema.CONFIG_VERSION;
+        final int currentSchemaVersion = settingsSchema.getSchemaVersion();
 
         boolean continueUpgrade;
 
@@ -93,10 +93,10 @@ public final class Updater {
                 }
             }
 
-            schemaConfig.setSchemaVersion(step);
+            settingsSchema.setSchemaVersion(step);
         }
 
-        SchemaConfig.HANDLER.save();
+        SettingsSchema.HANDLER.save();
         ImmersiveStorms.LOGGER.info(
                 "Immersive Storms config successfully updated from schema version {} to {}.",
                 currentSchemaVersion,
@@ -112,8 +112,8 @@ public final class Updater {
         JsonObject generalConfig = JsonParser.parseString(content).getAsJsonObject();
         JsonObject sandstormConfig = generalConfig.remove("sandstorm").getAsJsonObject();
 
-        copyOldConfigObject(generalConfig, ImmersiveStormsConfig.PATH);
-        copyOldConfigObject(sandstormConfig, SandstormConfig.PATH);
+        copyOldConfigObject(generalConfig, GeneralSettings.PATH);
+        copyOldConfigObject(sandstormConfig, SandstormSettings.PATH);
 
         Files.delete(oldConfigPath);
     }

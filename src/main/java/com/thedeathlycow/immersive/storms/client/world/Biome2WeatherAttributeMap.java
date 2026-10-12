@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
-import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
+import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
 import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
@@ -38,13 +38,13 @@ public final class Biome2WeatherAttributeMap {
         this.patchedClearWeatherMaps.clear();
     }
 
-    public void rebind(final HolderLookup<Biome> biomes, final AttributeConfigData data) {
-        List<AttributeConfigData.Entry> entries = data.entries();
+    public void rebind(final HolderLookup<Biome> biomes, final AdvancedSettings data) {
+        List<AdvancedSettings.Entry> entries = data.entries();
 
         Reference2ObjectMap<Biome, WeatherBasedAttributes.Builder> builders = new Reference2ObjectOpenHashMap<>();
         Reference2ObjectMap<Biome, EnvironmentAttributeMap> clearWeatherMaps = new Reference2ObjectOpenHashMap<>();
 
-        for (AttributeConfigData.Entry entry : entries) {
+        for (AdvancedSettings.Entry entry : entries) {
             UnboundRegistryObjectStream.bindToHolders(entry.biomes().stream(), biomes)
                     .distinct()
                     .forEach(holder -> {
@@ -108,7 +108,7 @@ public final class Biome2WeatherAttributeMap {
             }
 
             Holder<Biome> biome = biomeManager.getNoiseBiomeAtPosition(pos.x, pos.y, pos.z);
-            WeatherBasedAttributes weatherData = attributeAccess.getWeatherBasedAttributes().getWeatherAttributes(biome.value());
+            WeatherBasedAttributes weatherData = attributeAccess.getWeatherAttributes(biome.value());
 
             EnvironmentAttributeMap.Entry<Value, ?> clearValue = weatherData.clearAttributes().get(attribute);
             EnvironmentAttributeMap.Entry<Value, ?> rainValue = weatherData.rainAttributes().get(attribute);
@@ -140,5 +140,15 @@ public final class Biome2WeatherAttributeMap {
         }
 
         Biome2WeatherAttributeMap getWeatherBasedAttributes();
+
+        @NotNull
+        default WeatherBasedAttributes getWeatherAttributes(final Biome biome) {
+            return this.getWeatherBasedAttributes().getWeatherAttributes(biome);
+        }
+
+        @NotNull
+        default EnvironmentAttributeMap getClearWeatherMap(Biome biome, EnvironmentAttributeMap baseAttributes) {
+            return this.getWeatherBasedAttributes().getClearWeatherMap(biome, baseAttributes);
+        }
     }
 }

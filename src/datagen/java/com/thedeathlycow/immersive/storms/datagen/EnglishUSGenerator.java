@@ -1,8 +1,8 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
-import com.thedeathlycow.immersive.storms.client.config.ISConfigScreen;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.client.config.ui.ISConfigScreen;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
@@ -32,8 +32,8 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
         builder.add(ISConfigScreen.SANDSTORM_CATEGORY, "Sandstorm Settings");
         builder.add(ISConfigScreen.SANDSTORM_CATEGORY_DESC, "Specific settings for sandstorms");
 
-        generateConfigOptionTranslations(ImmersiveStormsConfig.HANDLER, builder);
-        generateConfigOptionTranslations(SandstormConfig.HANDLER, builder);
+        generateConfigOptionTranslations(GeneralSettings.HANDLER, builder);
+        generateConfigOptionTranslations(SandstormSettings.HANDLER, builder);
     }
 
     private <T> void generateConfigOptionTranslations(

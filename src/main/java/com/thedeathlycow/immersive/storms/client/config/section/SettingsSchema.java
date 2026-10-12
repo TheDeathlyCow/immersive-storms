@@ -7,10 +7,10 @@ import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
 import java.nio.file.Path;
 
-public class SchemaConfig {
+public class SettingsSchema {
     public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("schema.json5");
 
-    public static final ConfigClassHandler<SchemaConfig> HANDLER = ConfigClassHandler.createBuilder(SchemaConfig.class)
+    public static final ConfigClassHandler<SettingsSchema> HANDLER = ConfigClassHandler.createBuilder(SettingsSchema.class)
             .id(ImmersiveStorms.id("schema"))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)

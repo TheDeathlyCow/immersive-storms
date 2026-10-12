@@ -22,6 +22,7 @@ public abstract class LevelMixin implements LevelAccessor, LevelExtension {
             method = "<init>", at = @At("TAIL")
     )
     private void onInit(CallbackInfo ci) {
+        AdvancedSettings.HANDLER.load();
         this.immersiveStorms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
     }
 

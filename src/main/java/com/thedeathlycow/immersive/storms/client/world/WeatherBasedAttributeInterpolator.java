@@ -52,8 +52,8 @@ public final class WeatherBasedAttributeInterpolator {
         }
 
         WeatherBasedAttributes data = this.attributeMap.getWeatherAttributes(biome.value());
-        this.rainProbe.accumulate(weight, data.rainAttributes());
-        this.thunderProbe.accumulate(weight, data.thunderAttributes());
+        this.rainProbe.accumulate(weight, data.rain());
+        this.thunderProbe.accumulate(weight, data.thunder());
     }
 
     @NotNull

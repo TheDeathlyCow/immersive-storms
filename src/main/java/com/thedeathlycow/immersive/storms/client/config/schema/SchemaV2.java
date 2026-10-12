@@ -2,8 +2,8 @@ package com.thedeathlycow.immersive.storms.client.config.schema;
 
 import com.google.gson.JsonObject;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,8 +11,8 @@ import java.nio.file.Files;
 public final class SchemaV2 {
     public static void run(int originalSchemaVersion) throws IOException {
         // load old files
-        JsonObject sandstormConfig = JsonCopyHelper.read(SandstormConfig.PATH);
-        JsonObject generalConfig = JsonCopyHelper.read(ImmersiveStormsConfig.PATH);
+        JsonObject sandstormConfig = JsonCopyHelper.read(SandstormSettings.PATH);
+        JsonObject generalConfig = JsonCopyHelper.read(GeneralSettings.PATH);
 
         // apply updates
         JsonCopyHelper.copyBooleanProperty(sandstormConfig, generalConfig, "enableSandstormSounds");
@@ -20,8 +20,8 @@ public final class SchemaV2 {
 
         // save files
         Files.createDirectories(ImmersiveStorms.getConfigDir());
-        Files.writeString(SandstormConfig.PATH, sandstormConfig.toString());
-        Files.writeString(ImmersiveStormsConfig.PATH, generalConfig.toString());
+        Files.writeString(SandstormSettings.PATH, sandstormConfig.toString());
+        Files.writeString(GeneralSettings.PATH, generalConfig.toString());
     }
 
     private SchemaV2() {

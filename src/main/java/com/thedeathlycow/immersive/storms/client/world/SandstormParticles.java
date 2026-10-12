@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
@@ -29,9 +29,9 @@ public final class SandstormParticles implements ISClientTickEvents.EndLevel {
             return;
         }
 
-        SandstormConfig sandstormConfig = SandstormConfig.HANDLER.instance();
-        final int renderDistance = sandstormConfig.getSandstormParticleRenderDistance();
-        boolean enabled = sandstormConfig.isEnableSandstormParticles()
+        SandstormSettings sandstormSettings = SandstormSettings.HANDLER.instance();
+        final int renderDistance = sandstormSettings.getSandstormParticleRenderDistance();
+        boolean enabled = sandstormSettings.isEnableSandstormParticles()
                 && renderDistance > 0;
 
         if (!enabled) {
@@ -45,7 +45,7 @@ public final class SandstormParticles implements ISClientTickEvents.EndLevel {
         final BlockPos cameraPos = camera.blockPosition();
         final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         final ParticleOptions particle = new DustGrainParticleEffect(COLOR, PARTICLE_SCALE);
-        final float rarity = BASE_PARTICLE_CHANCE * sandstormConfig.getSandstormParticleDensityMultiplier();
+        final float rarity = BASE_PARTICLE_CHANCE * sandstormSettings.getSandstormParticleDensityMultiplier();
         final int cameraY = cameraPos.getY();
         final int xOffset = renderDistance / 2;
 

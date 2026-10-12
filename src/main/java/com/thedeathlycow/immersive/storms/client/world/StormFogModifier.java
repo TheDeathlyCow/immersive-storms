@@ -3,7 +3,7 @@ package com.thedeathlycow.immersive.storms.client.world;
 import com.seibel.distanthorizons.api.DhApi;
 import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
@@ -20,7 +20,7 @@ public final class StormFogModifier {
             final ClientLevel level,
             final DeltaTracker deltaTracker
     ) {
-        ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
+        GeneralSettings config = ImmersiveStormsClient.getConfig();
 
         if (!config.isEnableFogChanges()) {
             return;

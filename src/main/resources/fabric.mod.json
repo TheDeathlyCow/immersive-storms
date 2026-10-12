@@ -20,6 +20,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"yumi:init": [
+			"com.thedeathlycow.immersive.storms.fabric.ImmersiveStormsFabric",
 			"com.thedeathlycow.immersive.storms.ImmersiveStorms"
 		],
 		"yumi:client_init": [

@@ -11,10 +11,10 @@ import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 
 import java.nio.file.Path;
 
-public class ImmersiveStormsConfig {
+public class GeneralSettings {
     public static final Path PATH = ImmersiveStorms.getConfigDir().resolve("general.json5");
 
-    public static final ConfigClassHandler<ImmersiveStormsConfig> HANDLER = ConfigClassHandler.createBuilder(ImmersiveStormsConfig.class)
+    public static final ConfigClassHandler<GeneralSettings> HANDLER = ConfigClassHandler.createBuilder(GeneralSettings.class)
             .id(ImmersiveStorms.id("general"))
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
@@ -115,7 +115,7 @@ public class ImmersiveStormsConfig {
     }
 
     @Deprecated
-    public SandstormConfig getSandstorm() {
-        return SandstormConfig.HANDLER.instance();
+    public SandstormSettings getSandstorm() {
+        return SandstormSettings.HANDLER.instance();
     }
 }

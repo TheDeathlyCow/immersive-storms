@@ -1,6 +1,7 @@
 package com.thedeathlycow.immersive.storms.registry;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
 import com.thedeathlycow.immersive.storms.sound.StormSounds;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -42,6 +43,13 @@ public final class ISEnvironmentAttributes {
             "audio/storm_sounds",
             EnvironmentAttribute.builder(ISAttributeTypes.STORM_SOUNDS)
                     .defaultValue(StormSounds.EMPTY)
+                    .syncable()
+    );
+
+    public static final EnvironmentAttribute<WeatherArchetype> WEATHER_ARCHETYPE = register(
+            "gameplay/weather_archetype",
+            EnvironmentAttribute.builder(ISAttributeTypes.WEATHER_ARCHETYPE)
+                    .defaultValue(WeatherArchetype.NORMAL)
                     .syncable()
     );
 

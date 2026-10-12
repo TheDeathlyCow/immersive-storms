@@ -27,6 +27,12 @@ public final class StormFogModifier {
         }
 
         float partialTicks = deltaTracker.getGameTimeDeltaPartialTick(false);
+        WeatherArchetype archetype = camera.attributeProbe().getValue(ISEnvironmentAttributes.WEATHER_ARCHETYPE, partialTicks);
+
+        if (!config.isFogTypeEnabled(archetype)) {
+            return;
+        }
+
         float stormFogDistanceMultiplier = camera.attributeProbe().getValue(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, partialTicks);
         float reduction = stormFogDistanceMultiplier * config.getFogDistanceMultiplier();
         float fogEnd = fog.environmentalEnd * reduction;

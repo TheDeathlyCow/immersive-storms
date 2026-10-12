@@ -1,6 +1,7 @@
 package com.thedeathlycow.immersive.storms.registry;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
+import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
 import com.thedeathlycow.immersive.storms.sound.StormSounds;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,6 +11,11 @@ public final class ISAttributeTypes {
     public static final AttributeType<StormSounds> STORM_SOUNDS = register(
             "storm_sounds",
             AttributeType.ofNotInterpolated(StormSounds.CODEC)
+    );
+
+    public static final AttributeType<WeatherArchetype> WEATHER_ARCHETYPE = register(
+            "weather_archetype",
+            AttributeType.ofNotInterpolated(WeatherArchetype.CODEC)
     );
 
     public static void initialize() {

@@ -2,7 +2,6 @@ package com.thedeathlycow.immersive.storms.client;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Updater;
-import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
 import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.client.particle.BlackWaterDropParticle;
@@ -54,7 +53,6 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         Updater.initialize();
         GeneralSettings.HANDLER.load();
         SandstormSettings.HANDLER.load();
-        AdvancedSettings.HANDLER.load();
     }
 
     private static void checkDistantHorizons() {

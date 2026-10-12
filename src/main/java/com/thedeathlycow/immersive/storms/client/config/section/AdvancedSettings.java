@@ -9,6 +9,7 @@ import com.thedeathlycow.immersive.storms.client.config.data.CodecGsonAdapter;
 import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherCondition;
+import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import com.thedeathlycow.immersive.storms.registry.tag.CommonBiomeTags;
@@ -75,19 +76,9 @@ public class AdvancedSettings {
     private static List<Entry> defaultPreset() {
         return new ImmutableList.Builder<Entry>()
                 .add(new Entry(
-                        sandstormBiomes().build(),
+                        windyBiomes().build(),
                         WeatherBasedAttributes.builder()
-                                .setAllWeather(ISEnvironmentAttributes.HAS_SANDSTORM_DUST, true)
-                                // rain
-                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherCondition.RAINING)
-                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherCondition.RAINING)
-                                .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.RAINING)
-                                .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_SOFT_WIND), WeatherCondition.RAINING)
-                                // thunder
-                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherCondition.THUNDERING)
-                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherCondition.THUNDERING)
-                                .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, THICK_FOG, WeatherCondition.THUNDERING)
-                                .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_STRONG_WIND), WeatherCondition.THUNDERING)
+                                .setAllWeather(ISEnvironmentAttributes.HAS_AMBIENT_WIND, true)
                                 .build()
                 ))
                 .add(new Entry(
@@ -102,17 +93,30 @@ public class AdvancedSettings {
                         WeatherBasedAttributes.builder()
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.RAINING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, THICK_FOG, WeatherCondition.THUNDERING)
+                                .setAllWeather(ISEnvironmentAttributes.WEATHER_ARCHETYPE, WeatherArchetype.SPOOKY)
                                 .build()
                 ))
                 .add(new Entry(
-                        windyBiomes().build(),
+                        sandstormBiomes().build(),
                         WeatherBasedAttributes.builder()
-                                .setAllWeather(ISEnvironmentAttributes.HAS_AMBIENT_WIND, true)
+                                .setAllWeather(ISEnvironmentAttributes.HAS_SANDSTORM_DUST, true)
+                                .setAllWeather(ISEnvironmentAttributes.WEATHER_ARCHETYPE, WeatherArchetype.SANDSTORM)
+                                // rain
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherCondition.RAINING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherCondition.RAINING)
+                                .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.RAINING)
+                                .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_SOFT_WIND), WeatherCondition.RAINING)
+                                // thunder
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherCondition.THUNDERING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherCondition.THUNDERING)
+                                .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, THICK_FOG, WeatherCondition.THUNDERING)
+                                .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_STRONG_WIND), WeatherCondition.THUNDERING)
                                 .build()
                 ))
                 .add(new Entry(
                         blizzardBiomes().build(),
                         WeatherBasedAttributes.builder()
+                                .setAllWeather(ISEnvironmentAttributes.WEATHER_ARCHETYPE, WeatherArchetype.BLIZZARD)
                                 .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xFFFFFF, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_SOFT_WIND), WeatherCondition.THUNDERING)

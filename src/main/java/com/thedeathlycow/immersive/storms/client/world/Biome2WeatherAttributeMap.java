@@ -49,7 +49,7 @@ public final class Biome2WeatherAttributeMap {
                     .distinct()
                     .forEach(holder -> {
                         Biome biome = holder.value();
-                        WeatherBasedAttributes weatherAttributes = entry.attributes();
+                        WeatherBasedAttributes weatherAttributes = entry.weatherAttributes();
 
                         WeatherBasedAttributes.Builder builder = builders.computeIfAbsent(
                                 biome,
@@ -57,7 +57,7 @@ public final class Biome2WeatherAttributeMap {
                         );
                         builder.putInAllWeather(weatherAttributes);
 
-                        clearWeatherMaps.computeIfAbsent(biome, (Biome b) -> merge(b.getAttributes(), weatherAttributes.clearAttributes()));
+                        clearWeatherMaps.computeIfAbsent(biome, (Biome b) -> merge(b.getAttributes(), weatherAttributes.clear()));
                     });
         }
 
@@ -110,9 +110,9 @@ public final class Biome2WeatherAttributeMap {
             Holder<Biome> biome = biomeManager.getNoiseBiomeAtPosition(pos.x, pos.y, pos.z);
             WeatherBasedAttributes weatherData = attributeAccess.getWeatherAttributes(biome.value());
 
-            EnvironmentAttributeMap.Entry<Value, ?> clearValue = weatherData.clearAttributes().get(attribute);
-            EnvironmentAttributeMap.Entry<Value, ?> rainValue = weatherData.rainAttributes().get(attribute);
-            EnvironmentAttributeMap.Entry<Value, ?> thunderValue = weatherData.thunderAttributes().get(attribute);
+            EnvironmentAttributeMap.Entry<Value, ?> clearValue = weatherData.clear().get(attribute);
+            EnvironmentAttributeMap.Entry<Value, ?> rainValue = weatherData.rain().get(attribute);
+            EnvironmentAttributeMap.Entry<Value, ?> thunderValue = weatherData.thunder().get(attribute);
 
             float rainLevel = weatherAccess.rainLevel();
             float thunderLevel = weatherAccess.thunderLevel();

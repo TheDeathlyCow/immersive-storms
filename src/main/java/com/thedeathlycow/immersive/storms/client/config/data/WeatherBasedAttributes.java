@@ -5,9 +5,9 @@ import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.attribute.modifier.AttributeModifier;
 
 public record WeatherBasedAttributes(
-        EnvironmentAttributeMap clearAttributes,
-        EnvironmentAttributeMap rainAttributes,
-        EnvironmentAttributeMap thunderAttributes
+        EnvironmentAttributeMap clear,
+        EnvironmentAttributeMap rain,
+        EnvironmentAttributeMap thunder
 ) {
     public static final WeatherBasedAttributes EMPTY = new WeatherBasedAttributes(
             EnvironmentAttributeMap.EMPTY,
@@ -21,9 +21,9 @@ public record WeatherBasedAttributes(
 
     public EnvironmentAttributeMap forCondition(WeatherCondition condition) {
         return switch (condition) {
-            case CLEAR -> this.clearAttributes;
-            case RAINING -> this.rainAttributes;
-            case THUNDERING -> this.thunderAttributes;
+            case CLEAR -> this.clear;
+            case RAINING -> this.rain;
+            case THUNDERING -> this.thunder;
         };
     }
 
@@ -36,9 +36,9 @@ public record WeatherBasedAttributes(
         }
 
         public Builder putInAllWeather(final WeatherBasedAttributes data) {
-            this.clearAttributes.putAll(data.clearAttributes());
-            this.rainAttributes.putAll(data.rainAttributes());
-            this.thunderAttributes.putAll(data.thunderAttributes());
+            this.clearAttributes.putAll(data.clear());
+            this.rainAttributes.putAll(data.rain());
+            this.thunderAttributes.putAll(data.thunder());
             return this;
         }
 

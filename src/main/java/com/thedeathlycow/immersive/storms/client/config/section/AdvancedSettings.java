@@ -68,7 +68,7 @@ public class AdvancedSettings {
 
     public record Entry(
             List<UnboundRegistryObjectStream<Biome>> biomes,
-            WeatherBasedAttributes attributes
+            WeatherBasedAttributes weatherAttributes
     ) {
     }
 

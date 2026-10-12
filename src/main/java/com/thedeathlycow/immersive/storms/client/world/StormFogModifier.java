@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.fog.FogData;
 
 public final class StormFogModifier {
     // This isn't strictly necessary, as the same effect can be achieved by modifying the fog end distance environment
-    // attributes with a multiplier layer. However, this implementation makes for simpler configuration through only a
+    // weatherAttributes with a multiplier layer. However, this implementation makes for simpler configuration through only a
     // single attribute, allows for the old fog distance config value to still be respected, and keeps compat with DH.
     public static void applyStormFogDistance(
             final FogData fog,

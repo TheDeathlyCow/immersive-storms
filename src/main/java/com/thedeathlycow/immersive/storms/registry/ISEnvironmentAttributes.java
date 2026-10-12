@@ -46,7 +46,7 @@ public final class ISEnvironmentAttributes {
     );
 
     public static void initialize() {
-        ImmersiveStorms.LOGGER.debug("Initialized environment attributes");
+        ImmersiveStorms.LOGGER.debug("Initialized environment weatherAttributes");
     }
 
     private static <Value> EnvironmentAttribute<Value> register(final String id, final EnvironmentAttribute.Builder<Value> attributeBuilder) {

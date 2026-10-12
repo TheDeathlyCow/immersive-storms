@@ -2,9 +2,9 @@ package com.thedeathlycow.immersive.storms.client;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Updater;
-import com.thedeathlycow.immersive.storms.client.config.section.AttributeConfigData;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.client.particle.BlackWaterDropParticle;
 import com.thedeathlycow.immersive.storms.client.particle.ClientParticleHelper;
 import com.thedeathlycow.immersive.storms.client.particle.DustGrainParticle;
@@ -25,7 +25,7 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         checkDistantHorizons();
         registerConfig();
 
-        boolean disableSandstormEffects = SandstormConfig.HANDLER.instance().isDetectParticleRain()
+        boolean disableSandstormEffects = SandstormSettings.HANDLER.instance().isDetectParticleRain()
                 && YumiMods.get().isModLoaded("particlerain");
 
         if (!disableSandstormEffects) {
@@ -42,8 +42,8 @@ public class ImmersiveStormsClient implements ClientModInitializer {
         particleRegistry.registerProvider(ISParticleTypes.BLACK_RAIN, BlackWaterDropParticle.Provider::new);
     }
 
-    public static ImmersiveStormsConfig getConfig() {
-        return ImmersiveStormsConfig.HANDLER.instance();
+    public static GeneralSettings getConfig() {
+        return GeneralSettings.HANDLER.instance();
     }
 
     public static boolean isDistantHorizonsLoaded() {
@@ -52,9 +52,9 @@ public class ImmersiveStormsClient implements ClientModInitializer {
 
     private static void registerConfig() {
         Updater.initialize();
-        ImmersiveStormsConfig.HANDLER.load();
-        SandstormConfig.HANDLER.load();
-        AttributeConfigData.HANDLER.load();
+        GeneralSettings.HANDLER.load();
+        SandstormSettings.HANDLER.load();
+        AdvancedSettings.HANDLER.load();
     }
 
     private static void checkDistantHorizons() {

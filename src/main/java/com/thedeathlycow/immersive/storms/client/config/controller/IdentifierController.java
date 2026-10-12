@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.config.data;
+package com.thedeathlycow.immersive.storms.client.config.controller;
 
 import com.google.gson.*;
 import dev.isxander.yacl3.api.Option;
@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 public record IdentifierController(
         Option<Identifier> option
 ) implements IStringController<Identifier> {
-    public static <T> void registerTypeAdapter(GsonBuilder builder) {
+    public static void registerTypeAdapter(GsonBuilder builder) {
         builder.registerTypeAdapter(Identifier.class, new GsonAdapter());
     }
 

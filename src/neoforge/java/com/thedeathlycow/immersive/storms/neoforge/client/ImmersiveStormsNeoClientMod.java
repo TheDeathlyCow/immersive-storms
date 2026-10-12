@@ -1,7 +1,7 @@
 package com.thedeathlycow.immersive.storms.neoforge.client;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.ISConfigScreen;
+import com.thedeathlycow.immersive.storms.client.config.ui.ISConfigScreen;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.neoforged.api.distmarker.Dist;

@@ -2,10 +2,10 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.client.config.section.ImmersiveStormsConfig;
+import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
-import com.thedeathlycow.immersive.storms.registry.ISBiomeTags;
+import com.thedeathlycow.immersive.storms.registry.tag.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
             return;
         }
 
-        ImmersiveStormsConfig config = ImmersiveStormsClient.getConfig();
+        GeneralSettings config = ImmersiveStormsClient.getConfig();
         boolean enableParticles = config.isEnableAmbientWindParticles();
         boolean enableSounds = config.isEnableAmbientWindSounds();
 
@@ -68,7 +68,7 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
 
     private static void addParticleAndSound(
             ClientLevel level,
-            ImmersiveStormsConfig config,
+            GeneralSettings config,
             RandomSource random,
             ParticleColor color,
             BlockPos.MutableBlockPos pos,

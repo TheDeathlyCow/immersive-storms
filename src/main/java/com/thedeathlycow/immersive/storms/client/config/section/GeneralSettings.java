@@ -2,6 +2,7 @@ package com.thedeathlycow.immersive.storms.client.config.section;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
+import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;
@@ -85,6 +86,15 @@ public class GeneralSettings {
     @FloatSlider(min = 0.1f, max = 10.0f, step = 0.1f, format = "%.2f")
     @SerialEntry(comment = "Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive")
     float windParticleChanceMultiplier = 1.0f;
+
+    public boolean isFogTypeEnabled(WeatherArchetype archetype) {
+        return switch (archetype) {
+            case SANDSTORM -> this.enableSandstormFog;
+            case BLIZZARD -> this.enableBlizzardFog;
+            case SPOOKY -> this.enableDenseFog;
+            default -> true;
+        };
+    }
 
     public boolean isEnableFogChanges() {
         return enableFogChanges;

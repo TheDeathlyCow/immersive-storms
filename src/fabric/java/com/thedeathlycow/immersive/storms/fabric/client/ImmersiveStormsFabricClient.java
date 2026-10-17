@@ -1,9 +1,11 @@
 package com.thedeathlycow.immersive.storms.fabric.client;
 
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
+import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
 import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class ImmersiveStormsFabricClient implements ClientModInitializer {
     @Override
@@ -11,5 +13,11 @@ public class ImmersiveStormsFabricClient implements ClientModInitializer {
         ClientTickEvents.END_LEVEL_TICK.register(level -> {
             ISClientTickEvents.END_LEVEL.invoker().onEndTick(level);
         });
+
+        // TODO: multiloader this
+        ClientPlayNetworking.registerGlobalReceiver(
+                ConfigSyncPacket.PACKET_ID,
+                new ConfigSyncPacketListener()
+        );
     }
 }

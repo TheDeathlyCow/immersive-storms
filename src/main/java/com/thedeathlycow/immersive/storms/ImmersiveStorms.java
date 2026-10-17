@@ -3,6 +3,7 @@ package com.thedeathlycow.immersive.storms;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
+import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
 import com.thedeathlycow.immersive.storms.registry.ISAttributeTypes;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
@@ -14,6 +15,7 @@ import dev.yumi.mc.core.api.YumiMods;
 import dev.yumi.mc.core.api.entrypoint.ModInitializer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.Permissions;
@@ -52,6 +54,14 @@ public class ImmersiveStorms implements ModInitializer {
 
         if (AdvancedSettings.HANDLER.load()) {
             level.immersiveStorms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
+
+            // TODO: dont send this to players who dont have the mod
+            var packet = new ClientboundCustomPayloadPacket(new ConfigSyncPacket(AdvancedSettings.HANDLER.instance()));
+            level.getPlayers(_ -> true).forEach(player ->{
+                player.connection.send(packet);
+            });
+
+
             source.sendSuccess(() -> Component.literal("Reloaded Immersive Storms config"), true);
         } else {
             source.sendFailure(Component.literal("Failed to reload Immersive Storms config"));

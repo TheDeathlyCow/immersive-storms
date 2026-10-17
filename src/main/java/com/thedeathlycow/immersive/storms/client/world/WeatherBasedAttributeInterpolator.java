@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherCondition;
-import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
+import com.thedeathlycow.immersive.storms.util.ISLevel;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.attribute.EnvironmentAttribute;
@@ -40,7 +40,7 @@ public final class WeatherBasedAttributeInterpolator {
     public void tick(@NonNull final Level level, @NonNull final Vec3 position) {
         this.level = level;
         this.position = position;
-        this.attributeMap = ((LevelExtension) this.level).immersive_storms$getBiomeToWeatherAttributeMap();
+        this.attributeMap = this.level.immersive_storms$getBiomeToWeatherAttributeMap();
 
         this.rainProbe.tick();
         this.thunderProbe.tick();

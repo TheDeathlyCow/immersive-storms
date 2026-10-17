@@ -2,10 +2,13 @@ package com.thedeathlycow.immersive.storms.client.config.data;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 
@@ -26,6 +29,11 @@ public sealed interface UnboundRegistryObjectStream<T> permits UnboundRegistryOb
             final HolderLookup<T> lookup
     ) {
         return objects.flatMap(o -> o.listHolders(lookup));
+    }
+
+    static <B extends ByteBuf, T> StreamCodec<B, UnboundRegistryObjectStream<T>> streamCodec(final ResourceKey<? extends Registry<T>> registryName) {
+        return ByteBufCodecs.<B, TagKey<T>, ResourceKey<T>>either(TagKey.streamCodec(registryName), ResourceKey.streamCodec(registryName))
+                .map(UnboundRegistryObjectStream::fromEither, UnboundRegistryObjectStream::toEither);
     }
 
     static <T> Codec<UnboundRegistryObjectStream<T>> codec(final ResourceKey<? extends Registry<T>> registryName) {

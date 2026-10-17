@@ -2,6 +2,8 @@ package com.thedeathlycow.immersive.storms.client.config.section;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.config.Translate;
 import com.thedeathlycow.immersive.storms.client.config.controller.IdentifierController;
@@ -19,6 +21,9 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
@@ -55,13 +60,31 @@ public class AdvancedSettings {
             )
             .build();
 
+    public static final Codec<AdvancedSettings> NETWORK_CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Entry.NETWORK_CODEC.listOf()
+                            .fieldOf("entries")
+                            .forGetter(AdvancedSettings::entries)
+            ).apply(instance, AdvancedSettings::new)
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, AdvancedSettings> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(AdvancedSettings.NETWORK_CODEC);
+
     private static final float LIGHT_FOG = 128f / 1024f;
 
     private static final float THICK_FOG = 64f / 1024f;
 
     @Translate.Name("Entries")
     @SerialEntry(comment = "Maps biomes to a set of environment attribute overrides.")
-    List<Entry> entries = defaultPreset();
+    List<Entry> entries;
+
+    public AdvancedSettings() {
+        this(defaultPreset());
+    }
+
+    private AdvancedSettings(List<Entry> entries) {
+        this.entries = entries;
+    }
 
     public List<Entry> entries() {
         return entries;
@@ -71,6 +94,16 @@ public class AdvancedSettings {
             List<UnboundRegistryObjectStream<Biome>> biomes,
             WeatherBasedAttributes weatherAttributes
     ) {
+        public static final Codec<Entry> NETWORK_CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        UnboundRegistryObjectStream.codec(Registries.BIOME).listOf()
+                                .fieldOf("biomes")
+                                .forGetter(Entry::biomes),
+                        WeatherBasedAttributes.NETWORK_CODEC
+                                .fieldOf("weather_attributes")
+                                .forGetter(Entry::weatherAttributes)
+                ).apply(instance, Entry::new)
+        );
     }
 
     private static List<Entry> defaultPreset() {

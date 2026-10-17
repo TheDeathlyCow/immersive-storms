@@ -3,7 +3,6 @@ package com.thedeathlycow.immersive.storms.client.world;
 import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
 import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
 import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
-import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
@@ -136,7 +135,7 @@ public final class Biome2WeatherAttributeMap {
 
     public interface AttributeAccess {
         static AttributeAccess from(Level level) {
-            return ((LevelExtension) level)::immersive_storms$getBiomeToWeatherAttributeMap;
+            return level::immersive_storms$getBiomeToWeatherAttributeMap;
         }
 
         Biome2WeatherAttributeMap getWeatherBasedAttributes();

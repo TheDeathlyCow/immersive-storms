@@ -3,7 +3,6 @@ package com.thedeathlycow.immersive.storms;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
-import com.thedeathlycow.immersive.storms.client.util.LevelExtension;
 import com.thedeathlycow.immersive.storms.registry.ISAttributeTypes;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
@@ -52,7 +51,7 @@ public class ImmersiveStorms implements ModInitializer {
         ServerLevel level = source.getLevel();
 
         if (AdvancedSettings.HANDLER.load()) {
-            ((LevelExtension)level).immersiveStorms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
+            level.immersiveStorms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
             source.sendSuccess(() -> Component.literal("Reloaded Immersive Storms config"), true);
         } else {
             source.sendFailure(Component.literal("Failed to reload Immersive Storms config"));

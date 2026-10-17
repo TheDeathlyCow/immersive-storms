@@ -5,9 +5,14 @@
     "mixins": [
         "EnvironmentAttributeProbeMixin",
         "EnvironmentAttributeSystemMixin",
-        "LevelMixin"
+        "LevelMixin",
+        "LevelMixin$ServerLevelMixin",
+        "MinecraftServerMixin"
     ],
     "injectors": {
         "defaultRequire": 1
-	}
+    },
+    "client": [
+        "LevelMixin$ClientLevelMixin"
+    ]
 }

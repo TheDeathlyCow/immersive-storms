@@ -5,13 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.config.Translate;
-import com.thedeathlycow.immersive.storms.config.controller.IdentifierController;
-import com.thedeathlycow.immersive.storms.config.data.CodecGsonAdapter;
-import com.thedeathlycow.immersive.storms.config.data.UnboundRegistryObjectStream;
-import com.thedeathlycow.immersive.storms.config.data.WeatherBasedAttributes;
-import com.thedeathlycow.immersive.storms.config.data.WeatherCondition;
 import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
+import com.thedeathlycow.immersive.storms.config.Translate;
+import com.thedeathlycow.immersive.storms.config.data.*;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import com.thedeathlycow.immersive.storms.registry.tag.CommonBiomeTags;
@@ -24,6 +20,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
@@ -45,7 +42,7 @@ public class AdvancedSettings {
             .serializer(
                     config -> GsonConfigSerializerBuilder.create(config)
                             .appendGsonBuilder(gsonBuilder -> {
-                                IdentifierController.registerTypeAdapter(gsonBuilder);
+                                gsonBuilder.registerTypeAdapter(Identifier.class, new IdentifierGsonAdapter());
                                 CodecGsonAdapter.registerTypeAdapter(gsonBuilder, EnvironmentAttributeMap.class, EnvironmentAttributeMap.CODEC);
 
                                 Type biomeEntryType = new TypeToken<UnboundRegistryObjectStream<Biome>>() {

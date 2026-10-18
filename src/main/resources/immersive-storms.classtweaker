@@ -3,4 +3,6 @@ classTweaker  v1  official
 accessible class net/minecraft/client/particle/ParticleResources$SpriteParticleRegistration
 accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 accessible class net/minecraft/world/attribute/EnvironmentAttributeProbe$ValueProbe
-inject-interface net/minecraft/world/level/Level com/thedeathlycow/immersive/storms/util/ISLevel
+inject-interface net/minecraft/world/level/Level com/thedeathlycow/immersive/storms/world/AttributeMapHolder
+inject-interface net/minecraft/server/MinecraftServer com/thedeathlycow/immersive/storms/world/AttributeMapHolder
+inject-interface net/minecraft/client/multiplayer/ClientPacketListener com/thedeathlycow/immersive/storms/world/AttributeMapHolder

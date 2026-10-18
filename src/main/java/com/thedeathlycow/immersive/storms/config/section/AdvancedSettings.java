@@ -1,16 +1,16 @@
-package com.thedeathlycow.immersive.storms.client.config.section;
+package com.thedeathlycow.immersive.storms.config.section;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.Translate;
-import com.thedeathlycow.immersive.storms.client.config.controller.IdentifierController;
-import com.thedeathlycow.immersive.storms.client.config.data.CodecGsonAdapter;
-import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
-import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
-import com.thedeathlycow.immersive.storms.client.config.data.WeatherCondition;
+import com.thedeathlycow.immersive.storms.config.Translate;
+import com.thedeathlycow.immersive.storms.config.controller.IdentifierController;
+import com.thedeathlycow.immersive.storms.config.data.CodecGsonAdapter;
+import com.thedeathlycow.immersive.storms.config.data.UnboundRegistryObjectStream;
+import com.thedeathlycow.immersive.storms.config.data.WeatherBasedAttributes;
+import com.thedeathlycow.immersive.storms.config.data.WeatherCondition;
 import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;

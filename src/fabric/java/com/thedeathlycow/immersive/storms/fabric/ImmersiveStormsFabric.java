@@ -20,7 +20,7 @@ public class ImmersiveStormsFabric implements ModInitializer {
         });
 
         PayloadTypeRegistry.clientboundPlay().register(
-                ConfigSyncPacket.PACKET_ID,
+                ConfigSyncPacket.TYPE,
                 ConfigSyncPacket.STREAM_CODEC
         );
     }

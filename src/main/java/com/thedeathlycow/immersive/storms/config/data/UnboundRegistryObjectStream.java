@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.config.data;
+package com.thedeathlycow.immersive.storms.config.data;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

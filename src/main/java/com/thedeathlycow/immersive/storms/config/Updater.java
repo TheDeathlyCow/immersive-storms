@@ -1,13 +1,13 @@
-package com.thedeathlycow.immersive.storms.client.config;
+package com.thedeathlycow.immersive.storms.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.schema.ConfigUpdater;
-import com.thedeathlycow.immersive.storms.client.config.schema.SchemaV2;
-import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
-import com.thedeathlycow.immersive.storms.client.config.section.SettingsSchema;
+import com.thedeathlycow.immersive.storms.config.schema.ConfigUpdater;
+import com.thedeathlycow.immersive.storms.config.schema.SchemaV2;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.config.section.SandstormSettings;
+import com.thedeathlycow.immersive.storms.config.section.SettingsSchema;
 import dev.yumi.mc.core.api.YumiMods;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

@@ -1,10 +1,7 @@
-package com.thedeathlycow.immersive.storms.client.world;
+package com.thedeathlycow.immersive.storms.world;
 
-import com.thedeathlycow.immersive.storms.client.config.data.UnboundRegistryObjectStream;
-import com.thedeathlycow.immersive.storms.client.config.data.WeatherBasedAttributes;
-import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import com.thedeathlycow.immersive.storms.config.data.WeatherBasedAttributes;
+import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.attribute.EnvironmentAttribute;
@@ -16,69 +13,40 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public final class Biome2WeatherAttributeMap {
-    private final Reference2ObjectMap<Biome, WeatherBasedAttributes> biomesToAttributes = new Reference2ObjectOpenHashMap<>();
-    private final Reference2ObjectMap<Biome, EnvironmentAttributeMap> patchedClearWeatherMaps = new Reference2ObjectOpenHashMap<>();
-
-    @NotNull
-    public WeatherBasedAttributes getWeatherAttributes(final Biome biome) {
-        return this.biomesToAttributes.getOrDefault(biome, WeatherBasedAttributes.EMPTY);
-    }
-
-    @NotNull
-    public EnvironmentAttributeMap getClearWeatherMap(Biome biome, EnvironmentAttributeMap baseAttributes) {
-        return this.patchedClearWeatherMaps.getOrDefault(biome, baseAttributes);
-    }
-
-    public void clear() {
-        this.biomesToAttributes.clear();
-        this.patchedClearWeatherMaps.clear();
-    }
-
-    public void rebind(final HolderLookup<Biome> biomes, final AdvancedSettings data) {
-        List<AdvancedSettings.Entry> entries = data.entries();
-
-        Reference2ObjectMap<Biome, WeatherBasedAttributes.Builder> builders = new Reference2ObjectOpenHashMap<>();
-        Reference2ObjectMap<Biome, EnvironmentAttributeMap> clearWeatherMaps = new Reference2ObjectOpenHashMap<>();
-
-        for (AdvancedSettings.Entry entry : entries) {
-            UnboundRegistryObjectStream.bindToHolders(entry.biomes().stream(), biomes)
-                    .distinct()
-                    .forEach(holder -> {
-                        Biome biome = holder.value();
-                        WeatherBasedAttributes weatherAttributes = entry.weatherAttributes();
-
-                        WeatherBasedAttributes.Builder builder = builders.computeIfAbsent(
-                                biome,
-                                _ -> WeatherBasedAttributes.builder()
-                        );
-                        builder.putInAllWeather(weatherAttributes);
-
-                        clearWeatherMaps.computeIfAbsent(biome, (Biome b) -> merge(b.getAttributes(), weatherAttributes.clear()));
-                    });
+public interface Biome2WeatherAttributeMapView {
+    Biome2WeatherAttributeMapView EMPTY = new Biome2WeatherAttributeMapView() {
+        @Override
+        public @NotNull WeatherBasedAttributes getWeatherAttributes(Biome biome) {
+            return WeatherBasedAttributes.EMPTY;
         }
 
-        Reference2ObjectMap<Biome, WeatherBasedAttributes> updatedCache = new Reference2ObjectOpenHashMap<>();
-
-        for (var builderEntry : builders.entrySet()) {
-            updatedCache.putIfAbsent(builderEntry.getKey(), builderEntry.getValue().build());
+        @Override
+        public @NotNull EnvironmentAttributeMap getClearWeatherMap(Biome biome, EnvironmentAttributeMap baseAttributes) {
+            return WeatherBasedAttributes.EMPTY.clear();
         }
 
-        this.clear();
-        this.biomesToAttributes.putAll(updatedCache);
-        this.patchedClearWeatherMaps.putAll(clearWeatherMaps);
-    }
+        @Override
+        public void clear() {
+            // no-op
+        }
 
-    private static EnvironmentAttributeMap merge(final EnvironmentAttributeMap first, final EnvironmentAttributeMap second) {
-        EnvironmentAttributeMap.Builder builder = EnvironmentAttributeMap.builder();
-        builder.putAll(first);
-        builder.putAll(second);
-        return builder.build();
-    }
+        @Override
+        public void rebind(HolderLookup<Biome> biomes, AdvancedSettings data) {
+            // no-op
+        }
+    };
 
-    public static void addDefaultLayers(
+    @NotNull
+    WeatherBasedAttributes getWeatherAttributes(final Biome biome);
+
+    @NotNull
+    EnvironmentAttributeMap getClearWeatherMap(Biome biome, EnvironmentAttributeMap baseAttributes);
+
+    void clear();
+
+    void rebind(final HolderLookup<Biome> biomes, final AdvancedSettings data);
+
+    static void addDefaultLayers(
             final EnvironmentAttributeSystem.Builder builder,
             final HolderLookup<EnvironmentAttribute<?>> attributes,
             final WeatherAttributes.WeatherAccess weatherAccess,
@@ -138,7 +106,7 @@ public final class Biome2WeatherAttributeMap {
             return level::immersive_storms$getBiomeToWeatherAttributeMap;
         }
 
-        Biome2WeatherAttributeMap getWeatherBasedAttributes();
+        Biome2WeatherAttributeMapView getWeatherBasedAttributes();
 
         @NotNull
         default WeatherBasedAttributes getWeatherAttributes(final Biome biome) {

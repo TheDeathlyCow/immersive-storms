@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.config.controller;
+package com.thedeathlycow.immersive.storms.config.controller;
 
 import com.google.gson.*;
 import dev.isxander.yacl3.api.Option;

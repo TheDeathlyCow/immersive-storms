@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.config.data;
+package com.thedeathlycow.immersive.storms.config.data;
 
 public enum WeatherCondition {
     CLEAR,

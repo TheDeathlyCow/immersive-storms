@@ -1,8 +1,9 @@
 package com.thedeathlycow.immersive.storms.client.mixin.client;
 
-import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
-import com.thedeathlycow.immersive.storms.client.world.Biome2WeatherAttributeMap;
-import com.thedeathlycow.immersive.storms.util.AttributeMapHolder;
+import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
+import com.thedeathlycow.immersive.storms.world.Biome2WeatherAttributeMapView;
+import com.thedeathlycow.immersive.storms.world.AttributeMapHolder;
+import com.thedeathlycow.immersive.storms.world.Biome2WeatherAttributeMapImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -20,27 +21,27 @@ public abstract class ClientPacketListenerMixin implements AttributeMapHolder {
     public abstract RegistryAccess.Frozen registryAccess();
 
     @Unique
-    private Biome2WeatherAttributeMap immersiveStorms_attributeMap;
+    private final Biome2WeatherAttributeMapView immersiveStorms_attributeMap = new Biome2WeatherAttributeMapImpl();
 
     @Inject(
             method = "<init>", at = @At("TAIL")
     )
     private void onInit(CallbackInfo ci) {
         AdvancedSettings.HANDLER.load();
-        this.immersiveStorms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
+        this.immersive_storms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
     }
 
     @Override
     @Unique
     @NonNull
-    public Biome2WeatherAttributeMap immersive_storms$getBiomeToWeatherAttributeMap() {
+    public Biome2WeatherAttributeMapView immersive_storms$getBiomeToWeatherAttributeMap() {
         return this.immersiveStorms_attributeMap;
     }
 
     @Override
     @Unique
-    public void immersiveStorms$rebindAttributeMap(AdvancedSettings data) {
-        immersiveStorms_attributeMap = new Biome2WeatherAttributeMap();
+    public void immersive_storms$rebindAttributeMap(AdvancedSettings data) {
+        immersiveStorms_attributeMap.clear();
         this.immersiveStorms_attributeMap.rebind(this.registryAccess().lookupOrThrow(Registries.BIOME), data);
     }
 }

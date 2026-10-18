@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
+import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
 import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
 import com.thedeathlycow.immersive.storms.registry.ISAttributeTypes;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
@@ -53,7 +53,7 @@ public class ImmersiveStorms implements ModInitializer {
         ServerLevel level = source.getLevel();
 
         if (AdvancedSettings.HANDLER.load()) {
-            level.immersiveStorms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
+            level.immersive_storms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
 
             // TODO: dont send this to players who dont have the mod
             var packet = new ClientboundCustomPayloadPacket(new ConfigSyncPacket(AdvancedSettings.HANDLER.instance()));

@@ -72,9 +72,9 @@ public class AdvancedSettings {
 
     private static final float THICK_FOG = 64f / 1024f;
 
-    private static final int SANDSTORM_FOG_COLOR = 0xF78800;
+    private static final int SANDSTORM_FOG_COLOR = 0xFF9C21;
 
-    private static final int RED_SANDSTORM_FOG_COLOR = 0xFF2D00;
+    private static final int RED_SANDSTORM_FOG_COLOR = 0xF75E05;
     private static final int PINK_SANDSTORM_FOG_COLOR = 0xE9A481;
 
     private static final int BLIZZARD_FOG_COLOR = 0xFFFFFF;

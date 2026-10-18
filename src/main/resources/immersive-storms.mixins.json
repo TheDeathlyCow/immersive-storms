@@ -5,6 +5,7 @@
     "mixins": [
         "EnvironmentAttributeProbeMixin",
         "EnvironmentAttributeSystemMixin",
+        "LevelMixin",
         "MinecraftServerMixin",
         "ServerLevelMixin"
     ],

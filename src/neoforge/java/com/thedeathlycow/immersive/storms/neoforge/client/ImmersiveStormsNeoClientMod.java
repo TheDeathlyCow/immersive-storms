@@ -1,8 +1,8 @@
 package com.thedeathlycow.immersive.storms.neoforge.client;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.config.ui.ISConfigScreen;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
+import com.thedeathlycow.immersive.storms.config.ui.ISConfigScreen;
 import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
 import com.thedeathlycow.immersive.storms.world.AttributeMapHolder;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -15,7 +15,6 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 @Mod(value = ImmersiveStorms.MOD_ID, dist = Dist.CLIENT)
 public class ImmersiveStormsNeoClientMod {
@@ -44,13 +43,11 @@ public class ImmersiveStormsNeoClientMod {
     private static void registerPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
         event.register(
                 ConfigSyncPacket.TYPE,
-                ImmersiveStormsNeoClientMod::receive
+                (payload, context) -> {
+                    if (context.listener() instanceof AttributeMapHolder mapHolder) {
+                        mapHolder.immersive_storms$rebindAttributeMap(payload.settings());
+                    }
+                }
         );
-    }
-
-    private static void receive(ConfigSyncPacket payload, IPayloadContext context) {
-        if (context.listener() instanceof AttributeMapHolder mapHolder) {
-            mapHolder.immersive_storms$rebindAttributeMap(payload.settings());
-        }
     }
 }

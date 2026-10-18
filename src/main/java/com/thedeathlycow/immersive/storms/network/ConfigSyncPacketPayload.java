@@ -5,6 +5,9 @@ import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
 import dev.yumi.commons.event.Event;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ClientCommonPacketListener;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -12,7 +15,7 @@ import org.jspecify.annotations.NonNull;
 
 public record ConfigSyncPacketPayload(AdvancedSettings settings) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ConfigSyncPacketPayload> TYPE = new CustomPacketPayload.Type<>(
-            ImmersiveStorms.id("point_wind_spawn")
+            ImmersiveStorms.id("config_sync")
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfigSyncPacketPayload> STREAM_CODEC = StreamCodec.composite(
@@ -29,6 +32,14 @@ public record ConfigSyncPacketPayload(AdvancedSettings settings) implements Cust
                 }
             }
     );
+
+    public ConfigSyncPacketPayload() {
+        this(AdvancedSettings.HANDLER.instance());
+    }
+
+    public static Packet<ClientCommonPacketListener> createClientboundPacket() {
+        return new ClientboundCustomPayloadPacket(new ConfigSyncPacketPayload());
+    }
 
     @Override
     @NonNull

@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -26,6 +27,12 @@ public class ImmersiveStormsFabric implements ModInitializer {
                 ConfigSyncPacketPayload.TYPE,
                 ConfigSyncPacketPayload.STREAM_CODEC
         );
+
+        ServerPlayConnectionEvents.JOIN.register((listener, sender, _) -> {
+            if (ServerPlayNetworking.canSend(listener, ConfigSyncPacketPayload.TYPE)) {
+                sender.sendPacket(ConfigSyncPacketPayload.createClientboundPacket());
+            }
+        });
 
         ConfigSyncPacketPayload.SEND_TO_CLIENTS.register((server, payload) -> {
             for (ServerPlayer player : PlayerLookup.all(server)) {

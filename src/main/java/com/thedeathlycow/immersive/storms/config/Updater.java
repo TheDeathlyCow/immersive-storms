@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.config.schema.ConfigUpdater;
 import com.thedeathlycow.immersive.storms.config.schema.SchemaV2;
+import com.thedeathlycow.immersive.storms.config.schema.SchemaV3;
 import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.config.section.SettingsSchema;
@@ -25,6 +26,7 @@ public final class Updater {
     private static final Supplier<Int2ObjectMap<ConfigUpdater>> SCHEMAS = () -> {
         Int2ObjectMap<ConfigUpdater> map = new Int2ObjectArrayMap<>();
         map.put(2, SchemaV2::run);
+        map.put(3, SchemaV3::run);
         return map;
     };
 

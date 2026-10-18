@@ -60,39 +60,94 @@ public class AdvancedSettings {
 
     public static final Codec<AdvancedSettings> NETWORK_CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
+                    Codec.BOOL
+                            .fieldOf("edited_config")
+                            .forGetter(settings -> settings.editedConfig),
                     Entry.NETWORK_CODEC.listOf()
                             .fieldOf("entries")
-                            .forGetter(AdvancedSettings::entries)
+                            .forGetter(settings -> settings.entries)
             ).apply(instance, AdvancedSettings::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AdvancedSettings> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(AdvancedSettings.NETWORK_CODEC);
 
+    /// Singleton instance of the default entries, allows me to edit the default values without needing to mess with
+    /// user config files.
+    private static final List<Entry> DEFAULT_ENTRIES = defaultPreset();
+
     private static final float LIGHT_FOG = 128f / 1024f;
-
     private static final float THICK_FOG = 64f / 1024f;
-
     private static final int SANDSTORM_FOG_COLOR = 0xFF9C21;
-
     private static final int RED_SANDSTORM_FOG_COLOR = 0xF75E05;
     private static final int PINK_SANDSTORM_FOG_COLOR = 0xE9A481;
-
     private static final int BLIZZARD_FOG_COLOR = 0xFFFFFF;
 
+    @Translate.Name("Use Default Only")
+    @SerialEntry(
+            value = "edited_config",
+            comment = """
+                    This is the Immersive Storms advanced configuration file. It allows you to edit the Environment
+                    Attribute values of any biome based on the weather conditions. This file is very powerful but also
+                    very technical, so it is not really intended for most users to edit this directly. If you have never
+                    worked with Environment Attributes before, the Minecraft wiki provides a good source of information
+                    about them:
+                    https://minecraft.wiki/w/Environment_attribute
+                    
+                    I plan to provide a GUI to edit this file in-game via in the config menu in the future. At this
+                    time, this file may only be edited manually in a text editor like you are doing now.
+                    
+                    To apply your changes to this file, run the command "/immersive_storms reload" (requires operator
+                    level 4 permission).
+                    
+                    If you need any help with this file feel free to join my Discord server to ask about them, or make
+                    an issue on the GitHub page:
+                    - https://discord.thedeathlycow.com
+                    - https://github.com/TheDeathlyCow/immersive-storms/issues
+                    
+                    Things you may want to know:
+                    - This config allows the use of either tags keys or biome IDs, tag keys must be prefixed with #.
+                    - If any tag keys or biome IDs do not exist they will be simply skipped.
+                    - Each of the clear, rain, and thunder fields of the weather_attributes field have the same format
+                      as the attribute fields in a dimension or biome definition (except, of course, it is JSON5
+                      friendly).
+                    - All attribute values will be interpolated based on their state change lerp function with respect
+                      to the rain/thunder level.
+                    - Spatially interpolated attributes also work with this file.
+                    - Modifiers from this map are applied after the default layers are built, but before non-default
+                      layers (like sky flashes).
+                    - The immersive-storms:visual/storm_fog_end_distance environment attribute is provided primarily for
+                      compatibility and convenience reasons.
+                    - This config is synchronized to clients on join or when an administrator uses the command
+                      /immersive_storms reload.
+                    - Changes to this file can work client-side only, unless the server has its own file to override
+                      the client's with.
+                    - If multiple weather_attribute maps are provided for a biome, the maps will be merged with
+                      modifiers from the later map overriding those of the first.
+                    
+                    
+                    IMPORTANT NOTE: YOU MUST FIRST SET edited_config TO true TO ALLOW FOR THIS FILE HAVE ANY EFFECT!
+                    This is so that I can freely edit the default values for users who choose not to edit this file and
+                    have the changes take effect without needing to mess with your edits.
+                    """
+    )
+    boolean editedConfig = false;
+
     @Translate.Name("Entries")
-    @SerialEntry(comment = "Maps biomes to a set of environment attribute overrides.")
-    List<Entry> entries;
+    @Translate.NoComment
+    @SerialEntry
+    List<Entry> entries = DEFAULT_ENTRIES;
 
     public AdvancedSettings() {
-        this(defaultPreset());
+
     }
 
-    private AdvancedSettings(List<Entry> entries) {
+    private AdvancedSettings(boolean editedConfig, List<Entry> entries) {
+        this.editedConfig = editedConfig;
         this.entries = entries;
     }
 
     public List<Entry> entries() {
-        return entries;
+        return editedConfig ? entries : DEFAULT_ENTRIES;
     }
 
     public record Entry(

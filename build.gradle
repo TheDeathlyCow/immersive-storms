@@ -180,7 +180,7 @@ publishing {
 
 publishMods {
 	changelog = file("changelogs/${mod_version}.md").text
-	type = STABLE
+	type = BETA
 
 	file = jar.archiveFile
 	additionalFiles.from(sourcesJar.archiveFile)

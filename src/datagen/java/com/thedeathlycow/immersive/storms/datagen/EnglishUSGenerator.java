@@ -1,9 +1,9 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
-import com.thedeathlycow.immersive.storms.client.config.ui.ISConfigScreen;
-import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
-import com.thedeathlycow.immersive.storms.client.config.Translate;
+import com.thedeathlycow.immersive.storms.config.ui.ISConfigScreen;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.config.section.SandstormSettings;
+import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.registry.ISSoundEvents;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;

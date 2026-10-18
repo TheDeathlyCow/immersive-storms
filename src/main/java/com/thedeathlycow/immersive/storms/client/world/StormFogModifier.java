@@ -3,7 +3,7 @@ package com.thedeathlycow.immersive.storms.client.world;
 import com.seibel.distanthorizons.api.DhApi;
 import com.seibel.distanthorizons.api.interfaces.config.IDhApiConfig;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;

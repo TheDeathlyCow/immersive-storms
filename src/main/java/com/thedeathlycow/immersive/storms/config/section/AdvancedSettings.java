@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
 import com.thedeathlycow.immersive.storms.client.world.WeatherArchetype;
+import com.thedeathlycow.immersive.storms.compat.NSBiomes;
 import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.config.data.*;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
@@ -74,6 +75,7 @@ public class AdvancedSettings {
     private static final int SANDSTORM_FOG_COLOR = 0xF78800;
 
     private static final int RED_SANDSTORM_FOG_COLOR = 0xFF2D00;
+    private static final int PINK_SANDSTORM_FOG_COLOR = 0xE9A481;
 
     private static final int BLIZZARD_FOG_COLOR = 0xFFFFFF;
 
@@ -161,6 +163,17 @@ public class AdvancedSettings {
                                 .build()
                 ))
                 .add(new Entry(
+                        pinkSandstormBiomes().build(),
+                        WeatherBasedAttributes.builder()
+                                // rain
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, PINK_SANDSTORM_FOG_COLOR, WeatherCondition.RAINING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, PINK_SANDSTORM_FOG_COLOR, WeatherCondition.RAINING)
+                                // thunder
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, PINK_SANDSTORM_FOG_COLOR, WeatherCondition.THUNDERING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, PINK_SANDSTORM_FOG_COLOR, WeatherCondition.THUNDERING)
+                                .build()
+                ))
+                .add(new Entry(
                         blizzardBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .setAllWeather(ISEnvironmentAttributes.WEATHER_ARCHETYPE, WeatherArchetype.BLIZZARD)
@@ -172,6 +185,12 @@ public class AdvancedSettings {
                 .build();
     }
 
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> pinkSandstormBiomes() {
+        return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
+                .add(object(NSBiomes.DRYLANDS))
+                .add(object(NSBiomes.WOODED_DRYLANDS));
+    }
+
     private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> redSandstormBiomes() {
         return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
                 .add(tag(BiomeTags.IS_BADLANDS))
@@ -179,7 +198,9 @@ public class AdvancedSettings {
     }
 
     private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> sandstormBiomes() {
-        return redSandstormBiomes()
+        return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
+                .addAll(redSandstormBiomes().build())
+                .addAll(pinkSandstormBiomes().build())
                 .add(tag(ISBiomeTags.HAS_SANDSTORMS))
                 .add(tag(BiomeTags.IS_SAVANNA))
                 .add(tag(CommonBiomeTags.IS_DESERT))

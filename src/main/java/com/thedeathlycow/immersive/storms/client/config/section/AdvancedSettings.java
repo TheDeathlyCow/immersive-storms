@@ -59,6 +59,12 @@ public class AdvancedSettings {
 
     private static final float THICK_FOG = 64f / 1024f;
 
+    private static final int SANDSTORM_FOG_COLOR = 0xF78800;
+
+    private static final int RED_SANDSTORM_FOG_COLOR = 0xFF2D00;
+
+    private static final int BLIZZARD_FOG_COLOR = 0xFFFFFF;
+
     @Translate.Name("Entries")
     @SerialEntry(comment = "Maps biomes to a set of environment attribute overrides.")
     List<Entry> entries = defaultPreset();
@@ -102,22 +108,33 @@ public class AdvancedSettings {
                                 .setAllWeather(ISEnvironmentAttributes.HAS_SANDSTORM_DUST, true)
                                 .setAllWeather(ISEnvironmentAttributes.WEATHER_ARCHETYPE, WeatherArchetype.SANDSTORM)
                                 // rain
-                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherCondition.RAINING)
-                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xF79523, WeatherCondition.RAINING)
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, SANDSTORM_FOG_COLOR, WeatherCondition.RAINING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, SANDSTORM_FOG_COLOR, WeatherCondition.RAINING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.RAINING)
                                 .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_SOFT_WIND), WeatherCondition.RAINING)
                                 // thunder
-                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherCondition.THUNDERING)
-                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, 0xD96E38, WeatherCondition.THUNDERING)
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, SANDSTORM_FOG_COLOR, WeatherCondition.THUNDERING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, SANDSTORM_FOG_COLOR, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, THICK_FOG, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_STRONG_WIND), WeatherCondition.THUNDERING)
+                                .build()
+                ))
+                .add(new Entry(
+                        redSandstormBiomes().build(),
+                        WeatherBasedAttributes.builder()
+                                // rain
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, RED_SANDSTORM_FOG_COLOR, WeatherCondition.RAINING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, RED_SANDSTORM_FOG_COLOR, WeatherCondition.RAINING)
+                                // thunder
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, RED_SANDSTORM_FOG_COLOR, WeatherCondition.THUNDERING)
+                                .modify(EnvironmentAttributes.SKY_COLOR, ColorModifier.MULTIPLY_RGB, RED_SANDSTORM_FOG_COLOR, WeatherCondition.THUNDERING)
                                 .build()
                 ))
                 .add(new Entry(
                         blizzardBiomes().build(),
                         WeatherBasedAttributes.builder()
                                 .setAllWeather(ISEnvironmentAttributes.WEATHER_ARCHETYPE, WeatherArchetype.BLIZZARD)
-                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, 0xFFFFFF, WeatherCondition.THUNDERING)
+                                .modify(EnvironmentAttributes.FOG_COLOR, ColorModifier.MULTIPLY_RGB, BLIZZARD_FOG_COLOR, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_FOG_END_DISTANCE, LIGHT_FOG, WeatherCondition.THUNDERING)
                                 .set(ISEnvironmentAttributes.STORM_SOUNDS, StormSounds.of(ISSoundEvents.WEATHER_SOFT_WIND), WeatherCondition.THUNDERING)
                                 .build()
@@ -125,12 +142,16 @@ public class AdvancedSettings {
                 .build();
     }
 
-    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> sandstormBiomes() {
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> redSandstormBiomes() {
         return ImmutableList.<UnboundRegistryObjectStream<Biome>>builder()
-                .add(tag(ISBiomeTags.HAS_SANDSTORMS))
                 .add(tag(BiomeTags.IS_BADLANDS))
+                .add(tag(CommonBiomeTags.IS_BADLANDS));
+    }
+
+    private static ImmutableList.Builder<UnboundRegistryObjectStream<Biome>> sandstormBiomes() {
+        return redSandstormBiomes()
+                .add(tag(ISBiomeTags.HAS_SANDSTORMS))
                 .add(tag(BiomeTags.IS_SAVANNA))
-                .add(tag(CommonBiomeTags.IS_BADLANDS))
                 .add(tag(CommonBiomeTags.IS_DESERT))
                 .add(tag(CommonBiomeTags.IS_SAVANNA))
                 .add(object(Biomes.DESERT));

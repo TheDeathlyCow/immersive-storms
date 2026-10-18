@@ -201,7 +201,7 @@ publishMods {
 		serverRequired = false
 
 		requires("yacl")
-		optional("fabric-api", "modmenu")
+		optional("fabric-api", "modmenu", "natures-spirit")
 	}
 
 	modrinth {
@@ -210,6 +210,6 @@ publishMods {
 		minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
 
 		requires("yacl")
-		optional("fabric-api", "modmenu")
+		optional("fabric-api", "modmenu", "natures-spirit")
 	}
 }

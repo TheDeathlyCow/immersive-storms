@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms.fabric;
 
-import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
+import com.thedeathlycow.immersive.storms.network.ConfigSyncPacketPayload;
 import com.thedeathlycow.immersive.storms.util.ISCommandRegistrationCallback;
 import com.thedeathlycow.immersive.storms.util.ISServerLifecycleEvents;
 import dev.yumi.mc.core.api.ModContainer;
@@ -8,6 +8,9 @@ import dev.yumi.mc.core.api.entrypoint.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ImmersiveStormsFabric implements ModInitializer {
     @Override
@@ -20,8 +23,16 @@ public class ImmersiveStormsFabric implements ModInitializer {
         });
 
         PayloadTypeRegistry.clientboundPlay().register(
-                ConfigSyncPacket.TYPE,
-                ConfigSyncPacket.STREAM_CODEC
+                ConfigSyncPacketPayload.TYPE,
+                ConfigSyncPacketPayload.STREAM_CODEC
         );
+
+        ConfigSyncPacketPayload.SEND_TO_CLIENTS.register((server, payload) -> {
+            for (ServerPlayer player : PlayerLookup.all(server)) {
+                if (ServerPlayNetworking.canSend(player, ConfigSyncPacketPayload.TYPE)) {
+                    ServerPlayNetworking.send(player, payload);
+                }
+            }
+        });
     }
 }

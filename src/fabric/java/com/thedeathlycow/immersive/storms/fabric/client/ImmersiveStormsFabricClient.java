@@ -1,7 +1,7 @@
 package com.thedeathlycow.immersive.storms.fabric.client;
 
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
-import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
+import com.thedeathlycow.immersive.storms.network.ConfigSyncPacketPayload;
 import com.thedeathlycow.immersive.storms.world.AttributeMapHolder;
 import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
@@ -16,7 +16,7 @@ public class ImmersiveStormsFabricClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(
-                ConfigSyncPacket.TYPE,
+                ConfigSyncPacketPayload.TYPE,
                 (payload, context) -> {
                     AttributeMapHolder mapHolder = context.player().connection;
                     mapHolder.immersive_storms$rebindAttributeMap(payload.settings());

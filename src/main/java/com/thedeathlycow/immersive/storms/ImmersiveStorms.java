@@ -3,7 +3,7 @@ package com.thedeathlycow.immersive.storms;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
-import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
+import com.thedeathlycow.immersive.storms.network.ConfigSyncPacketPayload;
 import com.thedeathlycow.immersive.storms.registry.ISAttributeTypes;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
 import com.thedeathlycow.immersive.storms.registry.ISParticleTypes;
@@ -53,14 +53,11 @@ public class ImmersiveStorms implements ModInitializer {
         ServerLevel level = source.getLevel();
 
         if (AdvancedSettings.HANDLER.load()) {
-            level.immersive_storms$rebindAttributeMap(AdvancedSettings.HANDLER.instance());
+            AdvancedSettings data = AdvancedSettings.HANDLER.instance();
 
-            // TODO: dont send this to players who dont have the mod
-            var packet = new ClientboundCustomPayloadPacket(new ConfigSyncPacket(AdvancedSettings.HANDLER.instance()));
-            level.getPlayers(_ -> true).forEach(player ->{
-                player.connection.send(packet);
-            });
+            level.immersive_storms$rebindAttributeMap(data);
 
+            ConfigSyncPacketPayload.SEND_TO_CLIENTS.invoker().sendToClients(source.getServer(), new ConfigSyncPacketPayload(data));
 
             source.sendSuccess(() -> Component.literal("Reloaded Immersive Storms config"), true);
         } else {

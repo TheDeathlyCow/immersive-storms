@@ -2,15 +2,17 @@ package com.thedeathlycow.immersive.storms.neoforge;
 
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.network.ConfigSyncPacket;
+import com.thedeathlycow.immersive.storms.network.ConfigSyncPacketPayload;
 import com.thedeathlycow.immersive.storms.util.ISCommandRegistrationCallback;
 import com.thedeathlycow.immersive.storms.util.ISServerLifecycleEvents;
 import dev.yumi.mc.core.api.YumiMods;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -24,6 +26,10 @@ public class ImmersiveStormsNeo {
         if (YumiMods.get().isDevelopmentEnvironment()) {
             ImmersiveStorms.LOGGER.info("Thermoo Neoforge @Mod class initialized");
         }
+
+        ConfigSyncPacketPayload.SEND_TO_CLIENTS.register((server, payload) -> {
+            PacketDistributor.sendToAllPlayers(payload);
+        });
     }
 
     private static void onCommandRegistered(RegisterCommandsEvent event) {
@@ -39,7 +45,7 @@ public class ImmersiveStormsNeo {
     }
 
     private static void registerPayloadTypes(RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1");
-        registrar.playToClient(ConfigSyncPacket.TYPE, ConfigSyncPacket.STREAM_CODEC);
+        final PayloadRegistrar registrar = event.registrar("1").optional();
+        registrar.playToClient(ConfigSyncPacketPayload.TYPE, ConfigSyncPacketPayload.STREAM_CODEC);
     }
 }

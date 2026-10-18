@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.client.config.schema;
+package com.thedeathlycow.immersive.storms.config.schema;
 
 import java.io.IOException;
 

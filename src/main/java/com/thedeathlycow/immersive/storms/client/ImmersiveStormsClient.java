@@ -1,9 +1,9 @@
 package com.thedeathlycow.immersive.storms.client;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.Updater;
-import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
+import com.thedeathlycow.immersive.storms.config.Updater;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.client.particle.BlackWaterDropParticle;
 import com.thedeathlycow.immersive.storms.client.particle.ClientParticleHelper;
 import com.thedeathlycow.immersive.storms.client.particle.DustGrainParticle;

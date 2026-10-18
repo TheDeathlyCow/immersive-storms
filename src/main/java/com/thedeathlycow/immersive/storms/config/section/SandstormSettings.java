@@ -1,7 +1,7 @@
-package com.thedeathlycow.immersive.storms.client.config.section;
+package com.thedeathlycow.immersive.storms.config.section;
 
 import com.thedeathlycow.immersive.storms.ImmersiveStorms;
-import com.thedeathlycow.immersive.storms.client.config.Translate;
+import com.thedeathlycow.immersive.storms.config.Translate;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.autogen.AutoGen;

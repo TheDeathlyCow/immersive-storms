@@ -2,7 +2,7 @@ package com.thedeathlycow.immersive.storms.client.world;
 
 import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
 import com.thedeathlycow.immersive.storms.registry.tag.ISBiomeTags;

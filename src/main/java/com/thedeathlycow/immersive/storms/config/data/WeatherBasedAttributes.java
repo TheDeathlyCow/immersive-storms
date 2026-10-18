@@ -1,5 +1,7 @@
-package com.thedeathlycow.immersive.storms.client.config.data;
+package com.thedeathlycow.immersive.storms.config.data;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.attribute.modifier.AttributeModifier;
@@ -13,6 +15,34 @@ public record WeatherBasedAttributes(
             EnvironmentAttributeMap.EMPTY,
             EnvironmentAttributeMap.EMPTY,
             EnvironmentAttributeMap.EMPTY
+    );
+
+    public static final Codec<WeatherBasedAttributes> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    EnvironmentAttributeMap.CODEC
+                            .fieldOf("clear")
+                            .forGetter(WeatherBasedAttributes::clear),
+                    EnvironmentAttributeMap.CODEC
+                            .fieldOf("rain")
+                            .forGetter(WeatherBasedAttributes::rain),
+                    EnvironmentAttributeMap.CODEC
+                            .fieldOf("thunder")
+                            .forGetter(WeatherBasedAttributes::thunder)
+            ).apply(instance, WeatherBasedAttributes::new)
+    );
+
+    public static final Codec<WeatherBasedAttributes> NETWORK_CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    EnvironmentAttributeMap.NETWORK_CODEC
+                            .fieldOf("clear")
+                            .forGetter(WeatherBasedAttributes::clear),
+                    EnvironmentAttributeMap.NETWORK_CODEC
+                            .fieldOf("rain")
+                            .forGetter(WeatherBasedAttributes::rain),
+                    EnvironmentAttributeMap.NETWORK_CODEC
+                            .fieldOf("thunder")
+                            .forGetter(WeatherBasedAttributes::thunder)
+            ).apply(instance, WeatherBasedAttributes::new)
     );
 
     public static Builder builder() {

@@ -1,9 +1,9 @@
-package com.thedeathlycow.immersive.storms.client.config.ui;
+package com.thedeathlycow.immersive.storms.config.ui;
 
-import com.thedeathlycow.immersive.storms.client.config.Translate;
-import com.thedeathlycow.immersive.storms.client.config.section.AdvancedSettings;
-import com.thedeathlycow.immersive.storms.client.config.section.GeneralSettings;
-import com.thedeathlycow.immersive.storms.client.config.section.SandstormSettings;
+import com.thedeathlycow.immersive.storms.config.Translate;
+import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
+import com.thedeathlycow.immersive.storms.config.section.SandstormSettings;
 import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.OptionDescription;

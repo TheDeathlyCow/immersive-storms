@@ -1,6 +1,8 @@
 {
   "subtitles.immersive-storms.weather.soft_wind": "Wind blows softly",
   "subtitles.immersive-storms.weather.strong_wind": "Wind blows strongly",
+  "yacl3.config.immersive-storms:advanced.category.desc": "Opens the advanced settings files for Immersive Storms. A graphical interface is coming soon!",
+  "yacl3.config.immersive-storms:advanced.category.sandstorms": "Advanced Settings [GUI is WIP]",
   "yacl3.config.immersive-storms:general.category.desc": "General settings for Immersive Storms",
   "yacl3.config.immersive-storms:general.category.general": "General Settings",
   "yacl3.config.immersive-storms:general.enableAmbientWindParticles": "Enable ambient wind particles",

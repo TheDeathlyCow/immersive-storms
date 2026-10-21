@@ -1,4 +1,4 @@
-package com.thedeathlycow.immersive.storms.config.ui;
+package com.thedeathlycow.immersive.storms.client.config.ui;
 
 import com.thedeathlycow.immersive.storms.config.Translate;
 import com.thedeathlycow.immersive.storms.config.section.AdvancedSettings;
@@ -10,7 +10,10 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
+import net.minecraft.world.inventory.ClickAction;
 
 public class ISConfigScreen {
     private static final String GENERAL_PREFIX = Translate.prefixKey(GeneralSettings.HANDLER);
@@ -57,6 +60,17 @@ public class ISConfigScreen {
                                                     .setScreen(SandstormSettings.HANDLER
                                                             .generateGui()
                                                             .generateScreen(yaclScreen));
+                                        }).build())
+                                .option(ButtonOption.createBuilder()
+                                        .name(Component.translatable(ADVANCED_CATEGORY))
+                                        .description(
+                                                OptionDescription.createBuilder()
+                                                        .text(Component.translatable(ADVANCED_CATEGORY_DESC))
+                                                        .build()
+                                        )
+                                        .text(Component.literal(""))
+                                        .action((yaclScreen, buttonOption) -> {
+                                            Util.getPlatform().openFile(AdvancedSettings.PATH.toFile());
                                         }).build())
                                 .build()
                 )

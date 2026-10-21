@@ -1,6 +1,6 @@
 package com.thedeathlycow.immersive.storms.datagen;
 
-import com.thedeathlycow.immersive.storms.config.ui.ISConfigScreen;
+import com.thedeathlycow.immersive.storms.client.config.ui.ISConfigScreen;
 import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.config.section.SandstormSettings;
 import com.thedeathlycow.immersive.storms.config.Translate;
@@ -31,6 +31,8 @@ public class EnglishUSGenerator extends FabricLanguageProvider {
         builder.add(ISConfigScreen.GENERAL_CATEGORY_DESC, "General settings for Immersive Storms");
         builder.add(ISConfigScreen.SANDSTORM_CATEGORY, "Sandstorm Settings");
         builder.add(ISConfigScreen.SANDSTORM_CATEGORY_DESC, "Specific settings for sandstorms");
+        builder.add(ISConfigScreen.ADVANCED_CATEGORY, "Advanced Settings [GUI is WIP]");
+        builder.add(ISConfigScreen.ADVANCED_CATEGORY_DESC, "Opens the advanced settings files for Immersive Storms. A graphical interface is coming soon!");
 
         generateConfigOptionTranslations(GeneralSettings.HANDLER, builder);
         generateConfigOptionTranslations(SandstormSettings.HANDLER, builder);

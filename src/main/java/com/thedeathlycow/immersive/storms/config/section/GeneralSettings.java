@@ -87,6 +87,12 @@ public class GeneralSettings {
     @SerialEntry(comment = "Adjusts how often ambient wind particles appear (does not affect sandstorms), must be positive")
     float windParticleChanceMultiplier = 1.0f;
 
+    @AutoGen(category = GENERAL_CATEGORY)
+    @Translate.Name("Wind particle size")
+    @FloatSlider(min = 0.01f, max = 2.0f, step = 0.05f, format = "%.2f")
+    @SerialEntry(comment = "Multiplies the size of the ambient wind particles. Does not affect the sandstorm dust particles.")
+    float windParticleSize = 1.0f;
+
     public boolean isFogTypeEnabled(WeatherArchetype archetype) {
         return switch (archetype) {
             case SANDSTORM -> this.enableSandstormFog;
@@ -122,6 +128,10 @@ public class GeneralSettings {
 
     public float getWindParticleChanceMultiplier() {
         return windParticleChanceMultiplier;
+    }
+
+    public float windParticleSize() {
+        return windParticleSize;
     }
 
     @Deprecated

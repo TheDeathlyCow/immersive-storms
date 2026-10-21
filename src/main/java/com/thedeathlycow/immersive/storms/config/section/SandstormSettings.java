@@ -52,6 +52,12 @@ public class SandstormSettings {
     @SerialEntry(comment = "Multiplier for how frequently sandstorm particles should appear, must be positive. Bigger values = more common.")
     float sandstormParticleDensityMultiplier = 1.0f;
 
+    @AutoGen(category = CATEGORY)
+    @Translate.Name("Dust particle size")
+    @FloatSlider(min = 0.01f, max = 2.0f, step = 0.05f, format = "%.2f")
+    @SerialEntry(comment = "Multiplies the size of the dust particles. Does not affect the ambient wind particles.")
+    float dustParticleSize = 1.0f;
+
     public boolean isEnableSandstormParticles() {
         return enableSandstormParticles;
     }
@@ -66,5 +72,9 @@ public class SandstormSettings {
 
     public float getSandstormParticleDensityMultiplier() {
         return sandstormParticleDensityMultiplier;
+    }
+
+    public float dustParticleSize() {
+        return dustParticleSize;
     }
 }

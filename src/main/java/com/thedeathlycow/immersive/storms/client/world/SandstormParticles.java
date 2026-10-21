@@ -17,7 +17,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.Vector3f;
 
 public final class SandstormParticles implements ISClientTickEvents.EndLevel {
-    public static final Vector3f COLOR = ISMath.unpackRgb(0xD9AA84);
+    public static final Vector3f COLOR = ISMath.unpackRgb(BiomeWindEffects.ParticleColor.SANDY.color());
 
     private static final float PARTICLE_SCALE = 10f;
     private static final float PARTICLE_VELOCITY = -1f;
@@ -29,9 +29,9 @@ public final class SandstormParticles implements ISClientTickEvents.EndLevel {
             return;
         }
 
-        SandstormSettings sandstormSettings = SandstormSettings.HANDLER.instance();
-        final int renderDistance = sandstormSettings.getSandstormParticleRenderDistance();
-        boolean enabled = sandstormSettings.isEnableSandstormParticles()
+        SandstormSettings settings = SandstormSettings.HANDLER.instance();
+        final int renderDistance = settings.getSandstormParticleRenderDistance();
+        boolean enabled = settings.isEnableSandstormParticles()
                 && renderDistance > 0;
 
         if (!enabled) {
@@ -44,8 +44,9 @@ public final class SandstormParticles implements ISClientTickEvents.EndLevel {
         // main particle loop
         final BlockPos cameraPos = camera.blockPosition();
         final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        final ParticleOptions particle = new DustGrainParticleEffect(COLOR, PARTICLE_SCALE);
-        final float rarity = BASE_PARTICLE_CHANCE * sandstormSettings.getSandstormParticleDensityMultiplier();
+        final float particleSize = PARTICLE_SCALE * settings.dustParticleSize();
+        final ParticleOptions particle = new DustGrainParticleEffect(COLOR, particleSize);
+        final float rarity = BASE_PARTICLE_CHANCE * settings.getSandstormParticleDensityMultiplier();
         final int cameraY = cameraPos.getY();
         final int xOffset = renderDistance / 2;
 

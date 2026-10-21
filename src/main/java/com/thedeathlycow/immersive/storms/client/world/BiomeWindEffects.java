@@ -81,7 +81,7 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
                 && random.nextFloat() < PARTICLE_CHANCE * config.getWindParticleChanceMultiplier();
 
         if (addParticle) {
-            ParticleOptions particle = color.getParticle();
+            ParticleOptions particle = color.getParticle(config.windParticleSize());
             double speed = random.triangle(1.0, 0.5);
 
             level.addParticle(
@@ -127,30 +127,24 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
         out.set(x, y, z);
     }
 
-    private enum ParticleColor {
-        SNOWY(ISBiomeTags.HAS_BLIZZARDS, () -> new DustGrainParticleEffect(
-                0xffffff,
-                PARTICLE_SCALE
-        )),
-        SANDY(ISBiomeTags.HAS_SANDSTORMS, () -> new DustGrainParticleEffect(
-                SandstormParticles.COLOR,
-                PARTICLE_SCALE
-        )),
-        ROCKY(ISBiomeTags.IS_WINDY, () -> new DustGrainParticleEffect(
-                0x888888,
-                PARTICLE_SCALE
-        ));
+    public enum ParticleColor {
+        SNOWY(ISBiomeTags.HAS_BLIZZARDS, 0xffffff),
+        SANDY(ISBiomeTags.HAS_SANDSTORMS, 0xD9AA84),
+        ROCKY(ISBiomeTags.IS_WINDY, 0x888888);
 
         private final TagKey<Biome> tag;
-        private final Supplier<ParticleOptions> particle;
+        private final int color;
 
-        ParticleColor(TagKey<Biome> tag, Supplier<ParticleOptions> particle) {
+        ParticleColor(TagKey<Biome> tag, int color) {
             this.tag = tag;
-            this.particle = Suppliers.memoize(particle::get);
+            this.color = color;
         }
 
-        public ParticleOptions getParticle() {
-            return particle.get();
+        public ParticleOptions getParticle(float size) {
+            return new DustGrainParticleEffect(
+                    this.color,
+                    PARTICLE_SCALE * size
+            );
         }
 
         @Nullable
@@ -170,6 +164,10 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
             }
 
             return null;
+        }
+
+        public int color() {
+            return this.color;
         }
     }
 }

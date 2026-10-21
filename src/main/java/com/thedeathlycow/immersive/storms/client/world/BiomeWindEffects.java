@@ -1,17 +1,15 @@
 package com.thedeathlycow.immersive.storms.client.world;
 
-import com.google.common.base.Suppliers;
 import com.thedeathlycow.immersive.storms.client.ImmersiveStormsClient;
-import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.client.util.ISClientTickEvents;
+import com.thedeathlycow.immersive.storms.config.section.GeneralSettings;
 import com.thedeathlycow.immersive.storms.particle.DustGrainParticleEffect;
-import com.thedeathlycow.immersive.storms.registry.tag.ISBiomeTags;
 import com.thedeathlycow.immersive.storms.registry.ISEnvironmentAttributes;
+import com.thedeathlycow.immersive.storms.registry.tag.ISBiomeTags;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -22,8 +20,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
-
-import java.util.function.Supplier;
 
 public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
     private static final int PARTICLES_PER_TICK = 3;
@@ -128,42 +124,36 @@ public class BiomeWindEffects implements ISClientTickEvents.EndLevel {
     }
 
     public enum ParticleColor {
-        SNOWY(ISBiomeTags.HAS_BLIZZARDS, 0xffffff),
-        SANDY(ISBiomeTags.HAS_SANDSTORMS, 0xD9AA84),
-        ROCKY(ISBiomeTags.IS_WINDY, 0x888888);
+        SNOWY(0xffffff),
+        SANDY(0xD9AA84),
+        ROCKY(0x888888);
 
-        private final TagKey<Biome> tag;
         private final int color;
 
-        ParticleColor(TagKey<Biome> tag, int color) {
-            this.tag = tag;
+        ParticleColor(int color) {
             this.color = color;
         }
 
         public ParticleOptions getParticle(float size) {
-            return new DustGrainParticleEffect(
-                    this.color,
-                    PARTICLE_SCALE * size
-            );
+            return new DustGrainParticleEffect(this.color, PARTICLE_SCALE * size);
         }
 
         @Nullable
         public static ParticleColor at(Level level, BlockPos pos) {
             if (level.environmentAttributes().getValue(ISEnvironmentAttributes.HAS_AMBIENT_WIND, pos)) {
-                Holder<Biome> biome = level.getBiomeManager().getNoiseBiomeAtPosition(pos);
-
-                // TODO: remove tag usage here, it does not work client-side
-                // maybe use an attribute for color?
-                for (ParticleColor value : values()) {
-                    if (biome.is(value.tag)) {
-                        return value;
-                    }
-                }
-
-                return ROCKY;
+                WeatherArchetype archetype = level.environmentAttributes().getValue(ISEnvironmentAttributes.WEATHER_ARCHETYPE, pos);
+                return map(archetype);
             }
 
             return null;
+        }
+
+        public static ParticleColor map(WeatherArchetype archetype) {
+            return switch (archetype) {
+                case SANDSTORM -> SANDY;
+                case BLIZZARD -> SNOWY;
+                default -> ROCKY;
+            };
         }
 
         public int color() {
